@@ -2,12 +2,13 @@
 layout: post
 cover: "assets/images/cover7.jpg"
 navigation: True
-title: Hello Jekyll
-date: 2019-01-14 16:53:20
-tags: test
+title: 哈哈昂昂
+date: 2014-08-12 10:18:00
+tags: fables fiction
+subclass: "post tag-test tag-content"
 logo: "assets/images/ghost.png"
-author: Freelf
-categories: test
+author: casper
+categories: casper
 ---
 
 My first blog in jekyll~~~
