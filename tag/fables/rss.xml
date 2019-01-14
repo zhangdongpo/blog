@@ -12,6 +12,18 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>哈哈昂昂</title>
+	  <link>/blog//First-blog</link>
+	  <author></author>
+	  <pubDate>2014-08-12T10:18:00+00:00</pubDate>
+	  <guid>/blog//First-blog</guid>
+	  <description><![CDATA[
+	     <p>My first blog in jekyll~~~</p>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>The Businessman & the fisherman</title>
 	  <link>/blog//the-businessman-and-fisherman</link>
 	  <author></author>

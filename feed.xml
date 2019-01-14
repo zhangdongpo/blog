@@ -8,16 +8,15 @@
     
       
       <item>
-        <title>A Full and Comprehensive Style Test</title>
+        <title>哈哈昂昂</title>
         
-          <description>&lt;p&gt;This is just an &lt;em&gt;ipsis verbis&lt;/em&gt; copy of the first example running on the &lt;a href=&quot;http://demo.ghost.io&quot;&gt;Ghost Demo&lt;/a&gt;. This shows how you can use html styling to achieve your hopes.&lt;/p&gt;
-
+          <description>&lt;p&gt;My first blog in jekyll~~~&lt;/p&gt;
 </description>
         
-        <pubDate>Sat, 27 Sep 2014 10:18:00 +0000</pubDate>
+        <pubDate>Tue, 12 Aug 2014 10:18:00 +0000</pubDate>
         <link>
-        /a-full-and-comprehensive-style-test</link>
-        <guid isPermaLink="true">/a-full-and-comprehensive-style-test</guid>
+        /First-blog</link>
+        <guid isPermaLink="true">/First-blog</guid>
       </item>
       
     
