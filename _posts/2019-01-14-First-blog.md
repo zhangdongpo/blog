@@ -9,6 +9,7 @@ subclass: "post tag-test tag-content"
 logo: "assets/images/ghost.png"
 author: casper
 categories: casper
+disqus: true
 ---
 
 My first blog in jekyll~~~
