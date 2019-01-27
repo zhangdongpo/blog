@@ -7,8 +7,8 @@ paginate: 5
 language: "en-uk"
 
 # Website info
-name: "Finding The Way Home"
-description: "A beautiful narrative written with the world's most elegant publishing platform. The story begins here."
+name: "面向自由编程"
+description: "Freelf's Blog"
 
 short_url: "freelf.me"
 disqus: username
