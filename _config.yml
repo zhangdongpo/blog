@@ -21,13 +21,14 @@ permalink: /:title
 # permalink: /tag/:tag
 
 #gitalk
-gitalk: true
+gitalk: 
+  gitalk: true
   gitalk_clientID: 'b62d799fc3a6b1dd7de9'
   gitalk_Secret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f'
   gitalk_repo: 'blog'
   gitalk_owner: 'zhangdongpo'
   gitalk_admin: 'zhangdongpo'
-
+  
 # gems and other configs
 plugins: [jekyll-paginate]
 
