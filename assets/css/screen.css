@@ -464,8 +464,8 @@ textarea, select, input {
 
 textarea {
     width: 100%;
-    max-width: 340px;
-    min-width: 250px;
+    /* max-width: 340px; */
+    /* min-width: 250px; */
     height: auto;
     min-height: 80px;
 }
