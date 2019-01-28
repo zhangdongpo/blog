@@ -26,7 +26,7 @@ gitalk:
   gitalk_Secret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f'
   gitalk_repo: 'blog'
   gitalk_owner: 'zhangdongpo'
-  gitalk_admin: 'zhangdognpo'
+  gitalk_admin: 'zhangdongpo'
 
 # gems and other configs
 plugins: [jekyll-paginate]
