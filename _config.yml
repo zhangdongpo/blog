@@ -13,7 +13,7 @@ description: "Freelf's Blog"
 short_url: "freelf.me"
 disqus: username
 # edit baseurl to simply '/' if using as your personal page (instead of a project page)
-baseurl: ""
+baseurl: "/"
 
 # Permalinks
 permalink: /:title
