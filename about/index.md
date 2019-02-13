@@ -2,12 +2,10 @@
 layout: page
 title: About
 navigation: true
-logo: 'assets/images/ghost.png'
+logo: "assets/images/ghost.png"
 current: about
 ---
 
-This is a demo blog for Ghost, it contains dummy content which allows you to click around and see what a Ghost blog running the default theme looks like.
+Hey，我是 Freelf。iOS 攻城狮，喜欢旅游、DOTA2。
 
-We use this for testing and for reference!
-
-If you'd like to set up your own blog, head on over to [https://ghost.org](https://ghost.org) and sign up.
+> Know it, know why
