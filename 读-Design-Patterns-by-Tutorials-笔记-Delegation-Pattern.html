@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>读《Design Patterns by Tutorials》笔记——Delegation Pattern</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="读《Design Patterns by Tutorials》笔记——Delegation Pattern" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="读《Design Patterns by Tutorials》笔记——Delegation Pattern" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "读《Design Patterns by Tutorials》笔记——Delegation Pattern",
+    "url": "//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">读《Design Patterns by Tutorials》笔记——Delegation Pattern</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2018-08-16">16 Aug 2018</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>委托模式使一个对象能够使用另一个对象来提供数据或者执行一些任务，这个模式有三个部分，UML 图如下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/15344108237603.jpg" alt="" />
+<!-- more --></p>
+<ul>
+  <li>一个<strong>对象需要委托</strong>：也就是委托对象。通常这个对象有一个<code class="highlighter-rouge">weak</code> 属性 <code class="highlighter-rouge">delegate</code>，防止循环引用。</li>
+  <li>一个<strong>委托协议</strong>：这个协议定义了委托应该实现或者可能实现的方法。</li>
+  <li>一个<strong>委托</strong>：实现委托方法的对象。</li>
+</ul>
+
+<p>通过依赖一个委托协议代替一个混合对象使得实现更加有弹性，只要一个对象实现了协议就可以作为一个委托对象。</p>
+<h2 id="什么时候使用">什么时候使用</h2>
+<p>使用委托模式可以拆分大型类或者创建通用的、可重用的组件。委托关系在 Apple 的框架中很常见，尤其是 <code class="highlighter-rouge">UIKit</code>。名字中有 <code class="highlighter-rouge">DataSource</code> 和 <code class="highlighter-rouge">Delegate</code> 的对象实际上都遵守了代理模式。
+在 Apple 的框架中为什么不是一个协议，而是两个？
+Apple 的框架通常使用 <code class="highlighter-rouge">DataSource</code> 来对提供数据的委托方法进行分组，使用 <code class="highlighter-rouge">Delegate</code> 来对接收数据或者事件的委托方法分组。比如：<code class="highlighter-rouge">UITableViewDataSource</code> 是想要提供一个 <code class="highlighter-rouge">UITableViewCell</code> 来展示， <code class="highlighter-rouge">UITableViewDelegate</code> 通知那行被选中了。
+通常 <code class="highlighter-rouge">dataSource</code> 和 <code class="highlighter-rouge">delegate</code> 被设置为一个对象，比如拥有 <code class="highlighter-rouge">UITableView</code>的 view controller。然而，不是必须这样做。把它设置到另一个对象更有好处。</p>
+<h2 id="playground-example">Playground example</h2>
+<p>委托协议是一个表现类型的设计模式。这是因为委托都是一个对象和另一个对象交流有关。
+下面的代码将创建一个<code class="highlighter-rouge">MenuViewController</code>，这个 VC 有一个 <code class="highlighter-rouge">tableView</code>，并且是这个 <code class="highlighter-rouge">tableView</code> 的委托和数据源。
+首先创建 <code class="highlighter-rouge">MenuViewController</code>：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">UIKit</span>
+
+<span class="kd">class</span> <span class="kt">MenuViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+  <span class="c1">// 1</span>
+  <span class="kd">@IBOutlet</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span> <span class="p">{</span>
+    <span class="k">didSet</span> <span class="p">{</span>
+      <span class="n">tableView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
+      <span class="n">tableView</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1">// 2</span>
+  <span class="k">let</span> <span class="nv">items</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Item 1"</span><span class="p">,</span> <span class="s">"Item 2"</span><span class="p">,</span> <span class="s">"Item 3"</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>添加下面的代码，设置 <code class="highlighter-rouge">MenuViewController</code> 为 <code class="highlighter-rouge">tableView</code> 的数据源和委托：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - UITableViewDataSource</span>
+<span class="kd">extension</span> <span class="kt">MenuViewController</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
+  
+  <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span>
+                 <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span>
+                 <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> 
+      <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"Cell"</span><span class="p">,</span>
+                                    <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span>
+    <span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cell</span>
+  <span class="p">}</span>
+
+  <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span>
+                 <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">items</span><span class="o">.</span><span class="n">count</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// MARK: - UITableViewDelegate</span>
+<span class="kd">extension</span> <span class="kt">MenuViewController</span><span class="p">:</span> <span class="kt">UITableViewDelegate</span> <span class="p">{</span>
+
+  <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span>
+                 <span class="n">didSelectRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// To do next....</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">UITableViewDelegate</code> 和 <code class="highlighter-rouge">UITableViewDataSource</code> 都是委托协议，他们定义了委托对象必须实现的方法。
+可以非常简单的定义你自己的委托。比如：你可以创建一个委托来通知用户点击的 menuItem：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">MenuViewControllerDelegate</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="nf">menuViewController</span><span class="p">(</span> <span class="n">_</span> <span class="nv">menuViewController</span><span class="p">:</span> <span class="kt">MenuViewController</span><span class="p">,</span> <span class="n">didSelectItemAtIndex</span> <span class="nv">index</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>接下来，给 <code class="highlighter-rouge">MenuViewController</code> 添加一个属性：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt">MenuViewControllerDelegate</span><span class="p">?</span>
+</code></pre></div></div>
+<p>iOS 中的习惯是当一个对象创建后来设置委托对象。所以，当创建一个 <code class="highlighter-rouge">MenuViewController</code> 后，来设置它的委托对象。
+最后，当用户点击一个 item，你应该去通知委托对象。我们把 <code class="highlighter-rouge">tableView</code> 委托的 <code class="highlighter-rouge">didSelectd</code> 方法添加以下方法：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">delegate</span><span class="p">?</span><span class="o">.</span><span class="nf">menuViewController</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="nv">didSelectItemAtIndex</span><span class="p">:</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">)</span>
+</code></pre></div></div>
+<p>在委托方法中，一般我们都把需要委托的对象作为参数传过去，在这个例子中就是 <code class="highlighter-rouge">MenuViewController</code>，这样，委托对象就可以在需要的时候去使用或者检查调用者了。
+现在，你已经创建了你自己的委托协议，在一个真实的 app 中，item 在被点击了经常需要处理一些逻辑，比如跳转到一个新的视图。</p>
+<h2 id="应该注意的地方">应该注意的地方</h2>
+<p>委托非常有用，但是经常被滥用。不要为一个对象创建太多的委托。如果一个对象需要几个委托，可能表示这个类做了太多事情。这是应该考虑为特定的情况分解对象的功能，而不是一个包罗万象的类。
+很难说清楚多少是多，但是有一个黄金法则。如果你经常在两个类之间来回切换来了解发生了什么，那就说明太多了。同样的，如果你不能理解某个委托的用处，也说明太多了。</p>
+<h2 id="教程项目">教程项目</h2>
+<p>上一篇 MVC 之后，我们已经实现了可以一些功能，比如，点击屏幕可以显示答案，点击正确和错误按钮可以记录正确和错误的个数。
+接下来我们需要实现让用户可以选择问题组的一个列表，并且在 <code class="highlighter-rouge">QuestionViewControlle</code> 中添加了取消按钮、显示当前问题下标和回答完问题再点击正确或者错误按钮返回的操作。这些操作使用委托模式实现。具体效果如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/delegate.gif" alt="-c375" /></p>
+<h2 id="预告">预告</h2>
+<p>下一章我们会学习策略模式，并且继续完善 RabbleWabble。
+<a href="https://github.com/zhangdongpo/LearnDesignPattern/tree/Delegate">Demo地址</a></p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=读《Design Patterns by Tutorials》笔记——Delegation Pattern&amp;url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Strategy-Pattern">
+        <section class="post">
+            <h2>读《Design Patterns by Tutorials》笔记——Strategy Pattern</h2>
+            <p>策略模式定义了一系列可交换的对象，这些对象可以在运行时设置或者切换。这个模式有三部分。 * **使用策略的对象**：在 iOS 开发中这个对象通常是一个`UIViewController`，但是理论上可以是任何需要交换表现的对象。 * **策略协议**：定义了每个策略必须实现的方法。 * **策略对象**：遵守策略协议的对象。 UML 图如下： ![](http://ohg2bgicd.bkt.clouddn.com/1538047244.png) ## When should...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-MVC">
+        <section class="post">
+            <h2>读《Design Patterns by Tutorials》笔记——MVC</h2>
+            <p>MVC 设计模式把对象分为三个不同的类型： Models，Views和 Controllers。 UML 图表示如下： MVC 是在 iOS 编程中是非常常见的，因为 Apple 在 UIKit 中大量选用了这种设计模式。 Models保持应用数据，通常为...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

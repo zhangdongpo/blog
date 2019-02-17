@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>Objective-C Runtime --- 消息发送</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Objective-C Runtime --- 消息发送" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Objective-C Runtime --- 消息发送" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "Objective-C Runtime --- 消息发送",
+    "url": "//Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">Objective-C Runtime --- 消息发送</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2018-05-20">20 May 2018</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/runtime'>Runtime</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>上篇文章分析了对象的数据结构，这篇我们就结合源码来分析下Objective-C最核心的东西——消息发送。在Objective-C中，我们调用方法，其实都是发送消息。发送消息为Objective-C增加了动态特性，下面我们就来看一下Objective-C的消息发送过程。
+<!--more--></p>
+<h1 id="objc_msgsend简介">objc_msgSend简介</h1>
+<p>其实我们看大部分runtime文章，都是从这个函数看起的。在Objective-C中，我们调用方法的语法是这样的<code class="highlighter-rouge">[receiver message]</code>。编译期会把这个方法调用转换成下面这个函数：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc_msgSend(receiver, selector, arg1, arg2, ...)
+</code></pre></div></div>
+<p>其中第一个函数就是我们调用方法的recevier，第二个是个方法选择器，类型是<code class="highlighter-rouge">SEL</code>，我们看下<code class="highlighter-rouge">SEL</code>的定义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// An opaque type that represents a method selector.
+typedef struct objc_selector *SEL;
+</code></pre></div></div>
+<p><code class="highlighter-rouge">objc_selector</code>是一个映射到方法的C字符串。我们可以通过调用<code class="highlighter-rouge">@selector()</code>和<code class="highlighter-rouge">sel_registerName</code>生成一个<code class="highlighter-rouge">SEL</code>。等下会具体分析<code class="highlighter-rouge">SEL</code>。现在继续分析objc_msgSend函数。
+当receiver收到一条消息，消息发送函数通过isa指针找到类对象，在其类对象中查找方法实现。如果类对象中没有，通过superclass指针，找到其父类对象，在其中查找实现。一直查找到<code class="highlighter-rouge">NSObject</code>，只要找到实现就会去调用。这就是runtime查找方法实现的过程。为了加快方法调用，runtime系统缓存了已经调用过的方法。接下来我们会通过源码来分析。如果receiver为<code class="highlighter-rouge">nil</code>，会直接返回，并不会报错。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526885161.png" alt="" /></p>
+<h1 id="objc_msgsend源码解析">objc_msgSend源码解析</h1>
+<h2 id="selector">@selector</h2>
+<p>在<code class="highlighter-rouge">objc_msgSend</code>中，第一个参数我们不用过多解释。第二个参数selector，看起来简单，其实有些东西需要我们明白。这里需要我们注意的是：<strong>不同类中，相同方法名不带参数的方法所对应的方法选择器相同，如果方法有参数且参数数量相同，所对应的方法选择器也相同(和参数类型无关)。</strong>。前面这句话有点不太好懂，用代码来看一下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">TestObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span><span class="p">;</span> <span class="c1">// 1
+</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">a</span><span class="p">;</span> <span class="c1">// 2
+</span><span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">TestObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">a</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%d"</span><span class="p">,</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class="nc">TestTwoObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span><span class="p">;</span>  <span class="c1">// 3
+</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">str</span><span class="p">;</span> <span class="c1">// 4
+</span><span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">TestTwoObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">str</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>其中1和3对应的方法选择器相同，2和4对应的方法选择器相同。</p>
+<blockquote>
+  <ol>
+    <li>Objective-C为我们维护了一个方法选择器表。</li>
+    <li>使用<code class="highlighter-rouge">@selector()</code>时会从这个选择器表中查找对应的<code class="highlighter-rouge">SEL</code>，如果没有找到，会生成一个新的<code class="highlighter-rouge">SEL</code>添加到表中。</li>
+    <li>在编译期间会扫描全部的头文件和实现文件将其中的方法以及使用<code class="highlighter-rouge">@selector()</code>生成的选择子加入到方法选择器表中。</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>具体分析请看<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E4%BB%8E%E6%BA%90%E4%BB%A3%E7%A0%81%E7%9C%8B%20ObjC%20%E4%B8%AD%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%91%E9%80%81.md">从源代码看 ObjC 中消息的发送</a></p>
+</blockquote>
+
+<h2 id="解析objc_msgsend">解析objc_msgSend</h2>
+<p><code class="highlighter-rouge">objc_msgSend</code>是使用汇编写的，在<code class="highlighter-rouge">objc-msg-arm64.s</code>和<code class="highlighter-rouge">objc-msg-x86_64.s</code>中，有对应实现。由于自己能力不够，读不懂汇编，但是从里面的注释可以看出来，在<code class="highlighter-rouge">objc_msgSend</code>中，先会去缓存中查找方法，如果缓存没有找到，会调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数。<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数在runtime源码中是有实现的：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/***********************************************************************
+* _class_lookupMethodAndLoadCache.
+* Method lookup for dispatchers ONLY. OTHER CODE SHOULD USE lookUpImp().
+* This lookup avoids optimistic cache scan because the dispatcher
+* already tried that.
+**********************************************************************/
+IMP _class_lookupMethodAndLoadCache3(id obj, SEL sel, Class cls)
+{
+    return lookUpImpOrForward(cls, sel, obj, 
+                              YES/*initialize*/, NO/*cache*/, YES/*resolver*/);
+}
+</code></pre></div></div>
+<p>我们看到它调用了<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数，并且传递cache参数为NO，因为调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>之前，已经进行了cache查找，没有找到才调用<code class="highlighter-rouge">_class_lookupMethodAndLoadCache3</code>，所以这里传NO是避免再次查找缓存。
+具体的汇编代码分析请看<a href="https://www.jianshu.com/p/4d619b097e20">神经病院Objective-C Runtime住院第二天——消息发送与转发</a>。
+对objc_msgSend的分析有两种情况，一种是有缓存，一种是无缓存。我们向TestObject发送两次相同的消息就可以模拟出来。代码如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        TestObject *object = [TestObject new];
+        [object sayHello];
+        [object sayHello];
+    }
+    return 0;
+}
+</code></pre></div></div>
+<h3 id="无缓存">无缓存</h3>
+<p>我们先在第一次调用方法这一行打断点：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974679.png" alt="" />
+当到达这个断点之后在<code class="highlighter-rouge">lookUpImpOrForward</code>函数打断点，确保查找的消息是<code class="highlighter-rouge">sayHello</code>。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974777.png" alt="" />
+当断点到达<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数，左侧调用栈如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974866.png" alt="" />
+从图中可以看出来<code class="highlighter-rouge">objc_msgSend</code>并没有直接调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>，而是通过<code class="highlighter-rouge">_objc_msgSend_uncached</code>调用。下面我们就来分析下<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数。这个才是实际干活的。</p>
+<h4 id="lookupimporforward">lookUpImpOrForward</h4>
+<p>由于<code class="highlighter-rouge">lookUpImpOrForward</code>涉及很多的函数调用，我们将它分成几个部分来分析：</p>
+
+<ol>
+  <li>无锁的缓存查找。</li>
+  <li>加锁。</li>
+  <li>如果类没有实现或初始化，实现或初始化。</li>
+  <li>在当前类的缓存中查找。</li>
+  <li>在当前类的方法列表中查找。</li>
+  <li>在父类的缓存和方法列表中查找。</li>
+  <li>没有找到实现，尝试方法解析。</li>
+  <li>使用消息转发。</li>
+  <li>解锁返回实现。</li>
+</ol>
+
+<p>下面，我们来看下这个过程的具体实现</p>
+<h5 id="无锁的缓存查找">无锁的缓存查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>runtimeLock.assertUnlocked();
+
+// Optimistic cache lookup
+if (cache) {
+    imp = cache_getImp(cls, sel);
+    if (imp) return imp;
+}
+</code></pre></div></div>
+<p>由于通过<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>调用<code class="highlighter-rouge">lookUpImpOrForward</code>时传入cache为<code class="highlighter-rouge">NO</code>，所以这一步的缓存查找直接略过了。</p>
+<h5 id="加锁">加锁</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// runtimeLock is held during isRealized and isInitialized checking
+// to prevent races against concurrent realization.
+
+// runtimeLock is held during method search to make
+// method-lookup + cache-fill atomic with respect to method addition.
+// Otherwise, a category could be added but ignored indefinitely because
+// the cache was re-filled with the old value after the cache flush on
+// behalf of the category.
+runtimeLock.read();
+</code></pre></div></div>
+<p>通过注释我们可以看到，<code class="highlighter-rouge">runtimeLock</code>需要在<code class="highlighter-rouge">isRealized</code>和<code class="highlighter-rouge">isInitialized</code>检查过程中加锁，避免并发实现过程中的资源竞争(其实锁这些东西我也不太明白，后面学操作系统时会补一下这方面知识)。</p>
+<h5 id="如果类没有实现或初始化实现或初始化">如果类没有实现或初始化，实现或初始化</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (!cls-&gt;isRealized()) {
+        // Drop the read-lock and acquire the write-lock.
+        // realizeClass() checks isRealized() again to prevent
+        // a race while the lock is down.
+        runtimeLock.unlockRead();
+        runtimeLock.write();
+
+        realizeClass(cls);
+
+        runtimeLock.unlockWrite();
+        runtimeLock.read();
+    }
+
+if (initialize  &amp;&amp;  !cls-&gt;isInitialized()) {
+    runtimeLock.unlockRead();
+    _class_initialize (_class_getNonMetaClass(cls, inst));
+     runtimeLock.read();
+     // If sel == initialize, _class_initialize will send +initialize and 
+    // then the messenger will send +initialize again after this 
+    // procedure finishes. Of course, if this is not being called 
+    // from the messenger then it won't happen. 2778172
+}
+</code></pre></div></div>
+<p>在Objective-C运行时初始化过程中，会通过<code class="highlighter-rouge">realizeClass()</code>为类分配可读写的<code class="highlighter-rouge">class_rw_t</code>。<code class="highlighter-rouge">_class_initialize</code>会调用类的<code class="highlighter-rouge">+initialize</code>方法。以后会分析<code class="highlighter-rouge">+initialize</code>方法。</p>
+<h5 id="在当前类的缓存中查找">在当前类的缓存中查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imp = cache_getImp(cls, sel);
+if (imp) goto done;
+</code></pre></div></div>
+<p>这个很简单，直接调用<code class="highlighter-rouge">cache_getImp</code>函数，从类的<code class="highlighter-rouge">cache</code>属性中查找，找到实现直接执行<code class="highlighter-rouge">goto done</code>。我们先看下<code class="highlighter-rouge">done</code>的实现。很简单，直接解锁，返回实现。<code class="highlighter-rouge">cache_getImp</code>也是使用汇编写的。感兴趣可以去看<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a>。其原理就是在类的cache中查找实现并返回。因为我们这个小节是模拟无缓存消息发送，所以这一步查找不到，继续下一步。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>done:
+runtimeLock.unlockRead();
+return imp;
+</code></pre></div></div>
+<h5 id="在当前类的方法列表中查找">在当前类的方法列表中查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Try this class's method lists.
+{
+    Method meth = getMethodNoSuper_nolock(cls, sel);
+    if (meth) {
+        log_and_fill_cache(cls, meth-&gt;imp, sel, inst, cls);
+        imp = meth-&gt;imp;
+        goto done;
+    }
+}
+</code></pre></div></div>
+<p>通过调用<code class="highlighter-rouge">getMethodNoSuper_nolock</code>函数查找方法的结构体指针<code class="highlighter-rouge">method_t *</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static method_t *
+getMethodNoSuper_nolock(Class cls, SEL sel)
+{
+    runtimeLock.assertLocked();
+
+    assert(cls-&gt;isRealized());
+    // fixme nil cls? 
+    // fixme nil sel?
+
+    for (auto mlists = cls-&gt;data()-&gt;methods.beginLists(), 
+              end = cls-&gt;data()-&gt;methods.endLists(); 
+         mlists != end;
+         ++mlists)
+    {
+        method_t *m = search_method_list(*mlists, sel);
+        if (m) return m;
+    }
+
+    return nil;
+}
+
+</code></pre></div></div>
+<p>因为类对象中<code class="highlighter-rouge">method_array_t</code>是一个二维数组，所以循环<code class="highlighter-rouge">method_array_t</code>之后还需要<code class="highlighter-rouge">search_method_list</code>这个函数去查找对应的<code class="highlighter-rouge">method_t</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static method_t *search_method_list(const method_list_t *mlist, SEL sel)
+{
+    int methodListIsFixedUp = mlist-&gt;isFixedUp();
+    int methodListHasExpectedSize = mlist-&gt;entsize() == sizeof(method_t);
+    
+    if (__builtin_expect(methodListIsFixedUp &amp;&amp; methodListHasExpectedSize, 1)) {
+        return findMethodInSortedMethodList(sel, mlist);
+    } else {
+        // Linear search of unsorted method list
+        for (auto&amp; meth : *mlist) {
+            if (meth.name == sel) return &amp;meth;
+        }
+    }
+
+#if DEBUG
+    // sanity-check negative results
+    if (mlist-&gt;isFixedUp()) {
+        for (auto&amp; meth : *mlist) {
+            if (meth.name == sel) {
+                _objc_fatal("linear search worked when binary search did not");
+            }
+        }
+    }
+#endif
+
+    return nil;
+}
+</code></pre></div></div>
+<p>在这个方法中，会判断mlist是否是一个有序列表，如果是有序列表，会使用<code class="highlighter-rouge">findMethodInSortedMethodList</code>这个函数执行二分查找，如果无序就遍历查找。
+如果<code class="highlighter-rouge">getMethodNoSuper_nolock</code>这个方法找到了<code class="highlighter-rouge">Method</code>，通过<code class="highlighter-rouge">log_and_fill_cache</code>将实现加入缓存中。这个操作最后通过<code class="highlighter-rouge">cache_fill_nolock</code>完成。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static void cache_fill_nolock(Class cls, SEL sel, IMP imp, id receiver)
+{
+    cacheUpdateLock.assertLocked();
+
+    // Never cache before +initialize is done
+    if (!cls-&gt;isInitialized()) return;
+
+    // Make sure the entry wasn't added to the cache by some other thread 
+    // before we grabbed the cacheUpdateLock.
+    if (cache_getImp(cls, sel)) return;
+
+    cache_t *cache = getCache(cls);
+    cache_key_t key = getKey(sel);
+
+    // Use the cache as-is if it is less than 3/4 full
+    mask_t newOccupied = cache-&gt;occupied() + 1;
+    mask_t capacity = cache-&gt;capacity();
+    if (cache-&gt;isConstantEmptyCache()) {
+        // Cache is read-only. Replace it.
+        cache-&gt;reallocate(capacity, capacity ?: INIT_CACHE_SIZE);
+    }
+    else if (newOccupied &lt;= capacity / 4 * 3) {
+        // Cache is less than 3/4 full. Use it as-is.
+    }
+    else {
+        // Cache is too full. Expand it.
+        cache-&gt;expand();
+    }
+
+    // Scan for the first unused slot and insert there.
+    // There is guaranteed to be an empty slot because the 
+    // minimum size is 4 and we resized at 3/4 full.
+    bucket_t *bucket = cache-&gt;find(key, receiver);
+    if (bucket-&gt;key() == 0) cache-&gt;incrementOccupied();
+    bucket-&gt;set(key, imp);
+}
+</code></pre></div></div>
+<p>为了保证缓存有一个空的位置，当缓存中使用的容量大于总容量的3/4时，会扩充缓存，使缓存的大小翻倍。</p>
+<blockquote>
+  <p>在缓存翻倍的过程中，当前类全部的缓存都会被清空，Objective-C 出于性能的考虑不会将原有缓存的 bucket_t 拷贝到新初始化的内存中。</p>
+</blockquote>
+
+<p>缓存完成后执行<code class="highlighter-rouge">goto done</code>返回实现调用。</p>
+<h5 id="在父类的缓存和方法列表中查找">在父类的缓存和方法列表中查找。</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> // Try superclass caches and method lists.
+    {
+        unsigned attempts = unreasonableClassCount();
+        for (Class curClass = cls-&gt;superclass;
+             curClass != nil;
+             curClass = curClass-&gt;superclass)
+        {
+            // Halt if there is a cycle in the superclass chain.
+            if (--attempts == 0) {
+                _objc_fatal("Memory corruption in class list.");
+            }
+            
+            // Superclass cache.
+            imp = cache_getImp(curClass, sel);
+            if (imp) {
+                if (imp != (IMP)_objc_msgForward_impcache) {
+                    // Found the method in a superclass. Cache it in this class.
+                    log_and_fill_cache(cls, imp, sel, inst, curClass);
+                    goto done;
+                }
+                else {
+                    // Found a forward:: entry in a superclass.
+                    // Stop searching, but don't cache yet; call method 
+                    // resolver for this class first.
+                    break;
+                }
+            }
+            
+            // Superclass method list.
+            Method meth = getMethodNoSuper_nolock(curClass, sel);
+            if (meth) {
+                log_and_fill_cache(cls, meth-&gt;imp, sel, inst, curClass);
+                imp = meth-&gt;imp;
+                goto done;
+            }
+        }
+    }
+
+</code></pre></div></div>
+<p>这个过程和上面差不多，只是多了一个迭代父类的过程。和上面的区别是，在父类中找到的<code class="highlighter-rouge">_objc_msgForward_impcache</code>需要交给当前类来处理。</p>
+<h5 id="尝试方法解析器">尝试方法解析器</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> if (resolver  &amp;&amp;  !triedResolver) {
+    runtimeLock.unlockRead();
+    _class_resolveMethod(cls, sel, inst);
+    runtimeLock.read();
+    // Don't cache the result; we don't hold the lock so it may have 
+    // changed already. Re-do the search from scratch instead.
+    triedResolver = YES;
+    goto retry;
+ }
+</code></pre></div></div>
+<p>上面这部分代码调用了<code class="highlighter-rouge">_class_resolveMethod</code>来解析没有实现的方法:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void _class_resolveMethod(Class cls, SEL sel, id inst)
+{
+    if (! cls-&gt;isMetaClass()) {
+        // try [cls resolveInstanceMethod:sel]
+        _class_resolveInstanceMethod(cls, sel, inst);
+    } 
+    else {
+        // try [nonMetaClass resolveClassMethod:sel]
+        // and [cls resolveInstanceMethod:sel]
+        _class_resolveClassMethod(cls, sel, inst);
+        if (!lookUpImpOrNil(cls, sel, inst, 
+                            NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+        {
+            _class_resolveInstanceMethod(cls, sel, inst);
+        }
+    }
+}
+</code></pre></div></div>
+<p>先判断当前类是否为元类，如果为元类就调用<code class="highlighter-rouge">_class_resolveClassMethod</code>，如果不是就调用<code class="highlighter-rouge">_class_resolveInstanceMethod</code>。我们可以看到，在当前类为元类的时候，最后如果没有找到实现，还会再去调用<code class="highlighter-rouge">_class_resolveInstanceMethod</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static void _class_resolveInstanceMethod(Class cls, SEL sel, id inst)
+{
+    if (! lookUpImpOrNil(cls-&gt;ISA(), SEL_resolveInstanceMethod, cls, 
+                         NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+    {
+        // Resolver not implemented.
+        return;
+    }
+
+    BOOL (*msg)(Class, SEL, SEL) = (__typeof__(msg))objc_msgSend;
+    bool resolved = msg(cls, SEL_resolveInstanceMethod, sel);
+
+    // Cache the result (good or bad) so the resolver doesn't fire next time.
+    // +resolveInstanceMethod adds to self a.k.a. cls
+    IMP imp = lookUpImpOrNil(cls, sel, inst, 
+                             NO/*initialize*/, YES/*cache*/, NO/*resolver*/);
+
+}
+
+static void _class_resolveClassMethod(Class cls, SEL sel, id inst)
+{
+    assert(cls-&gt;isMetaClass());
+
+    if (! lookUpImpOrNil(cls, SEL_resolveClassMethod, inst, 
+                         NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+    {
+        // Resolver not implemented.
+        return;
+    }
+
+    BOOL (*msg)(Class, SEL, SEL) = (__typeof__(msg))objc_msgSend;
+    bool resolved = msg(_class_getNonMetaClass(cls, inst), 
+                        SEL_resolveClassMethod, sel);
+
+    // Cache the result (good or bad) so the resolver doesn't fire next time.
+    // +resolveClassMethod adds to self-&gt;ISA() a.k.a. cls
+    IMP imp = lookUpImpOrNil(cls, sel, inst, 
+                             NO/*initialize*/, YES/*cache*/, NO/*resolver*/);
+}
+</code></pre></div></div>
+<p>这两个方法其实就是判断当前类是否实现了<code class="highlighter-rouge">+ (BOOL)resolveInstanceMethod:(SEL)sel</code>和<code class="highlighter-rouge">+ (BOOL)resolveClassMethod:(SEL)sel</code>这两个方法。如果实现了用objc_msgSend去调用。在调用解析方法后还会使用<code class="highlighter-rouge">lookUpImpOrNil</code>去判断是否添加上<code class="highlighter-rouge">sel</code>对应的<code class="highlighter-rouge">IMP</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IMP lookUpImpOrNil(Class cls, SEL sel, id inst, 
+                   bool initialize, bool cache, bool resolver)
+{
+    IMP imp = lookUpImpOrForward(cls, sel, inst, initialize, cache, resolver);
+    if (imp == _objc_msgForward_impcache) return nil;
+    else return imp;
+}
+</code></pre></div></div>
+<p>其中<code class="highlighter-rouge">_objc_msgForward_impcache</code>是一个汇编程序入口，作为缓存中消息转发的标记。上面这个函数就是查找有没有对应<code class="highlighter-rouge">SEL</code>的实现，不包括转发。
+调用完<code class="highlighter-rouge">_class_resolveMethod</code>后，会跳转到retry标签，重新查找。只不过不会再次调用<code class="highlighter-rouge">_class_resolveMethod</code>这个方法了，因为将<code class="highlighter-rouge">triedResolver</code>标记为了<code class="highlighter-rouge">YES</code>。</p>
+<h5 id="使用消息转发">使用消息转发</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// No implementation found, and method resolver didn't help. 
+// Use forwarding.
+
+imp = (IMP)_objc_msgForward_impcache;
+cache_fill(cls, sel, imp, inst);
+</code></pre></div></div>
+<p>上面注释写的很清楚了，没有找到方法实现，并且方法解析不帮忙，只能使用转发了。将<code class="highlighter-rouge">imp</code>设置为<code class="highlighter-rouge">_objc_msgForward_impcache</code>，加入缓存。</p>
+<h6 id="转发过程">转发过程</h6>
+<p>因为我们把<code class="highlighter-rouge">_objc_msgForward_impcache</code>返回，因为<code class="highlighter-rouge">_objc_msgForward_impcache</code>是一个汇编标记。如果是<code class="highlighter-rouge">_objc_msgForward_impcache</code>这个标记，就会去调用<code class="highlighter-rouge">_objc_msgForward</code>或<code class="highlighter-rouge">_objc_msgForward_stret</code>，从这两个函数名来看，一个是有返回值的函数，一个是无返回值。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MESSENGER_START
+nop
+MESSENGER_END_SLOW
+	
+jne	__objc_msgForward_stret
+jmp	__objc_msgForward
+
+END_ENTRY __objc_msgForward_impcache
+	
+	
+ENTRY __objc_msgForward
+// Non-stret version
+
+movq	__objc_forward_handler(%rip), %r11
+jmp	*%r11
+
+END_ENTRY __objc_msgForward
+
+
+ENTRY __objc_msgForward_stret
+// Struct-return version
+
+movq	__objc_forward_stret_handler(%rip), %r11
+jmp	*%r11
+
+END_ENTRY __objc_msgForward_stret
+</code></pre></div></div>
+<p>从汇编中可以看出<code class="highlighter-rouge">_objc_msgForward</code>和<code class="highlighter-rouge">_objc_msgForward_impcache</code>分别会去调用<code class="highlighter-rouge">__objc_forward_handler</code>和<code class="highlighter-rouge">__objc_forward_stret_handler</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#if !__OBJC2__
+
+// Default forward handler (nil) goes to forward:: dispatch.
+void *_objc_forward_handler = nil;
+void *_objc_forward_stret_handler = nil;
+
+#else
+
+// Default forward handler halts the process.
+__attribute__((noreturn)) void 
+objc_defaultForwardHandler(id self, SEL sel)
+{
+    _objc_fatal("%c[%s %s]: unrecognized selector sent to instance %p "
+                "(no message forward handler is installed)", 
+                class_isMetaClass(object_getClass(self)) ? '+' : '-', 
+                object_getClassName(self), sel_getName(sel), self);
+}
+void *_objc_forward_handler = (void*)objc_defaultForwardHandler;
+
+#if SUPPORT_STRET
+struct stret { int i[100]; };
+__attribute__((noreturn)) struct stret 
+objc_defaultForwardStretHandler(id self, SEL sel)
+{
+    objc_defaultForwardHandler(self, sel);
+}
+void *_objc_forward_stret_handler = (void*)objc_defaultForwardStretHandler;
+#endif
+</code></pre></div></div>
+<p>从上面代码可以看出，Objc2.0之前，<code class="highlighter-rouge">_objc_forward_handler</code>和<code class="highlighter-rouge">_objc_forward_stret_handler</code>都是<code class="highlighter-rouge">nil</code>，新版本中，都是<code class="highlighter-rouge">objc_defaultForwardHandler</code>。在<code class="highlighter-rouge">objc_defaultForwardHandler</code>中，我们看到了最熟悉的那段话<code class="highlighter-rouge">unrecognized selector sent to instance</code>。
+其实handler默认就是打印日志，触发crash，要实现消息转发，就是手动替换默认的handler。<code class="highlighter-rouge">objc_setForwardHandler</code>实现替换。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void objc_setForwardHandler(void *fwd, void *fwd_stret)
+{
+    _objc_forward_handler = fwd;
+#if SUPPORT_STRET
+    _objc_forward_stret_handler = fwd_stret;
+#endif
+}
+</code></pre></div></div>
+<p>有关对<code class="highlighter-rouge">objc_setForwardHandler</code>的调用，以及之后的消息转发调用栈，可以参考<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a>。
+我们直接来看这个过程：</p>
+<blockquote>
+  <ol>
+    <li>先调用<code class="highlighter-rouge">forwardingTargetForSelector</code>方法获取新的<code class="highlighter-rouge">target</code>作为<code class="highlighter-rouge">receiver</code>重新执行<code class="highlighter-rouge">selector</code>，如果返回的内容不合法（为<code class="highlighter-rouge">nil</code>或者跟旧<code class="highlighter-rouge">receiver</code>一样），那就进入第二步。</li>
+    <li>调用<code class="highlighter-rouge">methodSignatureForSelector</code>获取方法签名后，判断返回类型信息是否正确，再调用 <code class="highlighter-rouge">forwardInvocation</code>执行<code class="highlighter-rouge">NSInvocation</code>对象，并将结果返回。如果对象没实现<code class="highlighter-rouge">methodSignatureForSelector</code>方法，进入第三步。</li>
+    <li>调用 doesNotRecognizeSelector 方法</li>
+  </ol>
+</blockquote>
+
+<p>杨萧玉大神总结了一张图，在这里贴一下。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527064101.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a></p>
+</blockquote>
+
+<h4 id="运行结果">运行结果</h4>
+<p>通过<code class="highlighter-rouge">lookUpImpOrForward</code>，我们就完成了第一次方法调用。缓存中没有，但是在<code class="highlighter-rouge">TestObject</code>类对象方法列表中找到了对应的实现。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527056409.png" alt="" /></p>
+<h3 id="缓存命中">缓存命中</h3>
+<p>如果调用方法时，缓存命中了，那么情况就和上面不一样了。我们来看下。
+在第二次调用<code class="highlighter-rouge">sayHello</code>时，我们打个断点。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527057108.png" alt="" />
+当断点走到这里，我们在<code class="highlighter-rouge">lookUpImpOrForward</code>中打断点，然后继续运行，发现<code class="highlighter-rouge">lookUpImpOrForward</code>中的断点没有走，直接打印了结果。前面我们也说过，在调用<code class="highlighter-rouge">lookUpImpOrForward</code>这个方法前，objc_msgSend已经访问过了类的缓存，没有找到实现，才通过<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数调用的<code class="highlighter-rouge">lookUpImpOrForward</code>。如何验证下objc_msgSend在发送消息过程中先进行了缓存查找呢？</p>
+<h4 id="验证">验证</h4>
+<p>我们在调用前，手动加入错误缓存，看会有什么情况出现。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527060788.png" alt="" />
+在上面，第一次调用前，我们手动加入缓存。可以看到在调用<code class="highlighter-rouge">objc_msgSend</code>时会去使用错误的缓存去实现。由此可以推断，在<code class="highlighter-rouge">objc_msgSend</code>确实查找了缓存。这个可以很强力的说明了<code class="highlighter-rouge">objc_msgSend</code>会先去缓存中查找实现。</p>
+
+<h1 id="总结">总结</h1>
+<p>通过解析objc_msgSend，比较形象的了解了Objective-C中消息发送的过程，其中有一些汇编代码。虽然过程很痛苦，但是收获也是很大。虽然汇编看的似懂非懂，重点是理解这个过程。其实这个过程还是很直观的。</p>
+
+<ol>
+  <li>查找缓存</li>
+  <li>查找当前类的缓存和方法列表</li>
+  <li>查找父类的缓存和方法列表</li>
+  <li>动态方法解析</li>
+  <li>消息转发</li>
+</ol>
+
+<p>这两篇文章都比较虚，后面会来看一下，我们在工作中可以利用runtime来干些什么。毕竟实用才是王道</p>
+
+<h1 id="参考">参考</h1>
+<ul>
+  <li><a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E4%BB%8E%E6%BA%90%E4%BB%A3%E7%A0%81%E7%9C%8B%20ObjC%20%E4%B8%AD%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%91%E9%80%81.md">从源代码看 ObjC 中消息的发送</a></li>
+  <li><a href="https://www.jianshu.com/p/4d619b097e20">神经病院Objective-C Runtime住院第二天——消息发送与转发</a></li>
+  <li><a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a></li>
+  <li><a href="http://www.mulle-kybernetik.com/artikel/Optimization/opti-9.html">Obj-C Optimization: The faster objc_msgSend</a></li>
+  <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html">Objective-C Runtime Programming Guide</a></li>
+</ul>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=Objective-C Runtime --- 消息发送&amp;url=Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B">
+        <section class="post">
+            <h2>记录一次解决安装fastlane报错过程</h2>
+            <p>最近做新项目，因为将来会涉及到频繁打包去测试。为了提高打包效率，决定使用下 fastlane。按照流程先来安装。结果不出意料的报错了。 ![](http://ohg2bgicd.bkt.clouddn.com/1527133572.png) 我去，我命令行本来就不熟悉，再加上这个是一个 ruby 工具。我更不会 ruby。心里一万只草泥马奔过。做 iOS 需要会的好多啊。结果从下午 5 点半搞到 7 点也没搞定。算了回家吃饭了。回到家，用家里的电脑装，发现异常顺利，一点错不报，一下就成功了。这让我好难受，心里想估计是 Xcode command...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">
+        <section class="post">
+            <h2>Objective-C Runtime —— 基础数据结构</h2>
+            <p>iOS工作两年了，几乎每次面试都会被问到Runtime的东西，自己一直没有系统的学习过Runtime。正好这段时间比较闲，自己也想深入的学习下iOS。所以那就先了解下基础的东西吧。以前听到Runtime一直感觉很高深，什么黑魔法啊一堆名词，其实去了解下的话，没有那么神奇。这篇文章分三大部分来介绍Runtime，是一个循序渐进的过程。第一呢，我们需要了解Objective-C的对象模型，然后才能去理解消息发送的过程，再然后再去了解下Runtime都能干什么，毕竟如果一个技术没有落地的应用，那它就没啥价值了。这篇文章基于objc4-723源码进行分析，GitHub有一个可调试库，地址。 简介 Runtime是什么？官方文档第一段就给出了答案。 The Objective-C language defers as many decisions as it can from compile...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

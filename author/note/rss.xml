@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>freelf.me</title>
+   
+   <link></link>
+   <description>Freelf's Blog</description>
+   <language>en-uk</language>
+   <managingEditor> Freelf</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>理解属性</title>
+	  <link>//%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7</link>
+	  <author>Freelf</author>
+	  <pubDate>2016-02-29T15:42:49+00:00</pubDate>
+	  <guid>//%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7</guid>
+	  <description><![CDATA[
+	     <p>属性是Objective-C的一项特性，用于封装对象内的数据。OC对象常会把需要的数据保存为实例变量，实例变量一般通过存取方法（这里的存取方法指的就是setter/getter方法）来访问实例变量。其中setter方法用于写入变量的值，getter方法用于读取变量的值。大家也许已经使用过属性这一概念了，不过大家未必会知道其中所有的细节，而且还有很多与属性有关的麻烦事。这里将会告诉大家有哪些问题可以用属性解决，并指出其中所体现出的关键特性。
+<!-- more -->
+​       在一个描述个人信息的类中，我们可能会存放人名，生日，地址等内容，我们可以在类的.h文件中声明一些实例变量，如下图所示：
+<span><img src="\images\理解属性\1.png" /></span>
+以前写过java或者C++的人应该比较熟悉这种写法，可以定义实例变量的作用域，然而编写OC却很少这样做。这种写法的问题是：对象布局在编译器就已经固定了，只要碰到<code class="highlighter-rouge">_firstName</code>变量的代码，编译器就把其替换为“偏移量”，这个偏移量是“硬编码”，表示该变量距离存放对象的内存区域的起始地址有多远。这样做目前看来没有什么问题，但是如果又增加了一个实例变量，如下图所示：
+<span><img src="\images\理解属性\2.png" /></span>
+原来表示<code class="highlighter-rouge">_firstName</code>的偏移量现在却指向了<code class="highlighter-rouge">_dateOfBrith</code>了，把偏移量硬编码于其中的那些代码都会读到错误的值，下面这个表可以演示这个过程，请自己对比加入<code class="highlighter-rouge">_dateOfBrith</code>这一实例变量之前和之后的内容布局，其中假设指针为4个字节（64位系统为8个字节）
+<span><img src="\images\理解属性\3.png" /></span>
+​        如果代码使用了编译期计算出来的偏移量，那么在修改类定义后必须重新编译。否则就会出错，比如：某个代码库中的代码使用了一份旧的类定义，如果和其相链接的代码使用了新的类定义，那么运行时就会出现不兼容的现象。各种变成语言都有应对这个问题的方法。OC的做法是，把实例变量当做一种存储偏移量的“特殊变量”，交由类对象保留。偏移量会在运行期查找，如果类的定义改变了，那么存储的偏移量也就变了，这样无论何时访问实例变量，总是使用正确的偏移量。甚至可以在运行期向类中新增实例变量，这就是稳固的“应用程序二进制接口”（ABI），ABI定义了许多内容，其中一项就是生成代码时所应该遵循的规范，有这种稳固的ABI，我们就可以在“class-continuation分类”中或实现文件中定义实例变凉了，所以说，不一定要在接口中把全部实例变量都声明好，可以将某些变量从接口的public区段移走，以便保护和类实现有关的内容。
+​       这个问题还有一种解决方法，就是尽量不要直接访问实例变量，而是通过存取方法来做。虽说属性最终还是通过实例变量来实现，但它却提供了一种简洁的抽象机制。你可以自己编写存取方法。在OC的编码风格中，存取方法有着严格命名规范，正因为这种规范，所以OC才能根据名称自动创建存取方法，这是<code class="highlighter-rouge"><span class="k">@property</span></code>就派上用场了。
+​        在对象接口的定义中，可以使用属性，这是一种标准写法，能够访问封装在对象里的数据。因此可以把属性当成一种简称。其意思是说：编译器会自动写出一套存取方法，用以访问给定类型中具有给定名称的变量例如下面这个类:
+<span><img src="\images\理解属性\4.png" /></span>
+对于该类的使用者来说，上述代码写出来的类和下面这种写法等效；
+<span><img src="\images\理解属性\5.png" /></span>
+​        要访问属性，可以使用点语法，在纯C种，如果想访问分配在栈上的struct结构体里面的成员，也需要用类似的语法，编译器会把点语法转换为对存取方法的调用，使用点语法的效果和直接调用存取方法相同。因此使用点语法和直接调取存取方法之间没有丝毫的差别。
+​        然而属性还有更多的优势，如果用了属性，编译器会自动编写访问这些属性所需的方法，这个过程叫做“自动合成（autosynthesis）”，需要强调的是，这个过程编译器在编译器执行，所以编译器里面看不到这些“合成方法”的源代码。除了生成方法代码外，编译器还会向类中添加适当的实例变量，并且在属性名前加上下划线，以此作为实例变量的名字，在前面的例子中，会生成两个实例变量，分别是<code class="highlighter-rouge">_firstName</code>和<code class="highlighter-rouge">_lastName</code>，也可以在类的.m文件中使用<code class="highlighter-rouge">@sythesize</code>语法来指定实例变量的名字，如下图：
+<span><img src="\images\理解属性\5.png" /></span>
+​        不过一般不推荐这么做，因为所有人都用一套方案，那么写出来的代码大家都看的懂。
+​       如果不想令编译器自动合成存取方法，则可以自己在.m文件中实现，如果只是实现了一个，那么另一个还是编译器来合成。还有一种方法可以阻止编译器自动合成存取方法，就是使用<code class="highlighter-rouge">@dynamic</code>关键字，它会告诉编译器不要自动创建实现属性所用的实例变量，也不要为其创建存取方法，而且在编译器访问属性代码时，即便发现没有定义存取方法，也不会报错，它相信这些方法可以在运行期找到。比如说：如果从CoreData框架中的NSManagedObject类里继承一个子类，那么就需要在运行期动态创建存取方法，继承NSManagedObject时之所以这样做，是因为子类的某些属性不是实例变量，其数据来自后端数据库中。</p>
+<pre><code class="language-objective-c">@interface Person : NSManagedObject
+@property NSString *firstName;
+@property NSString *lastName;
+@end
+</code></pre>
+<pre><code class="language-objective-c">@implementation Person
+@dynamic firstName,lastName;
+@end
+
+</code></pre>
+<p>​        上述代码中，编译器不会为上面这个类自动合成存取方法和实例变量，如果代码访问其中的属性编译器也不会发出警告信息。
+​         今天就写到这里吧，欢迎大家观看，下面将会写一下属性的特质。</p>
+
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>

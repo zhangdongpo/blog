@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>freelf.me</title>
+   
+   <link></link>
+   <description>Freelf's Blog</description>
+   <language>en-uk</language>
+   <managingEditor> Freelf</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>学习动画系列---寄宿图</title>
+	  <link>//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE</link>
+	  <author>Freelf</author>
+	  <pubDate>2016-11-22T11:54:36+00:00</pubDate>
+	  <guid>//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE</guid>
+	  <description><![CDATA[
+	     <p>  上一篇学习了下<code class="highlighter-rouge">CALayer</code>的概念，者一篇学习下<code class="highlighter-rouge">CALayer</code>的内部属性，我们先来解释下什么是寄宿图。在上一篇中，我们通过<code class="highlighter-rouge">CALayer</code>类创建了一个蓝色的背景图层，如果他仅仅是展现一个单调的颜色，~~那我还学他干啥？~~其实它还可以包含一张图片，它里面包含的图我们就叫寄宿图。这个名字太奇怪了。估计是翻译的问题吧。
+<!-- more --></p>
+<h1 id="contents属性">contents属性</h1>
+<h2 id="contents">contents</h2>
+<p>  <code class="highlighter-rouge">CALayer</code>有个<code class="highlighter-rouge">contents</code>属性，这个属性被定义为id类型，但是可不要被定义为id类型迷惑，如果给<code class="highlighter-rouge">contents</code>属性赋的值不是CGImage，那么他就是一个空白的layer。</p>
+
+<p>  这个奇怪的表现实由于Mac OS的历史原因造成的，因为在Mac OS中，这个属性对CGImage和NSImage都有作用。如果在iOS平台上将UIImage的值赋给它，只能得到一个空白的layer。</p>
+
+<p>  事实上，我们真正要赋值的是一个CGImageRef的指针，UIImage有个CGImage的属性，返回一个CGImageRef，如果我们直接把这个值赋给<code class="highlighter-rouge">contents</code>，编译器会提醒我们需要加上(__bridge id)，这是为啥呢，因为CGImageRef是一个Core Foundation类型的。因为Core Foundation对象和Cocoa对象在运行时是toll-free bridging的，所以我们可以通过__bridge关键字转换的。所以我们用下面的代码就可以让一个view现实一个图片，是不是很神奇。算了，当我没说。还是看代码吧：</p>
+
+<pre><code class="language-objective-c">    UIImage *image = [UIImage imageNamed:@"Slice1.png"];
+    _backView.layer.contents = (__bridge id)image.CGImage;
+</code></pre>
+
+<p>  通过上面的代码，我们可以实现如下图所示的效果：</p>
+
+<p><span><img src="\images\寄宿图\1.png" /></span></p>
+
+<p>  用这些简单的代码做了一件非常有趣的事情，就是我们利用<code class="highlighter-rouge">CALayer</code>在一个普通的<code class="highlighter-rouge">UIView</code>中显示了一个图片，而不是用UIImageView。通过操作<code class="highlighter-rouge">CALayer</code>可以让<code class="highlighter-rouge">UIView</code>更加有趣啦。哈哈哈！</p>
+
+<h2 id="contentgravity">contentGravity</h2>
+
+<p>  这个属性对应的是<code class="highlighter-rouge">UIView</code>的contentMode属性。但是它是一个<code class="highlighter-rouge">NSString</code>类型，contentGravity可选的常量值有一下这些：</p>
+
+<ul>
+  <li>kCAGravityCenter</li>
+  <li>kCAGravityTop</li>
+  <li>kCAGravityBottom</li>
+  <li>kCAGravityLeft</li>
+  <li>kCAGravityRight</li>
+  <li>kCAGravityTopLeft</li>
+  <li>kCAGravityTopRight</li>
+  <li>kCAGravityBottomLeft</li>
+  <li>kCAGravityBottomRight</li>
+  <li>kCAGravityResize</li>
+  <li>kCAGravityResizeAspect</li>
+  <li>kCAGravityResizeAspectFill</li>
+</ul>
+
+<p>和<code class="highlighter-rouge">UIView</code>的那些属性是对应的。</p>
+
+<h2 id="contentsscale">contentsScale</h2>
+
+<p>  contentsScale属性定义了寄宿图的像素尺寸和视图大小的比例，默认情况下它是1.0。contentsScale属性其实是适配Retina屏幕的，如果他的值为1.0，那么一个点绘制一个像素，如果为2.0，那么一个点绘制2个像素。所以当用代码手动处理寄宿图的时候，一定要记住手动设置图层的contentsScale属性，否则，你的图片在Retina屏幕上面就显示的不对啦！</p>
+
+<h2 id="masktobounds">maskToBounds</h2>
+
+<p>  这个属性对应<code class="highlighter-rouge">UIView</code>的clipsToBounds的属性，它可以用来决定是否显示超出边界的内容，把它设置为YES，图片就不会超出边界绘制了。</p>
+
+<h2 id="contentsrect">contentsRect</h2>
+
+<p>  <code class="highlighter-rouge">CALayer</code>的contentsRect属性允许我们再图层边框里显示寄宿图的一个子区域。这涉及到图片是如何显示和拉伸的，所以比contentsGravity灵活多了，和<code class="highlighter-rouge">bounds</code>、<code class="highlighter-rouge">frame</code>不同，这个属性不是按点来计算的，它使用了单位坐标。单位坐标是指定在0~1之间的。是一个相对的值。讲到这个，就有必要介绍下iOS使用的坐标系统了。</p>
+
+<ul>
+  <li>点–在iOS和Mac OS中最常见的坐标体系。点就像是虚拟的像素，也被称作逻辑像素。在标准设备上，一个点就是一个像素，但是在Retina设备上，一个点等于2*2个像素。iOS用电作为屏幕的坐标测算体系就是为了在Retina设备和普通设备能有一致的视觉效果。</li>
+  <li>像素–物理像素坐标不会用来屏幕布局，但是仍然与图片有相对关系。UIImage是一个屏幕分辨率解决方案，所以指定点来度量大小。但是一些底层的图片表示如CGImage就会使用像素，所以你要清楚再Retina设备和普通设备上，他们表现出来了不同的大小。</li>
+  <li>单位–对于与图片大小或是图层边界相关的显示，单位坐标是一个方便的度量方式，当大小改变的时候，也不需要再次调整。单位坐标在OpenGL这种纹理坐标系统中用得很多，Core Animation中也用到了单位坐标。</li>
+</ul>
+
+<p>默认的contentsRect是{0,0,1,1}，这意味着整个寄宿图都默认都是可见的，如果我们指定一个小一点的矩形，图片就会裁剪，这个我们可以自己去代码试验下。</p>
+
+<p>  事实上给contentsRect设置一个负数的原点或者是大于{1,1}的尺寸也是可以的。这种情况下，最外面的像素会被拉伸以填充剩下的区域。</p>
+
+<p>  利用contentsRect可以把一大张图切成小图显示，下面我们用代码来显示下，首先我们需要载入一张大图：</p>
+
+<p><span><img src="\images\寄宿图\Slice1.png" /></span></p>
+
+<p>我们怎么把这个大图分别裁成四个小图在app中显示呢，其实利用这个属性很简单。我们把这张大图赋值给四个独立的图层contents，然后设置每个layer的contentsRect来去掉我们不想要的部分。我们在StoryBoard上再拖四个view上来，然后看我们下面的代码：</p>
+
+<pre><code class="language-objective-c">- (void)viewDidLoad {
+    [super viewDidLoad];
+    UIImage *image = [UIImage imageNamed:@"Slice1.png"];
+    _backView.layer.contents = (__bridge id)image.CGImage;
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0, 0, 0.5, 0.5) toLayer:_gaoyuanyuan.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0.5, 0, 0.5, 0.5) toLayer:_jiangshuying.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0, 0.5, 0.5, 0.5) toLayer:_sijiali.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0.5, 0.5, 0.5, 0.5) toLayer:_anji.layer];
+}
+
+
+- (void)addSpriteImage:(UIImage *)image withContentRect:(CGRect)rect toLayer:(CALayer *)layer //set image
+{
+    layer.contents = (__bridge id)image.CGImage;
+   
+    layer.contentsGravity = kCAGravityResizeAspect;
+
+    layer.contentsRect = rect;
+}
+
+</code></pre>
+
+<p>这样就实现了我们的效果：</p>
+
+<p><span><img src="\images\寄宿图\2.png" /></span></p>
+
+<h2 id="contentscenter">contentsCenter</h2>
+
+<p>  现在我们介绍的最后一个和内容有关的属性是contentsCenter，看这个名字可能会以为跟图片的中心点位置有关。不过这个名字误导了我们。contentsCenter其实是一个CGRect，它定义了一个固定的边框和一个在图层上可以拉伸的区域。改变了contentsCenter的值并不会影响到寄宿图的显示，除非这个图层的位置改变了你才看得到效果。怎么理解contentsCenter呢，看下面这个图就懂啦！</p>
+
+<p><span><img src="\images\寄宿图\3.png" /></span></p>
+
+<p>  其实在IB中也可以设置这个就是:</p>
+
+<p><span><img src="\images\寄宿图\4.png" /></span></p>
+
+<h1 id="custom-drawing">Custom Drawing</h1>
+
+<p>  给contents设置CGImage不是唯一设置寄宿图的方法。我们还可以直接用Core Graphics直接绘制寄宿图。能够通过继承<code class="highlighter-rouge">UIView</code>并实现<code class="highlighter-rouge">-drawRect:</code>方法来绘制。</p>
+
+<p>  <code class="highlighter-rouge">-drawRect:</code>方法没有默认的实现，因为<code class="highlighter-rouge">UIView</code>并不在意寄宿图到底是单调的颜色还是图片，寄宿图并不是必须的。如果<code class="highlighter-rouge">UIView</code>检测到<code class="highlighter-rouge">-drawRect:</code>方法调用了，它就会给视图分配一个寄宿图，寄宿图的像素尺寸是视图大小乘以<code class="highlighter-rouge">contentsScale</code>的值。</p>
+
+<p>  如果我们不需要寄宿图，那就不要复写这个方法了，这回造成CUP资源和内存的浪费，这也是苹果为什么建议我们，如果没有自定义的绘制就不要在子类中写一个空的<code class="highlighter-rouge">-drawRect:</code>方法啦。</p>
+
+<p>  当视图在屏幕上出现的时候<code class="highlighter-rouge">-drawRect:</code>方法自动会调用。<code class="highlighter-rouge">-drawRect:</code>方法里面的代码利用了Core Graphics去绘制一个寄宿图，然后内容就会被缓存起来知道它需要被更新（通常是我们调用了<code class="highlighter-rouge">-setNeedsDisplay</code>方法，尽管影响到表现效果的属性值被更改时，一些试图类型会被自动重绘，如<code class="highlighter-rouge">bounds</code>属性）。虽然<code class="highlighter-rouge">-drawRect:</code>方法是一个UIView方法，事实上都是底层的CALayer安排了重绘工作和保存了因此产生的图片。</p>
+
+<p>  CALayer有一个可选的<code class="highlighter-rouge">delegate</code>属性，实现了<code class="highlighter-rouge">CALayerDelegate</code>协议，当CALayer需要一个内容特定的信息时，就会从协议中请求。CALayerDelegate是一个非正式协议，其实就是说没有CALayerDelegate @protocol可以让你在类里面饮用啦。你只需要调用你想调用的方法，CALayer会帮你做剩下的。</p>
+
+<p>  当需要被重绘时，CALayer会请求它的代理给它一个寄宿图来显示。它通过调用下面这个方法做到的：</p>
+
+<pre><code class="language-objective-c">-(void)displayLayer:(CALayerCALayer *)layer;
+</code></pre>
+
+<p>  趁这个机会，如果代理想直接设置contents属性的话，他就可以这么做，不然没有别的方法可以调用了。如果代理不实现<code class="highlighter-rouge">-displayLayer:</code>方法，CALayer就会转而尝试调用下面这个方法：</p>
+
+<pre><code class="language-objective-c">- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+</code></pre>
+
+<p>  在调用这个方法之前，CALayer创建了一个合适尺寸的空寄宿图（尺寸有bounds和contentsScale决定）和一个Core Graphics的绘制上下文环境，为绘制寄宿图做准备，他作为ctx参数传入。</p>
+
+<p>  让我们用代码来看一下他的作用：</p>
+
+<pre><code class="language-objective-c">- (void)viewDidLoad {
+    [super viewDidLoad];
+   CALayer *backLayer = _backView.layer;
+    
+    CALayer *blueLayer = [CALayer layer];
+    
+    blueLayer.backgroundColor = [UIColor blueColor].CGColor;
+    
+    blueLayer.frame = CGRectMake(0, 0, 100, 100);
+    
+    blueLayer.contentsScale = [UIScreen mainScreen].scale;
+    
+    blueLayer.delegate = self;
+    
+    [backLayer addSublayer:blueLayer];
+    
+    [blueLayer display];
+}
+    -(void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
+{
+    
+    CGContextSetLineWidth(ctx, 10.0f);
+    CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+    CGContextStrokeEllipseInRect(ctx, layer.bounds);
+}
+
+</code></pre>
+
+<p>通过上述代码就可以实现下图的效果：</p>
+
+<p><span><img src="\images\寄宿图\5.png" /></span></p>
+
+<p>注意一些东西：</p>
+
+<ul>
+  <li>我们再blueLayer上显示的调用了<code class="highlighter-rouge">-display</code>。不同于UIView，当图层显示在屏幕上时，CALayer不会自动重绘它的内容。它把重绘的决定权交给了开发者。</li>
+  <li>尽管我们没有用<code class="highlighter-rouge">masksToBounds</code>属性，绘制的那个圆依然沿边界被剪裁了，这是因为你当你使用CALayerDelegate绘制寄宿图的时候，并没有对超出边界外的内容提供绘制支持。</li>
+</ul>
+
+<p>  现在我们理解了CALayerDelegate，并知道怎么使用它。但是除非我们自己创建了一个单独的图层，几乎没有机会用到CALayerDelegate。因为当UIView创建了它的宿主图层时，它就自动把图层的delegate设置成自己了，并切提供了一个<code class="highlighter-rouge">-displayLayer:</code>的实现，那所有问题都没有了。</p>
+
+<p>  当使用寄宿了视图的图层的时候，我们也不必实现<code class="highlighter-rouge">-displayLayer:</code>和<code class="highlighter-rouge">-drawLayer:inContext:</code>方法来绘制我们的寄宿图。通常做法是实现UIView的<code class="highlighter-rouge">-drawRect:</code>方法，UIView会帮我们做完剩下的工作，包括在需要重绘时执行<code class="highlighter-rouge">-display</code>方法。</p>
+
+<p>  好啦，终于又看完了一章，坚持！！</p>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>学习动画系列---理解CALayer</title>
+	  <link>//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer</link>
+	  <author>Freelf</author>
+	  <pubDate>2016-11-21T15:42:49+00:00</pubDate>
+	  <guid>//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer</guid>
+	  <description><![CDATA[
+	     <p>  好长时间没写东西了，由于刚换了工作，一直在忙于熟悉业务，和一些新业务的开发，没有时间对自己的技术进行修行。这段时间终于闲下来了，可以找些自己感兴趣的东西来好好学习下了。最近在学习些高级动画，在gitbook上面看到一个<a href="https://www.gitbook.com/book/zsisme/ios-/details">iOS核心动画高级技巧</a>，阅读了下，写的是一些动画的基础。毕竟学东西，我们要从基础学起嘛。你连1+1都不会算，怎么学习数学，这是一个道理。好吧，我有些跑题了😀。我们平常用的UIView可以实现一些基础的动画，但是有时产品🐶要做一个非常牛逼的动画时，我们就有些傻眼了。这里就需要用到一个高级东西了，在我们iOS里面叫Core Animation，下面我们就来系列学下这个牛逼的东西。先来学习下比UIView高级些的东西，这个东西就叫CALayer。
+<!-- more --></p>
+<h1 id="calayer和uiview">CALayer和UIView</h1>
+<p>  iOS中所有的view都是<code class="highlighter-rouge">UIView</code>派生来的。<code class="highlighter-rouge">UIView</code>可以处理触摸事件，可以支持绘图，可以做仿射变换（其实就是旋转和缩放），<code class="highlighter-rouge">UIView</code>还可以做简单的类似于滑动，或者渐变动画。</p>
+
+<p>  <code class="highlighter-rouge">CALayer</code>和<code class="highlighter-rouge">UIView</code>类似，同样可以包含一些内容，管理layer的位置，它也有一些方法和属性用来做动画和变幻，和<code class="highlighter-rouge">UIView</code>最大的不同就是<code class="highlighter-rouge">CALayer</code>不能处理用户交互。</p>
+
+<p>  每一个<code class="highlighter-rouge">UIView</code>都有一个<code class="highlighter-rouge">CALayer</code>的实例的图层属性，<code class="highlighter-rouge">UIView</code>的职责就是负责管理创建这个layer，以确保党姿势图在层级关系中添加或者移除时，他们关联的图层也同样对应在层级关系树当中有同样的操作。</p>
+
+<p>  实际上这些背后关联的图层才是真正用来在屏幕上显示和做动画的，<code class="highlighter-rouge">UIView</code>仅仅是对它的一个封装。提供了一些iOS类似于处理触摸的具体功能，以及Core Animation底层方法的高级接口。至于为什么iOS要基于<code class="highlighter-rouge">UIView</code>和<code class="highlighter-rouge">CALayer</code>提供两个平行的层级关系呢？~~这不是多此一举么？~~这样做的原因在于职责分离，也能避免很多的重复代码。在iOS和Mac OS两个平台上，时间和用户交互有很多不同，这个大家都能理解，一个是多点触控，一个是鼠标键盘。把这种共能逻辑分开并应用的独立的Core Animation框架，苹果就能再iOS和Mac OS之间共享代码。反正底层都一样，只是封装成一个iOS用，一个Mac OS用。这就是iOS有UIKit，Mac OS有AppKit。</p>
+
+<p>  实际上，这里并不是两个层级关系，而是四个，处理视图层级和图层树，还存在呈现树和渲染树。我还没有看到这里，后面看到了在写后两个层级。😁</p>
+
+<h1 id="calayer的能力">CALayer的能力</h1>
+
+<p>  其实呢，对于一些简单的需求来说，我们没必要处理<code class="highlighter-rouge">CALayer</code>。因为<code class="highlighter-rouge">UIView</code>的动画API可以让动画变得简单。但是简单的代价就是不灵活。对于我这种完美主义➕强迫症患者来说，你这么不听话，让我怎么玩啊。于是我们就需要求Core Animation来帮忙了。我们始终要相信我们可以做出很牛逼的效果。请原谅我又吹牛逼了😄。</p>
+
+<p>  我们已经说了<code class="highlighter-rouge">CALayer</code>不能处理触摸时间，那么<code class="highlighter-rouge">CALayer</code>有哪些<code class="highlighter-rouge">UIView</code>没有的功能呢，上帝是公平的。既然<code class="highlighter-rouge">CALayer</code>不能处理触摸事件，那么它肯定有一些强大的功能。下面我们来列举下：</p>
+
+<ul>
+  <li>阴影，圆角，带颜色的边框。</li>
+  <li>3D变换。</li>
+  <li>非矩形范围。ps：这个还不知是个什么东东。</li>
+  <li>透明遮罩。</li>
+  <li>多级非线性动画。ps：这个也不知道是什么东西。</li>
+</ul>
+
+<p>  虽然我不懂有些东西，但是当我读玩这本书并且写完这个系列时，~~我必将很吊~~。</p>
+
+<h1 id="使用calayer">使用CALayer</h1>
+
+<p>  废了这么多话，下面来具体使用下CALayer下吧，毕竟光说不用嘴上功夫。下面打开你的<code class="highlighter-rouge">Xcode</code>然后cmd+shift+n，然后想一个酷炫的名字开始我们使用<code class="highlighter-rouge">CALayer</code>吧。（ps：每次新建工程我想名字都要想好久哦。语文不好真的不行。）</p>
+
+<p>  我们要怎么使用<code class="highlighter-rouge">CALayer</code>呢，我们要做到的就是在一个橘色的view上面加一个蓝色块，不用通过<code class="highlighter-rouge">addSubView</code>。好吧，在屏幕中间线添加那个橘色的view。这个我想小学生都会把。对不起，我又看不起小学生了。不扯别的了。不管你通过IB还是代码，反正我们很快就可以把橘色的view添加上来，下面我们通过下面的代码就可以把蓝色的小块加上来。</p>
+
+<pre><code class="language-objective-c">  //取到橘色view的backing layer
+  CALayer *backLayer  = self.backView.layer;
+  //新建一个蓝色layer
+  CALayer *blueLayer = [CALayer layer];
+  blueLayer.backgroundColor = [UIColor blueColor].CGColor;
+  blueLayer.frame = CGRectMake(0, 0, 50, 50);
+  //添加到橘色view的backing layer
+  [backLayer addSublayer:blueLayer];
+</code></pre>
+
+<p>  通过上面的代码我们就可以实现了，有图有真相。请看下图：
+<span><img src="\images\CALayer使用\1.png" /></span></p>
+
+<p>  一个view只有一个相关联的图层（自动创建），同事它也可以支持添加无数个图层，我们可以显示的创建一个单独的图层，并且把它直接添加到视图关联图层的自图层。尽管可以这样添加图层，但往往我们只是简单的处理视图，他们关联的图层并不需要额外的手动添加字图层。</p>
+
+<p>  使用关联的视图而不是<code class="highlighter-rouge">CALayer</code>的好处在于，你能使用所有<code class="highlighter-rouge">CALayer</code>底层特性的同时，也可以使用<code class="highlighter-rouge">UIView</code>的高级API。（比如自动排版，布局和事件处理）。</p>
+
+<p>  然而，在下面这些条件的时候，我们可能更需要<code class="highlighter-rouge">CALayer</code>而不是<code class="highlighter-rouge">UIView</code>：</p>
+
+<ul>
+  <li>开发同事可以在Mac OS上运行的跨平台应用。</li>
+  <li>使用多种CALayer子类，并且不想创建额外的<code class="highlighter-rouge">UIView</code>去封装他们的所有。</li>
+  <li>做一些对性能特别挑剔的工作。对于我们来说，我们都希望做一些好的产品，这是我们的追求嘛，所以基于这一点，我们就需要好好学习下这本书。</li>
+</ul>
+
+<p>  当然了，这些例子都很少见。总得来说，处理<code class="highlighter-rouge">UIView</code>比单独处理<code class="highlighter-rouge">CALayer</code>更加方便。</p>
+
+<h1 id="总结">总结</h1>
+
+<p>  这里我只是简单的了解了下<code class="highlighter-rouge">CALayer</code>，后面我会继续学下这个类的一些其他东西，再来分享。</p>
+
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern",
+    "url": "//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2018-09-28">28 Sep 2018</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>单例模式限制一个类仅仅有一个实例。每个这个类的引用都指向同一个实例。在 iOS 开发中非常常见这种模式，因为 Apple 广泛使用单例模式。
+UML 图如下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1538101105.png" alt="" />
+“singleton plus”模式也很常用，这个模式提供了一个共享单例，但是也允许其他实例被创建。</p>
+
+<!-- more -->
+
+<h2 id="when-should-you-use-it">When should you use it?</h2>
+
+<p>如果一个类有多个实例会导致问题或者不符合逻辑时使用单例模式。
+如果在大部分时间共享实例有用，但是你也想要创建一个自定义实例时使用 sigleton plus 模式。<code class="highlighter-rouge">FileManager</code>就是一个例子。他有一个<code class="highlighter-rouge">default</code>实例，这是一个单例，但是你也可以自己创建一个。如果你再后台线程使用它，通常需要创建一个自己的。</p>
+
+<h2 id="playground-example">Playground example</h2>
+
+<p><strong>单例模式</strong>是<strong>创建模式</strong>的一种。因为单例是关于创建一个共享实例。
+单例和 singleton plus 在 Apple 的框架中很普遍。
+比如：<code class="highlighter-rouge">UIApplication</code>是一个纯单例。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">UIKit</span>
+
+<span class="c1">// MARK: - Singleton</span>
+<span class="k">let</span> <span class="nv">app</span> <span class="o">=</span> <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span>
+<span class="c1">// let app2 = UIApplication()</span>
+</code></pre></div></div>
+<p>如果你把 app2 解注，会编译错误。<code class="highlighter-rouge">UIApplication</code>不允许创建其他实例。
+你也可以创建自己的单例类，比如以下代码：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">MySingleton</span> <span class="p">{</span>
+  <span class="c1">// 1</span>
+  <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">MySingleton</span><span class="p">()</span>
+  <span class="c1">// 2</span>
+  <span class="kd">private</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// 3</span>
+<span class="k">let</span> <span class="nv">mySingleton</span> <span class="o">=</span> <span class="kt">MySingleton</span><span class="o">.</span><span class="n">shared</span>
+<span class="c1">// 4</span>
+<span class="c1">// let mySingleton2 = MySingleton()</span>
+</code></pre></div></div>
+<ol>
+  <li>首先声明一个 <code class="highlighter-rouge">public static</code> 属性，叫做<code class="highlighter-rouge">shared</code>,这是一个单例实例。</li>
+  <li>把<code class="highlighter-rouge">init</code>方法私有化，不允许创建其他的实例。</li>
+  <li>使用<code class="highlighter-rouge">MySingleton.shared</code>获取单例。</li>
+  <li>如果你创建额外的实例将会导致编译错误。</li>
+</ol>
+
+<p>singleton plus 例子如下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - Singleton Plus</span>
+<span class="k">let</span> <span class="nv">defaultFileManager</span> <span class="o">=</span> <span class="kt">FileManager</span><span class="o">.</span><span class="k">default</span>
+<span class="k">let</span> <span class="nv">customFileManager</span> <span class="o">=</span> <span class="kt">FileManager</span><span class="p">()</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">FileManager</code>提供了<code class="highlighter-rouge">default</code>单例。
+我们可以创建一个新的实例，并不会导致编译错误。这说明<code class="highlighter-rouge">FileManager</code>提供了 singleton plus 模式。
+我们可以很简单的创建自己的 singleton plus 模式类，比如下面代码：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">SingletonPlus</span> <span class="p">{</span>
+  <span class="c1">// 1</span>
+  <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">SingletonPlus</span><span class="p">()</span>
+  <span class="c1">// 2</span>
+  <span class="kd">public</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// 3</span>
+<span class="k">let</span> <span class="nv">singletonPlus</span> <span class="o">=</span> <span class="kt">SingletonPlus</span><span class="o">.</span><span class="n">shared</span>
+<span class="c1">// 4</span>
+<span class="k">let</span> <span class="nv">singletonPlus2</span> <span class="o">=</span> <span class="kt">SingletonPlus</span><span class="p">()</span>
+</code></pre></div></div>
+<ol>
+  <li>我们声明一个<code class="highlighter-rouge">shared</code>属性，就像单例模式一样。有时这个属性也叫做<code class="highlighter-rouge">default</code>。</li>
+  <li>不想纯单例，我们把<code class="highlighter-rouge">init</code>方法声明为<code class="highlighter-rouge">public</code>,允许创建额外的实例。</li>
+  <li>可以通过<code class="highlighter-rouge">MySingletonPlus.shared</code>获取单例。</li>
+  <li>也可以创建一个新的实例。</li>
+</ol>
+
+<h2 id="what-should-you-be-careful-about">What should you be careful about?</h2>
+
+<p>单例模式非常容易滥用。
+如果你某个地方想用单例，首先考虑下其他方式完成任务。
+比如：如果你仅仅从一个 view controller 传递消息到另一个 view controller，单例不适合。可以通过一个初始化函数或者属性传递。
+如果你确定你确实需要单例，考虑下是否 singleton plus 更有用。
+是否多个实例会导致问题？是否自定义实例会有用处？这两个问题的答案将会决定到底使用纯单例还是 singleton plus。
+单例通常会为测试带来麻烦。如果你将状态存在全局对象中，比如单例。那么测试的顺序可能很重要。模仿这些顺序很痛苦。这就是导致测试很痛苦的原因。
+如果你经常需要一些自定义实例，那么使用普通对象最好。</p>
+<h2 id="tutorial-project">Tutorial project</h2>
+
+<p>接下在我们继续以前的工程。
+上一章我们在使用策略时采用了硬编码的方式。用户不能手动改变策略。这节的任务就是可以让用户自己选择问题展示的方式。可以切换顺序展示还是随机展示。
+首先我们需要有一个地方去存储 app 的设置。你需要创建一个单例来实现这个。
+实现效果如下：</p>
+
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/2018-09-28%2012.06.40.gif" width="375px" /></p>
+
+<p><a href="https://github.com/zhangdongpo/LearnDesignPattern/tree/Singleton">Demo</a></p>
+
+<h2 id="预告">预告</h2>
+
+<p>下节将介绍备忘录模式。</p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern&amp;url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern">
+        <section class="post">
+            <h2>读《Design-Patterns-by-Tutorials》笔记——Memento Pattern</h2>
+            <p>备忘录模式允许一个对象可以被保存和恢复。包括三个部分。 1. **Originator**: 需要被保存和恢复的对象。 2. **Memento**: 代表保存的状态。 3. ** Caretaker**: 从 originator 请求保存，并且接收一个 memento 作为响应。caretaker 负责保管这些...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Strategy-Pattern">
+        <section class="post">
+            <h2>读《Design Patterns by Tutorials》笔记——Strategy Pattern</h2>
+            <p>策略模式定义了一系列可交换的对象，这些对象可以在运行时设置或者切换。这个模式有三部分。 使用策略的对象：在 iOS 开发中这个对象通常是一个UIViewController，但是理论上可以是任何需要交换表现的对象。 策略协议：定义了每个策略必须实现的方法。 策略对象：遵守策略协议的对象。 UML 图如下： When should you use it? 当你有两个或多个需要交换的表现时需要使用策略模式。 这个模式和委托模式相似：因为两个模式都是依赖于协议而不出具体对象来提高弹性。通常，任何实现了策略协议的对象可以在运行时被用做协议对象。...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

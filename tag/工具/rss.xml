@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>freelf.me</title>
+   
+   <link></link>
+   <description>Freelf's Blog</description>
+   <language>en-uk</language>
+   <managingEditor> Freelf</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>记录一次Reveal连接不上的问题</title>
+	  <link>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-06-07T22:00:29+00:00</pubDate>
+	  <guid>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98</guid>
+	  <description><![CDATA[
+	     <p>由于换了新电脑，项目也告一段落，Reveal有一段时间没用了。最近开了新的项目，需要频繁的UI调整，所以需要用到Reveal，结果死活无法在Reveal发现。我用的是断点的方法，比较简单，官方文档给了三种方法。详情请看<a href="http://support.revealapp.com/kb/getting-started/reveal-integration-guide">官方文档</a>。
+<!--more-->
+按照官方文档的断点教程走了一圈，运行App。Console打印出下面这句话：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Loading Reveal Server from /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/RevealServer.framework/RevealServer...
+Reveal Server was loaded successfully.
+</code></pre></div></div>
+<p>心里想着应该可以了，打开Reveal，瞬间打脸。跑官方demo也不行。后来结果搜索，发现有个<a href="http://support.revealapp.com/kb/tips-tricks/bonjour-debugging-why-cant-i-connect-to-my-app">调试方法</a>。跟着步骤来发现，在<code class="highlighter-rouge">curl -s -D - http://localhost:51441/application -o /dev/null</code>这一步，我失败了。
+理清下思绪，应该是最后请求Reveal的服务器失败了，但是我试了一下，把localhost改为127.0.0.1就成功了。在终端ping localhost发现localhost没有绑定上。最后通过编辑/etc/hosts文件，把localhost绑定上，再次运行，终于搞定了！关于绑定localhost可以参照<a href="https://stackoverflow.com/questions/19732360/ping-cannot-resolve-localhost-unknown-host-os-x">这个回答</a>。</p>
+
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>

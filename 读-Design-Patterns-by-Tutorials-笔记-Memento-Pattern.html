@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>读《Design-Patterns-by-Tutorials》笔记——Memento Pattern</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="读《Design-Patterns-by-Tutorials》笔记——Memento Pattern" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="读《Design-Patterns-by-Tutorials》笔记——Memento Pattern" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "读《Design-Patterns-by-Tutorials》笔记——Memento Pattern",
+    "url": "//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">读《Design-Patterns-by-Tutorials》笔记——Memento Pattern</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2018-10-03">03 Oct 2018</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>备忘录模式允许一个对象可以被保存和恢复。包括三个部分。</p>
+<ol>
+  <li><strong>Originator</strong>: 需要被保存和恢复的对象。</li>
+  <li><strong>Memento</strong>: 代表保存的状态。</li>
+  <li><strong> Caretaker</strong>: 从 originator 请求保存，并且接收一个 memento 作为响应。caretaker 负责保管这些 memento，并在稍后向 originator 提供这些 memento来恢复 originator 的状态。
+虽然不是严格要求，iOS通常使用<code class="highlighter-rouge">Encoder</code>来讲 originator 的状态保存到 memento，并且使用<code class="highlighter-rouge">Decoder</code>把 memento 恢复到 originator。这使编码和解码的逻辑可以通用。比如：<code class="highlighter-rouge">JSONEncoder</code>和<code class="highlighter-rouge">JSONDecoder</code>允许一个对象可以编码为 <code class="highlighter-rouge">JSON</code> 数据，也可以从<code class="highlighter-rouge">JSON</code>数据中解码。
+UML 图如下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1538272701.png" alt="" /></li>
+</ol>
+
+<!-- more -->
+
+<h2 id="when-should-you-use-it">When should you use it?</h2>
+
+<p>当我们想要保存并且以后需要恢复一个对象的状态时需要用到备忘录模式。
+比如：我们可以使用这个模式来实现一个游戏系统，originator 就是游戏的状态(比如：等级，健康状态，生命值等等)，memento 就是保存的数据，caretaker 就是游戏系统。
+我们可以持续保存一系列数据，表示一个以前的存档。我们也可以用这个模式在 IDEs或者图表软件中实现一些 undo/redo 的特性。</p>
+
+<h2 id="playground-example">Playground example</h2>
+
+<p><strong>备忘录模式</strong>是<strong>表现模式</strong>得一种。这是因为这个模式是和保存和恢复表现相关的模式。我们在这个例子中创建一个简单的游戏系统。
+首先我们需要定义一个 <strong>originator</strong>，用以下代码来创建：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">Foundation</span>
+
+<span class="c1">// MARK: - Originator</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Game</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+  
+  <span class="kd">public</span> <span class="kd">class</span> <span class="kt">State</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">attemptsRemaining</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">level</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">score</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="p">}</span>
+  <span class="kd">public</span> <span class="k">var</span> <span class="nv">state</span> <span class="o">=</span> <span class="kt">State</span><span class="p">()</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">rackUpMassivePoints</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">score</span> <span class="o">+=</span> <span class="mi">9002</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">monstersEatPlayer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">attemptsRemaining</span> <span class="o">-=</span> <span class="mi">1</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>这里，你定义了一个<code class="highlighter-rouge">Game</code>类，它有一个内部<code class="highlighter-rouge">State</code>保存 game 属性，并且它有操作游戏内动作的方法。我们还要声明<code class="highlighter-rouge">Game</code>和<code class="highlighter-rouge">State</code>遵守<code class="highlighter-rouge">Codable</code>协议。
+什么是<code class="highlighter-rouge">Codable</code>? Apple 在 Swift 4中引进了<code class="highlighter-rouge">Codable</code>。任何类型都可以遵守<code class="highlighter-rouge">Codable</code>,用 Apple 的话来说就是：转换本身的外部代表。本质上，就是一个可以存储和恢复其自己的类型。听起来很类似？是的，这的确就是我们想让 originator 拥有的能力。
+因为<code class="highlighter-rouge">Game</code>和<code class="highlighter-rouge">State</code>的所有属性都遵守了<code class="highlighter-rouge">Codable</code>协议，编译器会自动生成<code class="highlighter-rouge">Codable</code>协议所必须实现的方法。<code class="highlighter-rouge">String</code>,<code class="highlighter-rouge">Int</code>,<code class="highlighter-rouge">Double</code>和大多数<code class="highlighter-rouge">Swift</code>提供的类型都遵守了<code class="highlighter-rouge">Codable</code>协议。
+<code class="highlighter-rouge">Codable</code>是一个<code class="highlighter-rouge">typealias</code>,结合了<code class="highlighter-rouge">Encodable</code>和<code class="highlighter-rouge">Decodable</code>协议：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">typealias</span> <span class="kt">Codable</span> <span class="o">=</span> <span class="kt">Decodable</span> <span class="o">&amp;</span> <span class="kt">Encodable</span>
+</code></pre></div></div>
+<p>可编码类型可以通过<code class="highlighter-rouge">Encoder</code>编码为外部表示。外部表示的实际类型取决于你所使用的<code class="highlighter-rouge">Encoder</code>。<code class="highlighter-rouge">Foundation</code>提供了几种默认的编码器，比如<code class="highlighter-rouge">J SONEncoder</code>是为了把对象转化为 JSON 数据。
+可以通过<code class="highlighter-rouge">Decoder</code>把外部表现转化为可解码类型。<code class="highlighter-rouge">Foundation</code>也提供了解码器。比如<code class="highlighter-rouge">JSONDecoder</code>可以把 JSON 数据转化为对象。
+接下来我们需要一个<strong>memento</strong>，在上面的代码下面添加如下代码：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - Memento</span>
+<span class="kd">typealias</span> <span class="kt">GameMemento</span> <span class="o">=</span> <span class="kt">Data</span>
+</code></pre></div></div>
+<p>理论上，我们一点也不需要这样声明。这里就是说明你<code class="highlighter-rouge">GameMemento</code>实际上是<code class="highlighter-rouge">Data</code>。这将是<code class="highlighter-rouge">Encoder</code>存储的数据，并且是<code class="highlighter-rouge">Decoder</code>恢复的元数据。
+接下来，我们需要添加一个<strong>caretaker</strong>,添加如下代码：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - CareTaker</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">GameSystem</span> <span class="p">{</span>
+  
+  <span class="kd">private</span> <span class="k">let</span> <span class="nv">decoder</span> <span class="o">=</span> <span class="kt">JSONDecoder</span><span class="p">()</span>
+  <span class="kd">private</span> <span class="k">let</span> <span class="nv">encoder</span> <span class="o">=</span> <span class="kt">JSONEncoder</span><span class="p">()</span>
+  <span class="kd">private</span> <span class="k">let</span> <span class="nv">userDefaults</span> <span class="o">=</span> <span class="kt">UserDefaults</span><span class="o">.</span><span class="n">standard</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">save</span><span class="p">(</span><span class="n">_</span> <span class="nv">game</span><span class="p">:</span> <span class="kt">Game</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="k">try</span> <span class="n">encoder</span><span class="o">.</span><span class="nf">encode</span><span class="p">(</span><span class="n">game</span><span class="p">)</span>
+    <span class="n">userDefaults</span><span class="o">.</span><span class="nf">set</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">title</span><span class="p">)</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">load</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Game</span> <span class="p">{</span>
+    <span class="k">guard</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">userDefaults</span><span class="o">.</span><span class="nf">data</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="n">title</span><span class="p">),</span>
+      <span class="k">let</span> <span class="nv">game</span> <span class="o">=</span> <span class="k">try</span><span class="p">?</span> <span class="n">decoder</span><span class="o">.</span><span class="nf">decode</span><span class="p">(</span><span class="kt">Game</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+      <span class="k">else</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="kt">Error</span><span class="o">.</span><span class="n">gameNotFound</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">game</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Error</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Error</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">gameNotFound</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>我们先来模拟一下游戏过程：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - Example</span>
+<span class="k">var</span> <span class="nv">game</span> <span class="o">=</span> <span class="kt">Game</span><span class="p">()</span>
+<span class="n">game</span><span class="o">.</span><span class="nf">monstersEatPlayer</span><span class="p">()</span>
+<span class="n">game</span><span class="o">.</span><span class="nf">rackUpMassivePoints</span><span class="p">()</span>
+</code></pre></div></div>
+<p>然后存储一下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Save Game</span>
+<span class="k">let</span> <span class="nv">gameSystem</span> <span class="o">=</span> <span class="kt">GameSystem</span><span class="p">()</span>
+<span class="k">try</span> <span class="n">gameSystem</span><span class="o">.</span><span class="nf">save</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"Best Game Ever"</span><span class="p">)</span>
+</code></pre></div></div>
+<p>然后读取一下记录：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Load Game</span>
+<span class="n">game</span> <span class="o">=</span> <span class="k">try!</span> <span class="n">gameSystem</span><span class="o">.</span><span class="nf">load</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"Best Game Ever"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"Loaded Game Score: </span><span class="se">\(</span><span class="n">game</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">score</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Emmm,是不是很不错！</p>
+
+<h2 id="what-should-you-be-careful-about">What should you be careful about?</h2>
+
+<p>当添加和移除<code class="highlighter-rouge">Codable</code>属性时需要当心，编码和解码都是可以抛出错误的。如果我们使用<code class="highlighter-rouge">try!</code>强制解包，并且丢失了必要的数据，app 会 crash。
+为了规避这种问题，除非你确定操作可以成功，应该尽量避免使用<code class="highlighter-rouge">try!</code>。当改变模型时也需要提前规划。比如：我们可以给模型添加版本号或者使用带版本号的数据库。然而我们需要考虑入魂儿处理版本升级。我们可以选择当我们有一个新的版本时删掉旧的数据，或者创建一个升级路径把旧的数据转化为新的数据，或者使用这两种方法的结合。</p>
+
+<h2 id="tutorial-project">Tutorial project</h2>
+
+<p>下面我们继续给我们以前的 app 增加功能。我们将使用备忘录模式添加一个 app 重要的特性：保存<code class="highlighter-rouge">QuestionGroup</code>分数的能力。
+实现效果：</p>
+
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/2018-10-03%2010.57.41.gif" width="375px" /></p>
+
+<p>再次运行会在控制台打印：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Hiragana</span><span class="p">:</span> <span class="n">correctCount</span> <span class="mi">5</span><span class="p">,</span> <span class="n">incorrectCount</span> <span class="mi">6</span>
+<span class="kt">Katakana</span><span class="p">:</span> <span class="n">correctCount</span> <span class="mi">5</span><span class="p">,</span> <span class="n">incorrectCount</span> <span class="mi">5</span>
+<span class="kt">Basic</span> <span class="kt">Phrases</span><span class="p">:</span> <span class="n">correctCount</span> <span class="mi">0</span><span class="p">,</span> <span class="n">incorrectCount</span> <span class="mi">0</span>
+<span class="kt">Numbers</span><span class="p">:</span> <span class="n">correctCount</span> <span class="mi">0</span><span class="p">,</span> <span class="n">incorrectCount</span> <span class="mi">0</span>
+</code></pre></div></div>
+<p><a href="https://github.com/zhangdongpo/LearnDesignPattern/tree/Memento">Demo</a></p>
+
+<h2 id="预告">预告</h2>
+
+<p>下节我们将学习观察者模式。</p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=读《Design-Patterns-by-Tutorials》笔记——Memento Pattern&amp;url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern">
+        <section class="post">
+            <h2>读《Design-Patterns-by-Tutorials》笔记——Observer Pattern</h2>
+            <p>观察者模式让一个对象观察另一个对象的改变。在本章节，你将学习两种实现观察者模式的方法： 1. 使用 KVO 2. 使用一个`Observable`包装。 UML 图如下： ![](http://ohg2bgicd.bkt.clouddn.com/1538641129.png) 这个模式包含两个主要对象： 1. **Subject**是被观察对象。 2. **Observer**是观察对象。 不幸的是，Swift...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern">
+        <section class="post">
+            <h2>读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern</h2>
+            <p>单例模式限制一个类仅仅有一个实例。每个这个类的引用都指向同一个实例。在 iOS 开发中非常常见这种模式，因为 Apple 广泛使用单例模式。 UML 图如下： “singleton plus”模式也很常用，这个模式提供了一个共享单例，但是也允许其他实例被创建。 When should you use it? 如果一个类有多个实例会导致问题或者不符合逻辑时使用单例模式。...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

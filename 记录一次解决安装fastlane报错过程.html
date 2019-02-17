@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- Page Meta -->
-    <title>哈哈昂昂</title>
+    <title>记录一次解决安装fastlane报错过程</title>
     <meta name="description" content="Freelf's Blog" />
 
     <!-- Mobile Meta -->
@@ -28,21 +28,21 @@
     <style>.hljs { background: none; }</style>
 
     <!-- Ghost outputs important style and meta data with this tag -->
-        <link rel="canonical" href="//First-blog" />
+        <link rel="canonical" href="//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B" />
     <meta name="referrer" content="origin" />
     <link rel="next" href="/page2/" />
 
     <meta property="og:site_name" content="面向自由编程" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="哈哈昂昂" />
+    <meta property="og:title" content="记录一次解决安装fastlane报错过程" />
     <meta property="og:description" content="Freelf's Blog" />
-    <meta property="og:url" content="//First-blog" />
+    <meta property="og:url" content="//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B" />
     <meta property="og:image" content="/assets/images/cover1.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="哈哈昂昂" />
+    <meta name="twitter:title" content="记录一次解决安装fastlane报错过程" />
     <meta name="twitter:description" content="Freelf's Blog" />
-    <meta name="twitter:url" content="//First-blog" />
+    <meta name="twitter:url" content="//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B" />
     <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
 
     <script type="application/ld+json">
@@ -50,8 +50,8 @@
     "@context": "http://schema.org",
     "@type": "Website",
     "publisher": "面向自由编程",
-    "name": "哈哈昂昂",
-    "url": "//First-blog",
+    "name": "记录一次解决安装fastlane报错过程",
+    "url": "//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B",
     "image": "/assets/images/cover1.jpg",
     "description": "Freelf's Blog"
 }
@@ -100,7 +100,7 @@
     <article class="post">
 
         <header class="post-header">
-            <h1 class="post-title">哈哈昂昂</h1>
+            <h1 class="post-title">记录一次解决安装fastlane报错过程</h1>
             <section class="post-meta">
                 <!-- <a href='/'>Freelf</a> -->
 
@@ -109,13 +109,13 @@
                 <!-- <a href='/author/Freelf'>Freelf</a> -->
                 
                 
-                <time class="post-date" datetime="2014-08-12">12 Aug 2014</time>
+                <time class="post-date" datetime="2018-05-29">29 May 2018</time>
                 <!-- [[tags prefix=" on "]] -->
                 
                 <!-- on -->
                 
                 
-                <a href='/tag/fables'>Fables</a>
+                <a href='/tag/fastlane'>Fastlane</a>
                 
                 
                 
@@ -124,7 +124,16 @@
 
         <section class="post-content">
 
-            <p>My first blog in jekyll~~~</p>
+            <p>最近做新项目，因为将来会涉及到频繁打包去测试。为了提高打包效率，决定使用下 fastlane。按照流程先来安装。结果不出意料的报错了。</p>
+
+<!--more-->
+
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/1527133572.png" alt="" />
+我去，我命令行本来就不熟悉，再加上这个是一个 ruby 工具。我更不会 ruby。心里一万只草泥马奔过。做 iOS 需要会的好多啊。结果从下午 5 点半搞到 7 点也没搞定。算了回家吃饭了。回到家，用家里的电脑装，发现异常顺利，一点错不报，一下就成功了。这让我好难受，心里想估计是 Xcode command tools 错了。今天来到公司把 Xcode 命令行工具删了，重新下载。再次安装，妈的，还是一样。后来没办法了，网上的方法不对头啊，去看日志，发现有报错。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527133989.png" alt="" />
+然后就去搜这个错误的解决方法，在https://github.com/cython/cython/issues/2009 这里找到答案。没办法，试一下吧。抱着把系统玩坏的想法，删了/usr/local/include 这个文件，然后用 brew 重新下载了 llvm。再试一次，我去，终于成功了。放张图纪念下～
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527134186.png" alt="" />
+经过这次安装过程，我发现，找问题还是要去看日志，看到底哪里错误了，去解决根本问题。装这个东西浪费了一上午时间，虽然过程很坎坷，但是结果很美丽。以后可以随便打包啦！先安装上，还没开始用，等用完之后，再来写一下使用的感觉。</p>
 
 
         </section>
@@ -158,15 +167,15 @@
 
             <section class="share">
                 <h4>Share this post</h4>
-                <a class="icon-twitter" href="http://twitter.com/share?text=哈哈昂昂&amp;url=First-blog"
+                <a class="icon-twitter" href="http://twitter.com/share?text=记录一次解决安装fastlane报错过程&amp;url=%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B"
                     onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
                     <span class="hidden">Twitter</span>
                 </a>
-                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=First-blog"
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B"
                     onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
                     <span class="hidden">Facebook</span>
                 </a>
-                <a class="icon-google-plus" href="https://plus.google.com/share?url=First-blog"
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B"
                     onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
                     <span class="hidden">Google+</span>
                 </a>
@@ -203,8 +212,24 @@
 
     <!-- [[! next_post ]] -->
     
+    <a class="read-next-story no-cover"
+        href="/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98">
+        <section class="post">
+            <h2>记录一次Reveal连接不上的问题</h2>
+            <p>由于换了新电脑，项目也告一段落，Reveal有一段时间没用了。最近开了新的项目，需要频繁的UI调整，所以需要用到Reveal，结果死活无法在Reveal发现。我用的是断点的方法，比较简单，官方文档给了三种方法。详情请看[官方文档](http://support.revealapp.com/kb/getting-started/reveal-integration-guide)。 按照官方文档的断点教程走了一圈，运行App。Console打印出下面这句话： ``` Loading Reveal Server from /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/RevealServer.framework/RevealServer... Reveal Server was loaded successfully. ``` 心里想着应该可以了，打开Reveal，瞬间打脸。跑官方demo也不行。后来结果搜索，发现有个[调试方法](http://support.revealapp.com/kb/tips-tricks/bonjour-debugging-why-cant-i-connect-to-my-app)。跟着步骤来发现，在`curl...</p>
+        </section>
+    </a>
+    
     <!-- [[! /next_post ]] -->
     <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81">
+        <section class="post">
+            <h2>Objective-C Runtime --- 消息发送</h2>
+            <p>上篇文章分析了对象的数据结构，这篇我们就结合源码来分析下Objective-C最核心的东西——消息发送。在Objective-C中，我们调用方法，其实都是发送消息。发送消息为Objective-C增加了动态特性，下面我们就来看一下Objective-C的消息发送过程。 objc_msgSend简介 其实我们看大部分runtime文章，都是从这个函数看起的。在Objective-C中，我们调用方法的语法是这样的[receiver message]。编译期会把这个方法调用转换成下面这个函数： objc_msgSend(receiver, selector, arg1, arg2, ...) 其中第一个函数就是我们调用方法的recevier，第二个是个方法选择器，类型是SEL，我们看下SEL的定义： /// An opaque type that...</p>
+        </section>
+    </a>
     
     <!-- [[! /prev_post ]] -->
 </aside>

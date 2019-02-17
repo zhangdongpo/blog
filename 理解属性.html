@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>理解属性</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="理解属性" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="理解属性" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "理解属性",
+    "url": "//%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">理解属性</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2016-02-29">29 Feb 2016</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>属性是Objective-C的一项特性，用于封装对象内的数据。OC对象常会把需要的数据保存为实例变量，实例变量一般通过存取方法（这里的存取方法指的就是setter/getter方法）来访问实例变量。其中setter方法用于写入变量的值，getter方法用于读取变量的值。大家也许已经使用过属性这一概念了，不过大家未必会知道其中所有的细节，而且还有很多与属性有关的麻烦事。这里将会告诉大家有哪些问题可以用属性解决，并指出其中所体现出的关键特性。
+<!-- more -->
+​       在一个描述个人信息的类中，我们可能会存放人名，生日，地址等内容，我们可以在类的.h文件中声明一些实例变量，如下图所示：
+<span><img src="\images\理解属性\1.png" /></span>
+以前写过java或者C++的人应该比较熟悉这种写法，可以定义实例变量的作用域，然而编写OC却很少这样做。这种写法的问题是：对象布局在编译器就已经固定了，只要碰到<code class="highlighter-rouge">_firstName</code>变量的代码，编译器就把其替换为“偏移量”，这个偏移量是“硬编码”，表示该变量距离存放对象的内存区域的起始地址有多远。这样做目前看来没有什么问题，但是如果又增加了一个实例变量，如下图所示：
+<span><img src="\images\理解属性\2.png" /></span>
+原来表示<code class="highlighter-rouge">_firstName</code>的偏移量现在却指向了<code class="highlighter-rouge">_dateOfBrith</code>了，把偏移量硬编码于其中的那些代码都会读到错误的值，下面这个表可以演示这个过程，请自己对比加入<code class="highlighter-rouge">_dateOfBrith</code>这一实例变量之前和之后的内容布局，其中假设指针为4个字节（64位系统为8个字节）
+<span><img src="\images\理解属性\3.png" /></span>
+​        如果代码使用了编译期计算出来的偏移量，那么在修改类定义后必须重新编译。否则就会出错，比如：某个代码库中的代码使用了一份旧的类定义，如果和其相链接的代码使用了新的类定义，那么运行时就会出现不兼容的现象。各种变成语言都有应对这个问题的方法。OC的做法是，把实例变量当做一种存储偏移量的“特殊变量”，交由类对象保留。偏移量会在运行期查找，如果类的定义改变了，那么存储的偏移量也就变了，这样无论何时访问实例变量，总是使用正确的偏移量。甚至可以在运行期向类中新增实例变量，这就是稳固的“应用程序二进制接口”（ABI），ABI定义了许多内容，其中一项就是生成代码时所应该遵循的规范，有这种稳固的ABI，我们就可以在“class-continuation分类”中或实现文件中定义实例变凉了，所以说，不一定要在接口中把全部实例变量都声明好，可以将某些变量从接口的public区段移走，以便保护和类实现有关的内容。
+​       这个问题还有一种解决方法，就是尽量不要直接访问实例变量，而是通过存取方法来做。虽说属性最终还是通过实例变量来实现，但它却提供了一种简洁的抽象机制。你可以自己编写存取方法。在OC的编码风格中，存取方法有着严格命名规范，正因为这种规范，所以OC才能根据名称自动创建存取方法，这是<code class="highlighter-rouge"><span class="k">@property</span></code>就派上用场了。
+​        在对象接口的定义中，可以使用属性，这是一种标准写法，能够访问封装在对象里的数据。因此可以把属性当成一种简称。其意思是说：编译器会自动写出一套存取方法，用以访问给定类型中具有给定名称的变量例如下面这个类:
+<span><img src="\images\理解属性\4.png" /></span>
+对于该类的使用者来说，上述代码写出来的类和下面这种写法等效；
+<span><img src="\images\理解属性\5.png" /></span>
+​        要访问属性，可以使用点语法，在纯C种，如果想访问分配在栈上的struct结构体里面的成员，也需要用类似的语法，编译器会把点语法转换为对存取方法的调用，使用点语法的效果和直接调用存取方法相同。因此使用点语法和直接调取存取方法之间没有丝毫的差别。
+​        然而属性还有更多的优势，如果用了属性，编译器会自动编写访问这些属性所需的方法，这个过程叫做“自动合成（autosynthesis）”，需要强调的是，这个过程编译器在编译器执行，所以编译器里面看不到这些“合成方法”的源代码。除了生成方法代码外，编译器还会向类中添加适当的实例变量，并且在属性名前加上下划线，以此作为实例变量的名字，在前面的例子中，会生成两个实例变量，分别是<code class="highlighter-rouge">_firstName</code>和<code class="highlighter-rouge">_lastName</code>，也可以在类的.m文件中使用<code class="highlighter-rouge">@sythesize</code>语法来指定实例变量的名字，如下图：
+<span><img src="\images\理解属性\5.png" /></span>
+​        不过一般不推荐这么做，因为所有人都用一套方案，那么写出来的代码大家都看的懂。
+​       如果不想令编译器自动合成存取方法，则可以自己在.m文件中实现，如果只是实现了一个，那么另一个还是编译器来合成。还有一种方法可以阻止编译器自动合成存取方法，就是使用<code class="highlighter-rouge">@dynamic</code>关键字，它会告诉编译器不要自动创建实现属性所用的实例变量，也不要为其创建存取方法，而且在编译器访问属性代码时，即便发现没有定义存取方法，也不会报错，它相信这些方法可以在运行期找到。比如说：如果从CoreData框架中的NSManagedObject类里继承一个子类，那么就需要在运行期动态创建存取方法，继承NSManagedObject时之所以这样做，是因为子类的某些属性不是实例变量，其数据来自后端数据库中。</p>
+<pre><code class="language-objective-c">@interface Person : NSManagedObject
+@property NSString *firstName;
+@property NSString *lastName;
+@end
+</code></pre>
+<pre><code class="language-objective-c">@implementation Person
+@dynamic firstName,lastName;
+@end
+
+</code></pre>
+<p>​        上述代码中，编译器不会为上面这个类自动合成存取方法和实例变量，如果代码访问其中的属性编译器也不会发出警告信息。
+​         今天就写到这里吧，欢迎大家观看，下面将会写一下属性的特质。</p>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=理解属性&amp;url=%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer">
+        <section class="post">
+            <h2>学习动画系列---理解CALayer</h2>
+            <p>&emsp;&emsp;好长时间没写东西了，由于刚换了工作，一直在忙于熟悉业务，和一些新业务的开发，没有时间对自己的技术进行修行。这段时间终于闲下来了，可以找些自己感兴趣的东西来好好学习下了。最近在学习些高级动画，在gitbook上面看到一个[iOS核心动画高级技巧][1]，阅读了下，写的是一些动画的基础。毕竟学东西，我们要从基础学起嘛。你连1+1都不会算，怎么学习数学，这是一个道理。好吧，我有些跑题了😀。我们平常用的UIView可以实现一些基础的动画，但是有时产品🐶要做一个非常牛逼的动画时，我们就有些傻眼了。这里就需要用到一个高级东西了，在我们iOS里面叫Core Animation，下面我们就来系列学下这个牛逼的东西。先来学习下比UIView高级些的东西，这个东西就叫CALayer。 # CALayer和UIView &emsp;&emsp;iOS中所有的view都是`UIView`派生来的。`UIView`可以处理触摸事件，可以支持绘图，可以做仿射变换（其实就是旋转和缩放），`UIView`还可以做简单的类似于滑动，或者渐变动画。 &emsp;&emsp;`CALayer`和`UIView`类似，同样可以包含一些内容，管理layer的位置，它也有一些方法和属性用来做动画和变幻，和`UIView`最大的不同就是`CALayer`不能处理用户交互。 &emsp;&emsp;每一个`UIView`都有一个`CALayer`的实例的图层属性，`UIView`的职责就是负责管理创建这个layer，以确保党姿势图在层级关系中添加或者移除时，他们关联的图层也同样对应在层级关系树当中有同样的操作。 &emsp;&emsp;实际上这些背后关联的图层才是真正用来在屏幕上显示和做动画的，`UIView`仅仅是对它的一个封装。提供了一些iOS类似于处理触摸的具体功能，以及Core Animation底层方法的高级接口。至于为什么iOS要基于`UIView`和`CALayer`提供两个平行的层级关系呢？\~\~这不是多此一举么？\~\~这样做的原因在于职责分离，也能避免很多的重复代码。在iOS和Mac OS两个平台上，时间和用户交互有很多不同，这个大家都能理解，一个是多点触控，一个是鼠标键盘。把这种共能逻辑分开并应用的独立的Core Animation框架，苹果就能再iOS和Mac OS之间共享代码。反正底层都一样，只是封装成一个iOS用，一个Mac OS用。这就是iOS有UIKit，Mac OS有AppKit。 &emsp;&emsp;实际上，这里并不是两个层级关系，而是四个，处理视图层级和图层树，还存在呈现树和渲染树。我还没有看到这里，后面看到了在写后两个层级。😁...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/iOS9%E7%9A%84%E9%80%82%E9%85%8D">
+        <section class="post">
+            <h2>iOS9的适配</h2>
+            <p>iOS9升级后相信很多人都是项目报错，因为项目要升级iOS9，从网上看了很多教程，就这篇教程还是比较全的，分享给大家，顺便自己记录下。网址是整理 iOS 9 适配中出现的坑（图文）。
+
+</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

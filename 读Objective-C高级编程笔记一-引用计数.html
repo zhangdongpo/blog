@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>读Objective-C高级编程笔记一——引用计数</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="读Objective-C高级编程笔记一——引用计数" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="读Objective-C高级编程笔记一——引用计数" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "读Objective-C高级编程笔记一——引用计数",
+    "url": "//%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">读Objective-C高级编程笔记一——引用计数</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2017-08-15">15 Aug 2017</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>最近读了《Objective-C高级编程》这本进阶书：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503026660.png" alt="Objective-C高级编程" />。
+这本书有三章，我们先来介绍第一章。可以从下图看下第一章的整体结构。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503025584.png" alt="内存管理" />。
+<!-- more -->
+本篇是第一篇，来写下iOS的内存管理，其实iOS的内存管理无论是ARC还是MRC都是通过引用计数来管理的。每个对象都有一个<code class="highlighter-rouge">retainCount </code>的属性。当一个对象的<code class="highlighter-rouge">retainCount </code>为0，就说明没有地方使用该对象了，可以释放了。
+我们先看MRC，再看ARC，因为ARC其实是建立在MRC之上的，只是是编译器在合适的地方代替我们插入了内存管理的代码。</p>
+<h3 id="引用计数">引用计数</h3>
+<p>前面我们一直在说引用计数，到底什么是引用计数呢？下图可以表达这个概念。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503068536.png" alt="照明管理" />
+在Objective-C中，对象就相当于上图中的灯。使用计数功能计算需要照明的人数，办公室的灯得到了很好的管理。同样，使用引用计数功能，对象也能够得到很好的管理，这就是Objective-C的内存管理，如下图所示：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503071113.png" alt="引用计数的内存管理" /></p>
+<h3 id="内存管理思考方式">内存管理思考方式</h3>
+<p>下面我们来了解下引用计数式的内存管理思考方式。</p>
+<ul>
+  <li>自己生成的对象，自己持有。</li>
+  <li>非自己生成的对象，自己也能持有。</li>
+  <li>不再需要自己持有的对象时释放。</li>
+  <li>非自己持有的对象不能释放。
+其实引用计数式的内存管理思考方式仅此而已。除了上文提到的“生成”，“持有”，“释放”三种对对象的操作方式，还有一种“废弃”方式，各个词表示的Objective-C方法如下表：
+| 对象操作                     | Objective-C方法
+| 生成并持有对象         | alloc/new/copy/mutableCopy方法
+| 持有对象                     | retain方法
+| 释放对象                     | release方法
+| 废弃对象                     | dealloc方法
+这些有关Objective-C内存管理的方法，实际上不包括在该语言中，而是包含在Cocoa框架中用于iOS，OS X应用开发。Cocoa中Foundation框架库的<code class="highlighter-rouge">NSObject</code>类负责内存管理的职责。Objective-C内存管理的alloc/retain/release/dealloc方法分别指代NSObject累的alloc方法，retain方法，release方法和dealloc方法。
+下面我们来详细了解下上面提到的内存管理思考方式。
+    <h4 id="自己生成的对象自己持有">自己生成的对象自己持有</h4>
+    <p>使用以下名称开头的方法名意味着自己生成并持有对象：</p>
+  </li>
+  <li>alloc</li>
+  <li>new</li>
+  <li>copy</li>
+  <li>mutableCopy
+例如：
+  id obj = [[NSObject alloc]init]
+这句话就自己生成并持有了对象，另外使用NSObject的new类也能自己生成并持有对象。<code class="highlighter-rouge">[NSObject new]</code>和<code class="highlighter-rouge">[[NSObject alloc]init]</code>是完全一样的。
+同样的copy和mutableCopy方法也可以自己生成并持有对象。两者的差异就是copy生成的是不可变对象，而mutableCopy生成的是可变对象。
+另外，下列名称也意味着自己生成并持有对象：</li>
+  <li>allocMyObject</li>
+  <li>newThisObject</li>
+  <li>copyThis</li>
+  <li>mutableCopyYourObject
+但是对象一下名称，即使使用alloc/new/copy/mutableCopy名称开头，也并不属于同一类方法。</li>
+  <li>allocate</li>
+  <li>newer</li>
+  <li>copying</li>
+  <li>mutableCopyed
+反正只要记得上面说的几个方法是自己生成并持有对象就好。
+    <h4 id="非自己生成的对象自己也能持有">非自己生成的对象自己也能持有</h4>
+    <p>因为是非自己生成并持有，所以该对象不是自己生成的，所以我们来使用上面说的几个方法外的方法试试。非常可以说明问题的就是NSMutableArray的array类方法：
+  id obj = [NSMutableArray array];
+上面代码中，其实obj是不持有生成的这个对象的，记得以前我还傻傻的以为这个和上面的一样会持有对象，结果一运行程序，直接崩溃了。我们可以使用retain方法来持有这个对象。</p>
+    <h4 id="不再需要自己持有的对象时释放">不再需要自己持有的对象时释放</h4>
+    <p>自己持有的对象，一旦不再需要，持有者有义务释放，使用release方法释放。无论是自己生成并持有的对象，还是通过retain方法持有的对象，在不需要时都需要通过release方法释放。下面我们来看下通过某个方法生成对象并将其return给调用方和调用<code class="highlighter-rouge">[NSMutableArray array] </code>方法取得对象的区别：</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(id)allocObject
+  {
+     id obj = [[NSObject alloc]init];
+     return obj;
+  }
+</code></pre></div>    </div>
+    <p>像上面这样，原封不动的返回生成并持有的对象，就能让调用方也持有该对象。和前面说的自己生成并持有没区别，为什么<code class="highlighter-rouge">[NSMutableArray array] </code>不行呢，下面我们来看下具体实现：</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(id)object
+	{
+	  id obj = [[NSObject alloc]init];
+	  [obj autorelease];
+	  return obj;
+	}
+</code></pre></div></div>
+<p>因为在这个里面使用了autorelease方法，使用这个方法，可以使取得的对象存在，但是自己并不持有该对象。autorelease提供了使对象在超出制定生存范围时能够自动并正确的释放，后面我们会对autorelease进行详细的说明。下图是autorelease和release的区别:
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503112187.png" alt="autorelease和release的区别" /></p>
+<h4 id="无法释放非自己持有的对象">无法释放非自己持有的对象</h4>
+<p>这点就非常好理解了，不是自己持有的对象自己干嘛要去释放，像下面代码就会导致程序崩溃：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id obj = [ [NSObject alloc]init];
+[obj release];
+[obj release];
+</code></pre></div></div>
+<p>在执行过一次release之后，obj指向的对象已经释放，再执行release肯定要访问到对象，访问已经废弃的对象时就boom了。
+上面的四项内容就是内存管理的思考方式，下面我们来介绍下操作引用计数的函数实现。</p>
+<h3 id="allocretainreleasedealloc实现">alloc/retain/release/dealloc实现</h3>
+<h4 id="gnustep的实现">GNUstep的实现</h4>
+<p>GNUstep是Cocoa框架的互换框架。所以理解了GNUstep就相当于理解了Cocoa框架的实现。
+我们先来看下alloc方法的实现：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+(id)alloc
+	{
+	       return [self allocWithZone:NSDefaultMallocZone()];
+	}
+	+(id)allocWithZone:(NSZone *)z
+	{
+	      return NSAllocateObject(self,0,z);
+	}
+</code></pre></div></div>
+<p>通过上面两个方法，我们看到其实最根本调用的是NSAllocateObject这个方法。下面我们来看看NSAllocateObject这个方法的实现：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct obj_layout
+	{
+	    NSUInteger retained;
+	}
+	
+	inline id NSAllocateObject(Class aClass,NSUInteger extraBytes,NSZone *zone)
+	{
+	     int size = 计算容纳对象大小的size；
+	     id new = NSZoneMalloc(zone,size);//分配对象内存
+	     memset(new,0,size);//初始化内存
+	     new = (id) &amp;  ((struce obj_layout *) new)[1];
+	}
+</code></pre></div></div>
+<p>NSZone是为了防止内存碎片化引入的结构，想要了解更多，那只能自己看书了，这里我们只介绍alloc方法操作引用计数的实现。
+下面是去掉NSZone之后的源代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct obj_layout
+	{
+	    NSUInteger retained;
+	}
+	+(id)alloc
+	{
+	     int size = sizeof(struct obj_layout) + 对象的大小；
+	     struct obj_layout *p = (struct obj_layout *)calloc(1,size); //将引用计数写入对象内存头部
+	     return (id)(p + 1); //返回对象的初始地址
+	}
+</code></pre></div></div>
+<p>alloc方法用struct <code class="highlighter-rouge">obj_layout</code>中的retained来保存引用计数，并将其写入对象内存头部，然后返回对象的初始地址。如下图所示：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503327298.png" alt="alloc返回对象的内存图" />
+对象的引用计数可以通过retainCount来获得：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id obj = [ [NSObject alloc]init];
+	NSLog(@"retainCount = %d",[obj retainCount]);
+	//显示为retainCount = 1；
+执行alloc后对象的retainCount为1，下面我们来用GNUstep来看下原因：
+	-(NSUInteger)retainCount
+	{
+	      return NSExtraRefCount(self) + 1;
+	}
+	inline NSUInteger NSExtraRefCount(id anObject)
+	{
+	    return ((struct obj_layout *)anObject)[-1].retained;  //这里这个-1，我是这么理解的，先把对象转成obj_layout类型，然后减去1个obj_layout指针大小，正好就指向obj_layout。下面的图更加明确的表示：
+	}
+</code></pre></div></div>
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/1505032536.png" alt="通过对象访问头像内存头部" />
+因为分配时全部为0，所以retained为0.由 NSExtraRefCount(self)  + 1得出，retainCount为1.可以推测出，retain方法其实是让retained变量+1，二release方法使retained变量减1。
+下面我们正好来看下retain方法的GNUstep实现：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(id)retain
+	{
+	    NSIncrementExtraRefCount(self);
+	    return self;
+	}
+	inline void  NSIncrementExtraRefCount(id anObject)
+	{
+	    if(((struct obj_layout *)anObject)[-1].reatined == UINT_MAX - 1)
+	        [NSException raise: NSInternalInconsistencyException format:@"NSIncrementExtraRefCount() asked to increment too far"];
+	    ((struct obj_layout *)anObject)[-1].retained++;
+	}
+</code></pre></div></div>
+<p>虽然写入了当retained变量超出最大值是发生的异常代码，但是实际上执行的是retained变量+1的代码。同样，release实例方法执行-1的代码，并且当引用计数变量为0时执行dealloc方法，下面我们来看下release的实现：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(void)release
+	{
+	    if(NSDecrementExtraRefCountWasZero(self))
+	        [self dealloc]
+	}
+	BOOL  NSDecrementExtraRefCountWasZero(id anObject)
+	{
+	    if(((struct obj_layout *)anObject)[-1].retained == 0){
+	        return YES;
+	    }else{
+	        ((struct obj_layout *)anObject)[-1].retained--;
+	        return NO;
+	    }
+	}
+</code></pre></div></div>
+<p>和预想一样，release方法就是当retained变量大于0时减一，等于0时调用dealloc方法，废弃对象。（这里需要注意，我们调用retainedCount时，其实是retained变量+1，如果不是这样的话，那么会出现alloc后需要调用两次release才能dealloc）。下面我们来看下dealloc的实现：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(void)dealloc
+	{
+	    NSDeallocateObject(self);
+	}
+	inline void NSDeallocateObject(id anObject)
+	{
+	    struct obj_layout *o =  &amp;((struct obj_layout *)anObject)[-1];
+	    free(0);
+	}
+</code></pre></div></div>
+<p>以上就是alloc/retain/release/dealloc在GNUstep中的实现。具体的总结：</p>
+<ul>
+  <li>在OC对象中存有引用计数这一整数值。</li>
+  <li>调用alloc和retain方法引用计数+1.</li>
+  <li>调用release方法引用计数-1.</li>
+  <li>当引用计数值为0时，调用dealloc方法释放对象。
+    <h4 id="苹果的实现">苹果的实现</h4>
+    <p>因为NSObject类的源代码没有公开，所以我们利用lldb大概追溯其大概的实现过程。在alloc方法上打断点，可以看到程序的执行顺序如下：</p>
+    <ol>
+      <li>+alloc；</li>
+      <li>+allocWithZone</li>
+      <li>class_createInstance</li>
+      <li>calloc
+alloc方法首先调用allocWithZone:方法，这个和GNUstep是相同的。后面调用class_createInstance方法，这个方法可以在objc4的runtime/objc-runtime-new.mm中找到实现。然后再调用calloc来分配内存块。
+retainCount/retain/release又是怎样实现的呢，我们用上面同样的方法可以看到retainCount/retain/release所执行的函数：</li>
+    </ol>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-retainCount
+	__CFDoExternRefOperation
+	CFBasicHashGetCountOfKey
+	
+	-retain
+	__CFDoExternRefOperation
+	CFBasicHashAddValue
+	
+	-release
+	__CFDoExternRefOperation
+	CFBasicHashRemoveValue
+	CFBasicHashRemoveValue返回0事，-release调用dealloc
+</code></pre></div></div>
+<p>通过看上面三个方法，都调用了__CFDoExternRefOperation函数，这个函数的实现我们可以在CFRuntime.c中找到实现，下面是简化后的__CFDoExternRefOperation函数实现：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int __CFDoExternRefOperation(uintptr_t op,id obj)
+	{
+	    CFBasicHashRef table = 取得对象的散列表(obj)；
+	    int count;
+	    switch(op){
+	        case OPERATION_retainCount:
+	        count = CFBasicHashGetCountOfKey(table,obj);
+	        return count;
+	
+	        case OPERATION_retain:
+	        CFBasicHashAddValue(table,obj);
+	        return obj;
+	
+	        case OPERATION_release:
+	        cont = CFBasicHashRemoveValue(table,obj);
+	        return count == 0;
+	    }
+	}
+</code></pre></div></div>
+<p>__CFDoExternRefOperation函数按retainCount/retain/release操作进行分发，调用不同的函数，我们可以推断，NSObject类的retainCount/retain/release实例方法也许就如下面所示：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(NSUInteger)retainCount
+	{
+	    return (NSUInteger) \_\_CFDoExternRefOperation(OPERATION_retainCount,self);
+	}
+	-(id)retain
+	{
+	    return (id) \_\_CFDoExternRefOperation(OPERATION_retain,self);
+	}
+	-(void)release
+	{
+	    return  \_\_CFDoExternRefOperation(OPERATION_release,self);
+	}
+
+</code></pre></div></div>
+<p>可以从__CFDoExternRefOperation函数实现来看，苹果的实现大概就是采用散列表来管理引用计数。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503473841.png" alt="通过散列表管理引用计数" />
+GNUstep将引用计数保存在对象占用内存块头部的变量中，而苹果则是保存在引用计数表中。
+通过内存块头部管理引用计数的好处：</p>
+<ul>
+  <li>写的代码少。</li>
+  <li>能统一管理引用计数和对象内存块。
+通过散列表管理引用计数的好处如下：</li>
+  <li>对象内存块的分配不需要考虑内存块头部。</li>
+  <li>引用计数表中存有内存块地址，可以从各个记录追溯到对象的内存块。
+追溯内存块在调试时有着很重要的作用，即使出现故障导致对象占用的内存块损坏，只要引用计数表没坏，就可以确定内存块的位置。另外，再利用工具检测内存泄漏时，引用计数表的各记录也有助于检测个对象的持有者是否存在。
+    <h3 id="autorelease">autorelease</h3>
+    <p>说到内存管理，就不得不提autorelease，autorelease看上去很像ARC，但实际上它更类似于C语言中自动变量的特性，当自动变量超过其作用域，该自动变量就会被自动废弃。autorelease会像C语言的自动变量那样来对待对象的实例。当超出其作用域时，对象实例的release方法被调用。另外，同C语言的自动变量不同的是，我们可以设定变量的作用域。
+autorelease的具体使用方法如下：</p>
+    <ol>
+      <li>生成并持有NSAutoreleasePool对象；</li>
+      <li>调用已分配对象的autorelease实例方法；</li>
+      <li>废弃NSAutoreleasePool对象；
+<img src="http://ohg2bgicd.bkt.clouddn.com/1504753622.png" alt="NSAutoreleasePool对象的生命周期" />
+NSAutoreleasePool对象的生存周期就相当于C语言变量的作用域，对于所有吊用过autorelease方法的对象，在废弃NSAutoreleasePool对象时，都将调用release方法。在Cocoa框架中，NSRunLoop对NSAutoreleasePool对象进行生成，持有和废弃处理。因此，我们不一定非得使用NSAutoreleasePool对象来进行开发工作。
+尽管如此，但是在大量产生autorelease对象时，只要不废弃NSAutoreleasePool对象，那么生成的对象就不会释放，因此有时会产生内存不足的现象。典型的例子就是读入大量图像的同时改变其尺寸。图像文件读入到NSData对象，并从中生成UIImage对象，改变对象尺寸后生成新的UIImage对象。这种情况下，就会大量产生autorelease的对象。
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for(int i = 0; i &lt; 图像数；i++){
+   //读入图像大量产生autorelease对象
+  }
+像上面这种情况，有必要在适当的地方生成，持有或废弃NSAutoreleasePool对象。
+  for(int i = 0;i &lt; 图像数；i++){
+   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc]init];
+   //读入图像
+   [pool drain];
+   通过drain，autorelease的对象被遗弃release。
+  }
+</code></pre></div>        </div>
+        <p>另外，Cocoa框架中有很多类方法用于返回autorelease对象，比如NSMutableArray类的arrayWithCapacity类方法。
+<code class="highlighter-rouge">id array = [NSMutableArray arrayWithCapacity:1];</code>
+上面的代码等同于一下的源代码。
+<code class="highlighter-rouge">id array = [[[NSMutableArray array]initWithCapacity:1]autorelease];</code></p>
+        <h3 id="autorelease实现">autorelease实现</h3>
+        <h4 id="gnustep实现">GNUstep实现</h4>
+        <p>我们先来看下GNUstep的实现:</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(id)autorelease
+  {
+   [NSAutoreleasePool addObject:self];
+  }
+</code></pre></div>        </div>
+        <p>autorelease方法本质就是调用NSAutoreleasePool的addObject类方法。下面我们来看下NSAutoreleasePool类的实现，由于NSAutoreleasePool类的源代码比较复杂，我们假象一个简化的源代码进行说明。</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+（void）addObject:（id）anObj
+  {
+   NSAutoreleasePool *pool = 取得正在使用的NSAutoreleasePool对象；
+   if（pool ！= nil）{
+       [pool addObject:anObj];
+   }else{
+       NSLog（@"NSAutoreleasePool对象非存在在状态下吊用autorelease"）;
+   }
+  }
+</code></pre></div>        </div>
+        <p>addObject类方法调用正在使用的NSAutoreleasePool对象的addObject实例方法。如果嵌套生成或持有NSAutoreleasePool对象，理所当然会使用最内侧的对象。下面来看下addObject实例方法的实现。</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-（void）addObject：（id）anObj
+  {
+   [array addObject:anObj];
+  }
+</code></pre></div>        </div>
+        <p>实际的GNUstep使用的是连接列表，同在NSMutableArray对象中添加对象是一样的。
+如果调用NSObject类的autorelease实例方法，该对象被追加到正在使用的NSAutoreleasePool对象中的数组里。
+下面我们看下drain方法废弃正在使用NSAutoreleasePool对象的过程。</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-（void）drain
+  {
+   [self dealloc];
+  }
+  -（void）dealloc
+  {
+   [self emptyPool];
+   [array release];
+  }
+  -（void）emptyPool
+  {
+   for(id obj in array){
+       [obj release];
+   }
+  }
+</code></pre></div>        </div>
+        <p>虽然调用了好几个方法，但可以确定对于数组中的所有对象都调用了release方法。</p>
+        <h4 id="苹果的实现-1">苹果的实现</h4>
+        <p>可以通过objc4的runtime/NSObject.mm来看苹果的autorelease实现。
+```
+class AutoreleasePoolPage
+  {
+   static inline void *push()
+   {
+       相当于生成或持有NSAutoreleasePool类对象；
+   }
+   static inline void pop(void *token) 
+   {
+       相当于废弃NSAutoreleasePool类对象；
+       releaseAll();
+   }
+   static inline id autorelease(id obj)
+   {
+       这个相当于NSAutoreleasePool类的addObject类方法
+       AutoreleasePoolPage *autoreleasePoolPage = 取得正在使用的AutoreleasePoolPage实例；
+       autoreleasePoolPage-&gt;add(obj)；
+   }
+   id *add(id obj)
+   {
+       将对象追加到内部数组中；
+   }
+   void releaseAll()
+   {
+       调用内部数组中对象的release方法；
+   }
+  };
+  void *
+  objc_autoreleasePoolPush(void)
+  {
+   return AutoreleasePoolPage::push();
+  }
+  void
+  objc_autoreleasePoolPop(void *ctxt)
+  {
+   AutoreleasePoolPage::pop(ctxt);
+  }</p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>我们可以看下我们再使用NSAutoreleasePool时对应代码的实现：
+</code></pre></div></div>
+<p>NSAutoreleasePool <em>pool = [[NSAutoreleasePool alloc]init];
+	/</em>等同于objc_autoreleasePoolPush()<em>/
+	id obj = [[NSObject alloc]init];
+	[obj autorelease];
+	/</em>等同于objc_autorelease()<em>/
+	[NSAutoreleasePool showPools];
+	//将NSAutoreleasePool的状况输出到控制台。
+	[pool drain];
+	/</em>等同于objc_autoreleasePoolPop(pool)*/</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>另外， 不能autorelease NSAutoreleasePool对象。
+### ARC
+实际上“引用计数式内存管理”的本质在ARC中并没有改变，ARC只是自动帮助我们处理了“引用计数”的相关部分。所以MRC的内存管理思考方式在ARC下也是可行的。只是在源代码的记述方法上稍有不同。想要了解这些变化就需要理解ARC中追加的所有权声明（其实就是所有权修饰符）。
+#### 所有权修饰符
+Objective-C中为了处理对象，可将变量类型定义为id类型或各种对象类型。所谓对象类型就是指向NSObject这样的Objective-C类的之神，例如“NSObject \*”。id类型用于隐藏对象类型的类名部分，相当于C语言中常用的void\*.
+ARC中，id类型和对象类型同C语言其他类型不同，其类型必须附加所有权修饰符，一共有四种：
+- \_\_strong
+- \_\_weak
+- \_\_unsafe\_\_unretained
+- \_\_autorelease
+下面分别来看下这四种修饰符。
+##### \_\_strong
+ARC中所有id类型和对象类型的默认修饰符是\_\_strong。下面通过代码来看下\_\_strong的应用：
+</code></pre></div></div>
+<p>id obj = [[NSObject alloc]init];
+	id __strong obj = [[NSObject alloc]init];
+	//这两种在ARC下是等效的。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>上面两种写法看不出\_\_strong有什么作用，我们通过下面的代码来看下。
+	
+```{
+	    //自己生成并持有对象
+	    id __strong obj = [[NSObject alloc]init];
+	}
+	    //超出作用域，强引用失效，自动释放自己持有的对象
+	//上面的代码和下面在MRC环境的代码等效
+	{
+	    id obj = [[NSObject alloc]init];
+	    [obj release];
+	}
+
+</code></pre></div></div>
+<p>如上面的代码所示，附有__strong修饰符的变量obj在超出其变量作用域时，强引用失效，释放其持有的对象。所以__strong的作用就是持有对象，持有的意思就是会导致对象的引用计数+1，当变量指向其他对象或超过作用域后，会释放其持有的对象，对象的引用计数-1。所以通过__strong修饰符，不必再次键入retain或者release，完美的满足了内存管理的思考方式。</p>
+<h5 id="__weak">__weak</h5>
+<p>看起来好像通过__strong就能完美的进行内存管理，但是遗憾的是，仅仅通过__strong是不能解决有些重大问题的，比如“循环引用”，什么时候会循环引用呢，我们举个例子：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Test</span> <span class="p">:</span> <span class="nc">NSObject</span>
+	<span class="p">{</span>
+	    <span class="n">id</span> <span class="n">__strong</span> <span class="n">obj_</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setObject</span><span class="o">:</span><span class="p">(</span><span class="n">id</span> <span class="n">__strong</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>
+	<span class="k">@end</span>
+	<span class="k">@implementation</span> <span class="nc">Test</span>
+	<span class="k">-</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">init</span>
+	<span class="p">{</span>
+	    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+	    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setObject</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">obj</span>
+	<span class="p">{</span>
+	    <span class="n">obj_</span> <span class="o">=</span> <span class="n">obj</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">@end</span>
+<span class="err">以下的代码就会发生循环引用：</span>
+	<span class="p">{</span>
+	    <span class="n">id</span> <span class="n">test0</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Test</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span><span class="c1">//test0持有对象A
+</span>	   <span class="n">id</span> <span class="n">test1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Test</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span><span class="c1">//test1持有对象B
+</span>	         <span class="p">[</span><span class="n">test0</span> <span class="nf">setObject</span><span class="p">:</span><span class="n">test1</span><span class="p">];</span><span class="c1">//对象B的实例变量持有对象A
+</span>	         <span class="p">[</span><span class="n">test1</span> <span class="nf">setObject</span><span class="p">:</span><span class="n">test0</span><span class="p">];</span><span class="c1">//对象A的实例变量持有对象B
+</span>	<span class="p">}</span>   
+	<span class="c1">//超出作用域test0释放对象A的引用，此时持有对象A的是对象B的实例变量
+</span>	<span class="c1">//test1释放对对象B的引用，此时持有对象B的是对象A的实例变量
+</span>	<span class="c1">//这样就发生了内存泄露（这里解释下内存泄露，内存泄露就是本该释放的对象没有释放，还占用着内存。记得刚开始学习的时候看到内存泄露这个名词不明白什么是内存泄露。）
+</span>	<span class="err">```</span>
+<span class="err">像上面这种是两个对象间的循环引用，也可能会出现自己对自己的循环引用如下面的代码：</span>
+</code></pre></div></div>
+<p>id test = [[Test alloc]init];
+[test setObject:test];</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>讲了这么多问题，那到底怎么才能避免循环引用呢，看到\_\_strong就会意识到还有\_\_weak，和strong相对应，\_\_weak不持有对象，也就是不会导致对象的引用计数+1。来看下面的代码：
+```id __weak obj = [[NSObject alloc]init];
+//使用weak修饰的变量不持有对象
+	//对象立即被释放。
+</code></pre></div></div>
+<p>我们可以通过__weak来改变上面的循环引用问题，就是用下面的这种方式来声明实例变量</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+	   id __weak obj_;
+}
+</code></pre></div></div>
+<p>__weak还有一个优点，就是持有的对象被废弃，变量自动会置为nil，像这样可以通过使用__weak来避免循环应用，还可以通过检查附有__weak修饰符变量是否为nil来判断对象是否被废弃。（PS: __weak只能在iOS4以上版本使用，在iOS4以下版本用__unsafe__unretain代替）。</p>
+<h5 id="__unsafe_unretained">__unsafe_unretained</h5>
+<p>__unsafe_unretained和__weak很类似，都不会导致对象的引用计数+1，下面我们看看他们两个有什么不同。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id __unsafe_unretained obj1;
+	        {
+	            id __strong ojb0 = [[NSObject alloc]init];//obj0持有对象
+	            obj1 = ojb0;//obj1既不持有对象强引用也不持有弱引用
+	            NSLog(@"A:%@",obj1);
+	        }
+	    //超出obj0作用域，强引用失效，对象无持有者，废弃对象
+	        NSLog(@"B:%@",obj1);
+	    //打印结果
+	    A:&lt;NSObject: 0x100203700&gt;
+	    B:&lt;NSObject: 0x100203700&gt;
+	    //obj1所指向的对象已经废弃，所以发生野指针。
+</code></pre></div></div>
+<p>所以使用__unsafe_unretained和__weak的区别就是某些情况下会发生野指针。那么在什么时候使用__unsafe_unretained呢，就上上面说的一样，在iOS4之前使用，不过这种情况已经很少啦。</p>
+<h5 id="__autoreleasing">__autoreleasing</h5>
+<p>我们知道在ARC有效时不能调用对象的autorelease实例方法，也不能使用NSAutoreleasePool类，这样一来，虽然autorelease无法直接使用，但实际上，ARC有效时autorelease功能是起作用的。下面通过代码来看下如何在ARC下使用autorelease。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@autoreleasepool {
+	            id __autoreleasing obj = [[NSObject alloc]init];
+	        }
+</code></pre></div></div>
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/1504884931.png" alt="ARC和MRC比较" />
+从上图可以看到这两种是等价的，也就是我们可以在ARC中使用@ autoreleasepool和__autoreleasing来使用autorelease。
+但是显式的附加__autoreleasing和显示的附加__strong一样罕见。我们通过实例来看下为什么非显式的使用__autoreleasing修饰符也可以。</p>
+<ol>
+  <li>如果不是以alloc/new/copy/mutableCopy方法名开头的创建对象的方法，那么自动将返回值的对象注册到autoreleasepool。（ps：init方法返回值对象不注册到autoreleasepool）。比如下面代码取得的对象就是autoreleasepool中的对象。
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@autoreleasepool {       
+              id __strong obj = [NSMutableArray array];
+          }
+</code></pre></div>    </div>
+    <p>我们看下[NSMutableArray array]具体实现：</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+(id)array	
+     {
+         id obj = [[NSMutableArray alloc]init];
+     '' return obj;//由于return使得对象超出其作用域，但是作为函数返回值，编译器自动将其注册到autoreleasepool。
+     }
+</code></pre></div>    </div>
+  </li>
+  <li>访问__weak修饰符变量时，实际上必定要访问到autoreleasepool的对象
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id __weak obj = obj0;
+NSLog(@"class = %@",[obj class]);
+//上面代码和下面代码相同
+id __weak obj = obj0;
+id __autoreleasing tem = obj;
+NSLog(@"class = %@",[tem class]);
+</code></pre></div>    </div>
+    <p>为什么访问附有__weak修饰符变量时必须访问注册到autoreleasepool的对象呢，因为__weak修饰符只持有弱引用，而在访问引用对象过程中，该对象有可能被废弃。如果把要访问对象注册到autoreleasepool中，那么@autoreleasepool块结束前都能确保对象存在。</p>
+  </li>
+  <li>最后一个可非显示使用__autoreleasing修饰符的就是二级指针了。比如我们声明一个NSObject **obj,他的默认修饰符就是__autoreleasing。那么在什么时候使用呢，比如我们为了获取详细的错误信息，需要传入NSError对象的指针，而不是使用函数返回值。如以下代码：
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(BOOL)performOperationWithError:(NSError \*\*)error;
+     -(BOOL)performOperationWithError:(NSError \* \_\_autoreleasing\*)error;
+ //上面两种写法等价，默认的修饰符为\_\_autoreleasing
+</code></pre></div>    </div>
+    <p>参数中持有NSError对象指针的方法，虽然为了响应结果，需要生成NSError类对象，但是也必须符合内存管理的思考方式，就是除了alloc/new/copy/mutableCopy外其他方法的返回值对象都会注册到autoreleasepool。
+另外通过以下代码看看我们在使用二级指针时应该注意什么：</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSError *error = nil;
+NSError **perror = &amp;error;
+//上面的代码会报错，因为所有权修饰符必须一致。所以应该改成下面这样的
+NSError *error = nil;
+NSError * __strong *perror = &amp;error;
+//再来看下函数参数的使用
+NSError __strong *error = nil;
+[obj performOperationWithError:&amp;error];
+//因为所有权修饰符必须一致，但是这个不会报错，是因为编译器自动将代码转换成下面的样子
+NSError __strong *error = nil;
+NSErro __autoreleasing *tmp = error;
+[obj performOperationWithError:&amp;tmp];
+//当然也可以显示的指定参数的所有权修饰符为__strong，但是为了在使用参数取得对象时符合内存管理的思考方式，不建议这样做。
+</code></pre></div>    </div>
+    <p>在显示指定__autoreleasing修饰符时，必须注意对象要为自动变量(包括局部变量，函数以及方法参数)，还有无论何时，我们都应该去使用@autoreleasepool块结构去代替NSAutoreleasepool，这样提高了程序的可读性，并且@ autoreleasepool在MRC环境下也有效。调试用的_objc_autoreleasePoolPrint()函数无论什么环境都可以调试注册到autoreleasepool上的对象。</p>
+    <h4 id="arc规则">ARC规则</h4>
+    <p>在ARC下，我们需要遵守一定的规则</p>
+    <ul>
+      <li>不能使用retain/release/retainCount/autorelease
+这个应该不用解释，因为是自动引用计数，所以这些手动的就不能写啦！</li>
+      <li>不能使用NSAllocateObject/NSDeallocateObject
+ ARC下一般通过调用alloc方法生成并持有对象，不能使用上面的两个函数生成和释放对象。</li>
+      <li>需要遵守内存管理的方法命名规则
+使用alloc/new/copy/mutableCopy开头方法返回对象时必须返回给调用方所应当持有的对象，并且以init开头的方法必须是实例方法，并且必须返回对象，init方法只是对alloc的对象做了一些初始化。</li>
+      <li>不能显示调用dealloc
+无论什么环境，只要对象的引用计数为0就是调用该对象的dealloc方法。但是在ARC环境下，我们在dealloc方法内不需要调用[super dealloc],因为ARC会自动处理。如果调用，编译器会报错。</li>
+      <li>使用@autoreleasepool代替NSAutoreleasePool
+在ARC环境下，使用NSAutoreleasePool会报错.</li>
+      <li>不能使用NSZone
+无论什么环境，Runtime已经单纯忽略了NSZone。</li>
+      <li>对象类型不能作为C语言的结构体成员
+因为C语言没有办法管理结构体成员的生命周期，要把对象类型变量加入到结构体中，可以通过转换为void*或者附加__unsafe_unretained。因为__unsafe_unretained修饰的变量不属于编译器内存管理对象。</li>
+      <li>显式转换id和void*
+在MRC下，像下面代码这样将id变量强制转换成void*变量并不会出问题。
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id obj = [[NSObject alloc]init];
+void *p = obj;
+//更近一步用void*变量赋值给id变量中，调用其实例方法，运行时也不会有问题。
+id o = p;
+[o release];
+</code></pre></div>        </div>
+        <p>但是在ARC环境下上面代码就会引起错误。因为id类型或对象类型赋值给void*或者逆向赋值时都需要进行特定的转换。如果只是想单纯地赋值，可以使用“__bridge”转换。如下面代码所示：</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> id obj = [[NSObject alloc]init];
+ void *p = (__bridge void *)(obj);
+ id o = (__bridge id)p;
+但是像上面这样转换为void\*类型，其安全性与赋值给\_\_unsafe\_unretained修饰符相近，甚至会更低。如果转换时不注意对象的所有者，会因为野指针导致程序崩溃。
+\_\_bridge转换中还有另外两种转换，分别是“\_\_bridge\_retained”和“\_\_bridge\_transfer”。\_\_bridge\_retained的作用如下面代码所示：
+//ARC
+id obj = [[NSObject alloc]init];
+void *p = (__bridge_retained  void *)(obj);
+//MRC
+id obj = [[NSObject alloc]init];
+void *p = (__bridge_retained  void *)(obj);
+[(id)p retain];
+通过\_\_bridge\_retained转换，obj和p同时持有对象。
+\_\_bridge\_transfer转换和\_\_bridge\_retained提供相反的动作。通过代码来看下：
+//ARC   
+id obj = (__bridge_transfer id)p;
+//MRC
+id obj = (id)p;
+[obj retain];
+[(id)p release];
+</code></pre></div>        </div>
+        <p>可以看到当p赋值给obj后立马就释放了对对象的引用。
+如果使用以上两种变换，那么不使用id或对象类型变量也可以生成，持有，以及释放对象，但是ARC中并不推荐使用这种方法，这些转化多数在Objective-C和Core Foundation对象之间的相互转换。（ps:Core Foundation对象主要使用在C语言编写的Core Foundation框架中，并使用引用计数的对象，Core Foundation框架中的release/retain分别是CFRelease/CFRetain，Core Foundation对象和Objective-C对象区别很小，不同的就是由哪个框架生成。无论由哪个框架生成，一旦生成后便能在不同框架中使用。Foundation框架对象可以由Core Foundation框架API释放，反之亦然。两种类型的对象互相转换不需要额外的CPU资源，因此也被称为“免费桥”（Toll-Free Bridge））。
+以下函数可用于Objective-C对象和Core Foundation对象之间的相互转换。</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CFTypeRef CFBridgingRetain(id X){
+           return (__bridge_retained CFTypeRef)X;
+       }
+id CFBridgingRelease(CFTypeRef X){
+           return (__bridge_transfer id)X;
+       }
+</code></pre></div>        </div>
+        <p>下面我们来看下具体使用：
+``` 
+CFMutableArrayRef cfObject = NULL;
+{
+ //变量obj持有对生成并持有对象的强引用
+ id obj = [[NSMutableArray alloc]init];
+ //通过CFBridgingRetain将对象CFRetain赋值给变量cfObject
+ cfObject = CFBridgingRetain(obj);
+ CFShow(cfObject);
+ printf(“retain count = %d\n”,CFGetRetainCount(cfObject));
+ //对象的引用计数为2
+}
+ //obj超过作用域，强引用失效引用计数为1
+ printf(“retain count after the scope = %d\n”,CFGetRetainCount(cfObject));
+ CFRelease(cfObject);
+ //因为将对象CFRelease，所以引用计数为0，将对象废弃。
+我们再看下使用__bridge转换代替CFBridgingRetain或__bridge_retained转换时，源代码会变成什么样呢？
+ CFMutableArrayRef cfObject = NULL;
+ {
+  //变量obj持有对生成并持有对象的强引用
+  id obj = [[NSMutableArray alloc]init];
+  //因为通过__bridge转换时不改变对象的持有状况，所以引用计数为1
+  cfObject = （__bridge CFMutableArrayRef)obj;
+  CFShow(cfObject);
+  printf(“retain count = %d\n”,CFGetRetainCount(cfObject));
+ //对象的引用计数为1
+ }
+ //obj超过作用域，强引用失效引用计数为0，将对象废弃，此后访问对象出错！野指针
+ printf(“retain count after the scope = %d\n”,CFGetRetainCount(cfObject));
+ CFRelease(cfObject);</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>由此可知，CFBridgingRetain或者\_\_bridge\_retained是不可或缺的。
+下面我们反过来看下，这次由Core Foundation的API生成并持有对象，将该对象作为NSMutableArray对象来处理。
+</code></pre></div></div>
+<p>{
+	//变量cfObject生成并持有对象。
+	CFMutableArrayRef cfObject = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);
+	//cfObject对象引用计数为1
+	 printf(“retain count = %d\n”,CFGetRetainCount(cfObject));
+	//通过CFBridgingRelease赋值，变量obj持有对象强引用的同时，对象通过CFRelease释放
+	id obj = CFBridgingRelease(cfObject);
+   printf(“retain count after the cast = %d\n”,CFGetRetainCount(cfObject));</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> //对象的引用计数为1 }
+//obj超过作用域，强引用失效引用计数为0，将对象废弃。 下面我们看看通过\_\_bridge代替会出现什么情况： {
+ //变量cfObject生成并持有对象。
+ CFMutableArrayRef cfObject = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);
+ //cfObject对象引用计数为1
+ printf("retain count = %d\n",CFGetRetainCount(cfObject));
+//通过__bridge赋值，变量obj持有对象强引用
+id obj = (__bridge id)cfObject;
+ printf("retain count after the cast = %d\n",CFGetRetainCount(cfObject));
+
+//对象的引用计数为2 }
+//obj超过作用域，强引用失效引用计数为1，发生内存泄露。 由上面可以看出必须通过CFBridgingRetain/CFBridgingRelease或者\_\_bridge\_retained/\_\_bridge\_transfer转换。
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#### 属性
+ARC时，Objective-C的属性也会发生变化，需要我们加上属性修饰符来声明属性，我们看下属性修饰符和所有权修饰符的对应关系：
+![属性声明的属性与所有权修饰符对应的关系][image-11]
+以上各种属性赋值给指定的属性中就相当于赋值给附加各属性对应的所有权修饰符变量中。只有copy不是简单赋值，它赋值是通过NSCopying接口的copyWithZone：方法复制赋值源所生成的对象。
+#### 数组
+ARC所有权修饰符在修饰静态修饰符变量时和修饰对象类型变量是相同的。我们主要来看下修饰动态数组时的使用。将附有\_\_strong修饰符的变量作为动态数组使用时，根据不同的需要我们可以选择NSMutableArray，NSMutableDictionary，NSMutableSet等Foundation框架的容器。这些容器会恰当的持有追加的对象并帮助我们管理这些对象。但是在C语言的动态数组中也可以使用附有\_\_strong修饰符的变量，知识必须遵守一些事项，以下按顺序说明。
+1. 声明动态数组：
+</code></pre></div></div>
+<p>id __strong *array = nil;
+	//因为id *默认为__autoreleasing，所以这里显示指定__strong</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2. 使用calloc函数确保想分配的附有\_\_strong修饰符变量的容量占有块
+		
+</code></pre></div></div>
+<p>array = (id __strong *)calloc(entries, sizeof(id));
+		//这里分配了entries个所需的内存块。由于使用附有__strong修饰符的变量前必须先将其初始化为nil，所以这里使用使分配区域初始化为0的calloc函数来分配内存。不使用calloc函数，在用malloc函数分配内存后可用memset等函数将内存填充为0，但是，像下面的代码是非常危险的，以内malloc函数分配的内存区域没有被初始化为0，因此nil会被赋值给__strong修饰符并且被赋值了随机地址的变量中，从而释放一个不存在的对象，所以在分配内存是使用calloc函数。
+		array = (id __strong *)malloc(sizeof(id) * entries);
+		    for (NSUInteger i = 0; i &lt; entries; i++) {
+		        array[i] = nil;
+		    }</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3. 通过calloc函数分配的动态数组就能想静态数组一样使用
+		`array[0] = [[NSObject alloc]init];`
+但是在动态数组中操作附有\_\_strong修饰符的变量和静态数组有很大区别，需要自己释放元素，不能只使用free函数释放数组，数组各元素也需要释放。因为在静态数组中，编译器能够根据变量的作用域自动插入释放赋值对象的代码，但是在动态数组中，编译器不能确定数组的声明周期所以无法处理。我们需要像下面代码所示去释放数组元素：
+</code></pre></div></div>
+<p>for NSUInteger i = 0; i &lt; entries; i++) {
+	  array[i] = nil;
+}
+free(array);</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>同初始化时注意事项相反，即使使用memset函数将内存填充为0也不会释放数组元素对象，只会引起内存泄露，必须赋值为nil。另外使用memcpy和realloc函数重新分配内存块也会有危险，由于数组元素赋值的对象有可能被保留在内存中或是重复被废弃，所以这两个函数也禁止使用。最好不要用\_\_autoreleasing修饰符去修饰动态数组。由于\_\_unsafe\_unretained修饰在编译器内存管理对象之外，所以它与void \*类型一样，只能作为C语言的指针类型来使用。
+#### ARC实现
+苹果官方说明中称，ARC是由编译器进行内存管理的，其实编译器是无法完全胜任的，还需要Runtime的协助。
+##### \_\_strong实现
+我们通过clang可以看到程序的汇编输出，通过汇编输出和objc4库的源代码就能够知道程序是怎么工作的，我们来看下下面代码是怎么工作的：
+</code></pre></div></div>
+<p>{
+ id __strong obj = [[NSObject alloc]init];
+}
+//编译器的模拟代码如下：
+id obj = objc_msgSend(NSObject,@selector(alloc));
+objc_msgSend(obj,@selector(init));
+objc_release(obj);
+通过上面代码可以看到编译器自动调用了release。下面再来看下不是通过alloc/new/copy/mutableCopy方法创建对象会是什么情况：
+{
+	id __strong obj = [NSMutableArray array];
+}
+	//编译器模拟代码
+id obj = objc_msgSend(NSMutableArray,@selector(array));
+objc_retainAutoreleasedReturnValue(obj);
+objc_release(obj);</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>这里稍有不同的是objc\_retainAutoreleasedReturnValue函数是什么呢，其实objc\_retainAutoreleasedReturnValue函数主要用于最优化程序运行。他的意思就是持有的对象是返回注册到autoreleasepool中对象的方法，或是函数的返回值。与objc\_retainAutoreleasedReturnValue函数相对的函数是objc\_autoreleaseReturnValue.下面我们来看下他的用法：
+</code></pre></div></div>
+<p>+(id)array
+{
+	 return [[NSMutableArray alloc] init];
+}
+//转换后的源代码使用了objc_autoreleaseReturnValue
++(id)array
+{
+	id obj = objc_msgSend(NSMutableArray.@selector(alloc));
+	objc_msgSend(obj,@selector(init));
+	return objc_autoreleaseReturnValue(obj);
+}</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc\_autoreleaseReturnValue函数会检查使用该函数的方法或函数调用方的执行命令列表，如果方法或函数的调用方在调用了方法或函数后紧接着调用了objc\_retainAutoreleasedReturnValue函数，那么就不将返回的对象注册到autoreleasepool中，而是直接传递到方法或函数的调用方。（ps:在objc4版本493.9中，只能在OS X64位中最优化）如下图所示:
+![省略了autoreleasepool注册][image-12]
+##### \_\_weak实现
+我们先来看下\_\_weak的功能：
+- 若附有\_\_weak修饰符的变量所引用的对象被废弃，自动置为nil。
+- 使用\_\_weak修饰符的变量，即是使用注册到autoreleasepool中的对象。
+</code></pre></div></div>
+<p>id __weak obj1 = obj;
+//转换后的源代码
+id obj1 ;
+objc_initWeak(&amp;obj1,obj);
+objc_destroyWeak(&amp;obj1);</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc\_initWeak函数初始化附有\_\_weak修饰符的变量，在变量作用域结束时通过objc\_destroyWeak函数释放变量。那么objc\_initWeak又是怎么初始化的呢？我们看下面代码：
+</code></pre></div></div>
+<p>obj1 = 0;
+objc_storeWeak(&amp;obj1,obj)；
+//objc_initWeak首先将obj1初始化为0，然后再通过objc_storeWeak函数赋值给obj1。
+//objc_destoryWeak函数将0作为参数调用objc_storeWeak函数，释放变量
+bjc_storeWeak(&amp;obj1,0)；</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc\_storeWeak函数把第二个参数的赋值对象作为键值，将第一参数的附有\_\_weak修饰符的变量的地址注册到weak表中，如果第二个参数为0，则把变量的地址从weak表中移除。
+下面我么来看下对象废弃的动作：
+1. objc\_release
+2. 引用计数为0所以执行dealloc
+3. \_objc\_rootDealloc
+4. object\_dispose
+5. objc\_destructInstance
+6. objc\_clear\_deallocating
+对象被废弃是调用objc\_clear\_deallocating的动作如下：
+1. 从weak表中获取废弃对象的地址为键值的记录。
+2. 将包含在记录中的所有附有\_\_weak修饰符变量的地址，赋值为nil
+3. 从weak表中删除该记录。
+4. 从引用计数表中删除废弃对象的地址为键值的记录。
+根据上面的步骤，前面说的如果附有\_\_weak修饰符变量所引用的对象被废弃，则将nil赋值给该变量这一功能被实现，但是如果大量使用附有\_\_weak修饰符的变量，则会消耗响应的CPU资源。我们只在需要避免循环引用是使用\_\_weak修饰符。
+下面我么来验证第二个功能：使用\_\_weak修饰符的变量即是使用注册到autoreleasepool中的对象。
+</code></pre></div></div>
+<p>id __weak obj1 = obj;
+NSLog(@”%@”,obj1);
+//该源代码转换成如下形式
+id obj1;
+objc_initWeak(&amp;obj1,obj);
+id tmp = objc_loadWeakRetained(&amp;obj1);
+objc_autorelease(tmp);
+NSLog(@”%@”,tmp);
+objc_destroyWeak(&amp;obj1);</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>相比于前面的情形，增加了objc\_loadWeakRetained函数和objc\_autorelease函数，这些函数调用动作如下：
+1. objc\_loadWeakRetained函数取出附有\_\_weak修饰符变量所引用的对象，并且retain。
+2. objc\_autorelease函数将对象注册到autoreleasepool中。
+如果大量使用附有\_\_weak修饰符的变量，注册到autoreleasepool的对象也会大量增加，因此在使用附有\_\_weak修饰符的变量，最好先暂时赋值给\_\_strong修饰符的变量后再使用。
+##### \_\_autoreleasing实现
+</code></pre></div></div>
+<p>@autoreleasepool {
+    id __autoreleasing obj = [[NSObject alloc]init];
+}
+	//转换成如下形式
+id pool = objc_autoreleasePoolPush();
+id obj = objc_msgSend(NSObject,@selector(alloc));
+objc_msgSend(obj,@selector(init));
+objc_autorelease(obj);
+objc_autoreleasePoolPop(pool);</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>这与苹果的autorelease实现中的说明完全相同。我们再来看下在autoreleasepool块中使用注册到autoreleasepool中的对象会如何。
+</code></pre></div></div>
+<p>@autoreleasepool {         <br />
+	id __autoreleasing obj = [NSMutableArray array];
+}
+	//转换成如下形式
+	id pool = objc_autoreleasePoolPush();
+	id obj = objc_msgSend(NSMutableArray,@selector(array));
+	objc_retainAutoreleasedReturnValue(obj);
+	objc_autorelease(obj);
+	objc_autoreleasePoolPop(pool);
+```
+虽然持有对象的方法从alloc变为objc_retainAutoreleasedReturnValue函数，但注册autoreleasepool的方法没有改变，仍是objc_autorelease函数。</p>
+<h4 id="引用计数-1">引用计数</h4>
+<p>前面我们一直都在说的是引用计数管理的思考方式，没有过多的去关注引用计数的值，我们可以通过_objc_rootRetainCount(id obj)函数获取引用计数的值，但实际上并不能够完全信任该函数取得的值。对于已经释放的对象以及不正确的对象地址，有时也会返回1。另外在多线程中使用对象的引用计数数值，因为存有竞态条件的问题，所以取得的数值不一定完全可信。虽然在调试中_objc_rootRetainCount(id obj)很有用，但最好在了解其所具有的问题的基础上来使用。</p>
+<h3 id="感悟">感悟</h3>
+<p>平常我们写代码可能不会去想这些东西，但是我们一定需要了解这些东西，因为一旦出现问题，这些东西会让我们在分析问题，处理问题上更加得心应手。了解了一个东西，我们再去使用它。就像使用第三方库时，我们应该先了解再去使用，不应该只是看看他的API直接就用了，这样我们一点收获都没有。我们也没必要重复的去造轮子，了解了就可以拿来用。知其然，知其所以然，这一点是我们应该做到的。</p>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=读Objective-C高级编程笔记一——引用计数&amp;url=%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E8%BF%9F%E6%9D%A5%E7%9A%842017%E6%80%BB%E7%BB%93">
+        <section class="post">
+            <h2>迟来的2017总结</h2>
+            <p>2017年过去了，今天是2018年01月10日，终于有时间整理一下过去，展望一下未来了。年初给自己定了几个目标，但是那时没有写东西的习惯(虽然现在也没有)，现在回想起来已然不记得什么了。只记得一个大概就是多读书，多写总结。然而并没有达到。只能说一年的时光又被我浪费掉了。从这篇文章开始，以后每周要写一篇文章了。对未来的展望，依然是多读书，多写文章。因为，读书是一个输入的过程，而写作是个输出的过程。希望自己写的都是自己实践过的，不写软文。先不展望未来了。先回忆下过去吧。下面从工作、生活、学习三方面做下总结。 ## 工作 今年9月份离开了呆了一年半的公司。一年半，对于我来说，还是很珍贵的。在这一年半的时光里，我从一个菜鸟变成了不是那么菜的菜鸟。学到了很多，但是学习的速度不快，总的来说小有进步。过去的一年，我的内心是非常焦虑的。为什么呢？我不止一遍的问自己，主要还是自己能力的问题。在公司，发现自己好多想学的东西，没有办法去实现，离开公司吧，以自己的能力，很难找到一份中意的工作。就是这样矛盾着，到了9月份。公司因为业务问题，把我们移动端辞退了一部分，我就在这一部分中。现在想来也不是坏事，自己没勇气做的事情，别人逼了自己一把。接下来找工作的事情就不详细说了，总结下来一句话：能力不好，好工作自然不好找喽。经历了将近一个月，总算找到个自己还算满意的。接下来，进入新环境。刚来接手个新项目，领导说了，让我用Swift开发。卧槽，我Swift没看过，为了不表现出自己的菜，我开始了猛补Swift的道路。用了一个星期，把Swift的官方文档读了一遍，我突然发现，光读是没用的，用的时候还是忘记了。所以从这里面可以看出来，想学东西就要了解一下，然后撸起袖子就是干。在项目中学习，然后把那些突然让自己茅塞顿开的知识记录下来，写成文章，这也是一个输入与输出的过程啊。 从来到这个公司到现在，已经快四个月了，项目也接近了尾声，然而现在倒在了上线上。领导一直觉的是项目的问题，因为小公司，没有测试，软件质量没有保障，所以匆忙上线肯定是不行的。提了几次建议，没有被采纳，只是一味的屏蔽功能，感觉真的是无药可救。没办法，只能先忍着了。要么忍，要么狠，要么滚呗。自己能力不行，就要对自己狠。努力把项目做好，后面，我依然会提出我自己的建议，采不采纳是他们的问题，我自己尽力了，我尽力把自己能做的做好。问心无愧。 ## 学习 每次都对自己说，要多读书，结果每天回到家。就被好看的电视剧吸引过去了，然后一看表，11点多了，该睡了，一页书都没开。然后感叹，自己进步好慢。想要提高自己，就要克制住自己的欲望，其实欲望也是可以利用的嘛，给自己规定一个小目标，看完多少书后可以释放下欲望。这里并不是说看完，是要自己真正的去理解了。劳逸结合，提高自己的效率。 今年读的书就比较少了，读了一本狮子书，然后感觉自己并没有完全的掌握。明白了里面说的，然而问到了具体的场景，就懵逼了。这也是为什么面试小红书会挂掉的原因。以后还是需要多实践啊。现在会想起来今年收获确实不是很大，还有两本书快看完了，然而，也忘记了不少。以后，需要改变下策略了，是不是没有做笔记的问题，有时候自己看的太细了，导致自己的速度下降了，其实不用看那么细，不懂的可以先跳过去。希望以后可以找到一个高效读书的方法。等找到了，再分享出来。 ## 生活 今年的生活没有太大的变化。年中的时候办了一个健身卡，由于搬家的原因，就没用了，转出去赔了不少钱。以后一定要杜绝冲动消费。光是这些钱自己也是花了不少。希望自己明年可以坚持健身，感觉现在年龄不大，但是注意力很难集中。而且整个人精神不太好。希望可以坚持健身，改善下自己的精神面貌。还有，就是今年开始关注理财了，关注了且慢的长赢计划，截止到今天，没有多少收入，但是贵在坚持，希望自己以后多赚钱，坚持定投，然后研究下股票。来年也研究下保险。不能总想着自己赚工资，要学会理财，这也是个很重要的技能。这也是2017年一个不小的进步吧，自己有这个思想的转变就不错啦。 ## 未来的展望 ###...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/UIKit-Dynamic-Tutorial">
+        <section class="post">
+            <h2>UIKit Dynamic Tutorial</h2>
+            <p>这是一篇翻译自Raywenderlich上的文章，原文。 What’s UIKit Dynamic   iOS7鼓励我们设计出一个物理动态的效果，这个听起来是一个很艰巨的任务。但是苹果爸爸已经为我们提供了一些非常好用的东西，就是UIKit Dynamics和Motion Effects。 UIKit Dynamics 是一个被整合的UIKit中的完整物理引擎。它允许你通过添加一些重力，附件(弹簧），力等行为来创建感觉真实的效果。你只管定义界面元素采用的物理特征，其他的就交给UIKit Dynamics。 Motion Effects 就是你创建的一些行为，比如上面提到的那些重力，附件等等的东西。 当把这两个用在一起时，将会很自然的响应自己的行为。...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

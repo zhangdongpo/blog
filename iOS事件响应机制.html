@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>iOS事件响应机制</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="iOS事件响应机制" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="iOS事件响应机制" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "iOS事件响应机制",
+    "url": "//iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">iOS事件响应机制</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2015-10-07">07 Oct 2015</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/UI'>Ui</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>​         本文着重讲解iOS事件的传递机制，如有错误或者有意见不同者，欢迎指出讨论。</p>
+
+<p>​           iOS的事件有好几种：Touch Events(触摸事件)、Motion Events(运动事件，比如重力感应和摇一摇等)、Remote Event(远程事件，比如用耳机上的按键来控制手机)，其中我们最常用的就是触摸事件了，基于存在于APP的每个地方，我们就主要讲讲他。</p>
+
+<p>​         我们从三个方面来介绍iOS的事件机制：1.响应链是什么时候构建的？2.事件的第一响应者怎么确定的，3.事件第一响应者确定后，系统是怎么传递事件的。
+<!-- more -->
+##响应链的构建</p>
+
+<p>无论是哪种事件，其传递和响应都与响应链息息相关，那么响应链到底是一个什么样的东西呢？ 在UIKit中有一个类：UIResponder，我们可以看看头文件的几个属性和方法：</p>
+
+<pre><code class="language-objective-c">NS_CLASS_AVAILABLE_IOS(2_0) @interface UIResponder : NSObject
+
+- (nullable UIResponder*)nextResponder;
+
+- (BOOL)canBecomeFirstResponder;    // default is NO
+- (BOOL)becomeFirstResponder;
+
+- (BOOL)canResignFirstResponder;    // default is YES
+- (BOOL)resignFirstResponder;
+
+- (BOOL)isFirstResponder;
+
+// Generally, all responders which do custom touch handling should override all four of these methods.
+// Your responder will receive either touchesEnded:withEvent: or touchesCancelled:withEvent: for each
+// touch it is handling (those touches it received in touchesBegan:withEvent:).
+// *** You must handle cancelled touches to ensure correct behavior in your application.  Failure to
+// do so is very likely to lead to incorrect behavior or crashes.
+- (void)touchesBegan:(NSSet&lt;UITouch *&gt; *)touches withEvent:(nullable UIEvent *)event;
+- (void)touchesMoved:(NSSet&lt;UITouch *&gt; *)touches withEvent:(nullable UIEvent *)event;
+- (void)touchesEnded:(NSSet&lt;UITouch *&gt; *)touches withEvent:(nullable UIEvent *)event;
+- (void)touchesCancelled:(nullable NSSet&lt;UITouch *&gt; *)touches withEvent:(nullable UIEvent *)event;
+- (void)touchesEstimatedPropertiesUpdated:(NSSet * _Nonnull)touches NS_AVAILABLE_IOS(9_1);
+
+</code></pre>
+
+<p>UIResponder是所有可以响应事件的类的基类(从名字应该就可以看出来了)，其中包括最常见的UIView和UIViewController甚至是UIApplication，所以我们的UIView和UIViewController都是作为响应事件的载体。</p>
+
+<p>​        事实事件响应链的形成和事件的响应和传递，UIResponder都帮我们做了很多事。我们的app中，所有的视图都是按照一定的结构组织起来的，即树状层次结构，每个view都有自己的superView，包括controller的topmost view(controller的self.view)。当一个view被add到superView上的时候，他的nextResponder属性就会被指向它的superView，当controller被初始化的时候，self.view(topmost view)的nextResponder会被指向所在的controller，而controller的nextResponder会被指向self.view的superView，这样，整个app就通过nextResponder串成了一条链，也就是我们所说的响应链。所以响应链就是一条虚拟的链，并没有一个对象来专门存储这样的一条链，而是通过UIResponder的属性串连起来的。下图是苹果官方文档给出的两种传递事件的app架构：</p>
+
+<p><span><img src="\images\iOS事件响应机制\1.png" /></span></p>
+
+<p>##Hit-test View</p>
+
+<p>​         我们开头说道iOS有三种event类型，事件传递中UIWindow会根据不同的event，用不同的方式寻找initial object，initial object决定当前的事件类型。比如Touch Event，UIWindow会先试着把事件传递给事件发生的那个view，就是下面要说的hit-textview。对于Motion和Remote Event，UIWindow会把例如震动和远程控制事件传递给当前的firstResponder，有关firstResponder的信息请自己查看官方文档，下面我们主要说Touch Event的hit-textview。</p>
+
+<p>​        有了事件响应链，接下来就是寻找事件的具体响应者了，我们称之为：Hit-Testing View，寻找这个View的过程我们称之为，hit-test。</p>
+
+<p>​        什么是hit-test，我们可以理解为一个探测器，通过这个探测器，我们可以找到并且判断手指是否点击在某个视图上，就是通过Hit-test找到手指点击到的处于屏幕最前面的那个UIView。</p>
+
+<p>​        在解释hit-test是什么工作之前，我们先看看它是什么时候被调用的。hit-test在代码中其实就是一个函数，UIView有下面两个方法：</p>
+
+<pre><code class="language-objective-c">- (nullable UIView *)hitTest:(CGPoint)point withEvent:(nullable UIEvent *)event;
+- (BOOL)pointInside:(CGPoint)point withEvent:(nullable UIEvent *)event;  
+</code></pre>
+
+<p>​	每当手指接触屏幕，UIApplication接收到手机的事件后，就会去掉用UIWindow的<code class="highlighter-rouge">hitTest:withEvent:</code>，看看当前点击的点是否在window内，如果是则继续一次调用subView的<code class="highlighter-rouge">hitTest:withEvent:</code>方法，直到找到最后需要的view。调用结束并且hit-test view确定后，这个view和view上面依附的手势，都会和一个UITouch对象相关联起来，这个UITouch会作为事件的传递参数之一，我们可以看到UITouch头文件里面有一个view和gestureRecognizers的属性，这就是hit-test view和他的手势。</p>
+
+<p>​	现在知道hit-test是什么时候调用了，那么接下来看看它是怎么工作的。Hit-Test是采用递归的方法从view层级的根节点开始遍历，看看下面这张图：</p>
+
+<p><span><img src="\images\iOS事件响应机制\2.png" /></span></p>
+
+<p>​	UIWindow有一个mainview，mainview里面有三个subview，他们的层级关系是，view A在最下面，view B在中间，view C在最上，也就是，view A是最先被加到superview上面的，view C最晚。其中view A和view B有一部分重叠。如果手指在view B.1和view A.2重叠的地方点击。按照上面递归的方式，顺序如下图所示：</p>
+
+<p><span><img src="\images\iOS事件响应机制\3.png" /></span></p>
+
+<p>​	递归是向界面的根节点UIWindow发送hitTest:withEvent:消息开始的，从这个消息返回的是一个UIView，也就是手指当前位置最前面的那个 hittest view。当向UIWindow发送hitTest:withEvent:消息时，hitTest:withEvent:里面所做的事，就是判断当前的点击位置是否在window里面，如果在则遍历window的subview然后依次对subview发送hitTest:withEvent:消息(注意这里给subview发送消息是根据当前subview的index顺序，index越大就越先被访问)。如果当前的point没有在view上，view的subview就不需要遍历了，当事件遍历到了view B.1，发现point在view B.1里面，并且view B.1没有subview，那么他就是我们要找的hittest view了，找到之后就会一路返回直到根节点，而view B之后的view A也不会被遍历了。下面这个图是网上找的，很是到位：</p>
+
+<p><span><img src="\images\iOS事件响应机制\4.png" /></span></p>
+
+<p>注意hitTest里面是有判断当前的view是否支持点击事件，比如userInteractionEnabled、hidden、alpha等属性，都会影响一个view是否可以相应事件，如果不响应则直接返回nil。 我们留意到还有一个pointInside:withEvent:方法，这个方法跟hittest:withEvent:一样都是UIView的一个方法，通过他开判断point是否在view的bounds范围内。如果这些条件都满足了，那么遍历就可以继续往下走了。代码大概如下：</p>
+
+<pre><code class="language-objective-c">-(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    if (self.userInteractionEnabled || self.hidden || self.alpha &lt;= 0.01) {
+        return nil;
+    }
+    if ([self pointInside:point withEvent:event]) {
+        for (UIView *subView in [self.subviews reverseObjectEnumerator]) {
+            CGPoint converPoint = [subView convertPoint:point fromView:self];
+            UIView *hitTestView = [subView hitTest:converPoint withEvent:event];
+            if (hitTestView) {
+                return hitTestView;
+            }
+        }
+        return self;
+    }
+    return nil;
+}
+</code></pre>
+
+<p>##Hit-Test应用</p>
+
+<p>1.扩大view的点击区域</p>
+
+<p>​	一个按钮尺寸是10*10，如果要扩大按钮的点击区域，就是点击其四周之外的10pt也可以响应点击，可以怎么做呢，也许重写hitTest:withEvent:是个好办法，hittest就是返回可以响应事件的view，如果我们在button的子类就重写他，在里面判断如果point在button的frame之外的10pt，就返回button自己。</p>
+
+<pre><code class="language-objective-c">-(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    if (self.userInteractionEnabled || self.hidden || self.alpha &lt;= 0.01) {
+        return nil;
+    }
+    CGRect touchRect = CGRectInset(self.bounds, -10, -10);
+    if (CGRectContainsPoint(touchRect, point)) {
+        for (UIView *subView in [self.subviews reverseObjectEnumerator]) {
+            CGPoint converPoint = [subView convertPoint:point fromView:self];
+            UIView *hitTestView = [subView hitTest:converPoint withEvent:event];
+            if (hitTestView) {
+                return hitTestView;
+            }
+        }
+        return self;
+    }
+    return nil;
+}
+</code></pre>
+
+<p>2.将事件传递给兄弟view</p>
+
+<p>​	如上面第一个图，如果需要是需要view A响应事件而不是B(即使点在重叠的部分)，什么都不做的话，当点击在重叠的时候，A是不能响应事件的，除非B的userInteractionEnabled为NO并且者B没有任何事件的响应函数。这个时候通过重写B的hittest可以解决这个问题，在B的hittest里面直接返回nil就行了。</p>
+
+<pre><code class="language-objective-c">-(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    UIView *hitTestView = [super hitTest:point withEvent:event];
+    if (hitTestView == self) {
+        hitTestView = nil;
+    }
+    return hitTestView;
+}
+</code></pre>
+
+<p>2.将事件传递给subView</p>
+
+<p>​	如下图，蓝色的scrollView设置pagingEnabled使得image停止滚动后都会固定在居中的位置，如果在scrollView的左边或者右边活动发现scrollView是无法滚动的，原因就是hittest里面没有满足pointInSide这个条件，scrollView的bound只有蓝色的区域。这个时候重写UIView的hottest:withEvent:，然后返回scrollView即可解决问题。</p>
+
+<p><span><img src="\images\iOS事件响应机制\5.png" /></span></p>
+
+<pre><code class="language-objective-c">-(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
+    UIView *hitTestView = [super hitTest:point withEvent:event];
+    if (hitTestView) {
+        hitTestView = self.scrollView;
+    }
+    return hitTestView;
+}
+</code></pre>
+
+<p>##事件的传递</p>
+
+<p>​	有了响应链，并且找到了第一响应事件的对象，接下来就是把事件发送给这个响应者了。UIApplication中有个<code class="highlighter-rouge">sendEvent:</code>方法，在UIWindow中同样也有一个这个方法。UIApplication是通过这个方法把事件发送给UIWindow，然后UIWindow通过同样的接口把事件发个hit-test view的。这个我们可以从Time Profile里面得到证实：</p>
+
+<p><span><img src="\images\iOS事件响应机制\6.png" /></span></p>
+
+<p>​	当我点击了WRBuyBookButton之后，UIWindow会通过一个私有方法，在里面会去调用按钮的touchesBegan和touchesEnded方法，touchesBegan里面有设置按钮高亮等之类的动作，这就实现了事件的传递。而事件的响应，也就是按钮上绑定了action，是在touchesEnded里面通过调用UIApplication的sendAction:to:from:forEvent:方法来实现的，至于这个方法怎么去响应action，就只能猜测了，可能是通过OC的底层消息机制的相关接口objc-msgSend来发送消息实现的。如果第一响应者没有响应这个事件，那么就会根据响应链，把这个事件冒泡传递给nextResponder来响应。</p>
+
+<p>​	注意这里是怎么把事件传递给nextResponder的呢？拿touch事件来说，UIResponder里面的touch四个阶段的方法里面，实际上什么事都没做，UIView继承了它进行重写，重写的内容也是没有什么东西，就是把事件传递给了nextResponder,比如：<code class="highlighter-rouge">[self.nextResponder touchesBegan:touches withEvent:event]</code>。所以当一个view或者controller里面没有重写touch事件，那么这个事件就一直传递下去，直到UIAplication，这也就是事件向上冒泡的原理。如果view重写了touch方法，我们一般会看到的效果就是这个view响应了事件之后，事件就会被截断了，他得nextResponder不会收到这个事件，即使重写了nextResponder的touch方法。这个时候如果想事件继续传递下去，可以调用<code class="highlighter-rouge">[super touchesBegan:touches withEvent:event]</code>,不建议直接调<code class="highlighter-rouge">[self.nextResponder touchesBegan:touches withEvent:event]</code>。</p>
+
+<p>#关于UIScrollView的事件</p>
+
+<p>​	先说一个现象，我们平时加到UIScrollView(或者UITableView和UICollectionView)上的UIButton，即使有设置highLight的样式，点击的时候却发现这个样式老是出不来，但是按钮的事件命名可以响应的，很诡异。</p>
+
+<p>​	后来才知道，UIScrollView因为要滚动，所以对时间做了特殊的处理：当UIScrollView接收到事件后，会暂时劫持当前事件300ms，如果300ms之后手指还没有滚动欧冠，则认为你放弃滚动，放弃对事件的劫持并往下传递，但是从Time Profiler看到此时按钮并不是调用自身的touch方法，而是调用自身绑定手势的touch事件，由于按钮的highLighted样式是写在按钮的touch方法上的，所以这个时候就看不到高亮了，但是长按按钮可以有高亮的状态，这个就不太清楚为什么了，因为从Time Profiler里面看到按钮的touchesBegan好像没有被调。如果300ms之内手指滚动了，则相应滚动事件，事件就不会传给subView了，也就是不会继续调用按钮上手势的touch方法了。</p>
+
+<p><span><img src="\images\iOS事件响应机制\7.png" /></span></p>
+
+<p>​	可以通过UIScrollView的一个属性来解决这个问题：<code class="highlighter-rouge">delaysContentTouches</code>，意思是 是否需要延迟处理事件的传递，默认为NO，我们把它设为YES后，一切看起来挺好的，按钮终于有了高亮样式了，但是发现手指点击在按钮上并滚动，发现ScrollView滚动不了了。原来是当手指点击UIScrollView并在滚动之前，如果subView接收并且可以相应事件，那么事件响应链就会在subView相应事件后就截断了，即UIScrollView本身不会响应这个事件，不会发生滚动了。可以设置<code class="highlighter-rouge">canCancelContentTouches</code>为YES来让UIScrollView可以滚动，与之类似的还有一个<code class="highlighter-rouge">touchesShouldCancelInContentView:</code>接口，可以根据参数view来更判断是否需要cancel，如果需要可以在UIScrollView的子类重写这个接口。</p>
+
+<p>​	这一块里面的具体实现原理就不知道了。我们也没必要深究，大方向理解就好了，真的有兴趣的也可以去研究下，期待研究完的同学分享。</p>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=iOS事件响应机制&amp;url=iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/iOS%E8%A7%86%E5%9B%BE%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">
+        <section class="post">
+            <h2>iOS视图控制器的生命周期</h2>
+            <p>​ 我们去面试很多时候都被问到视图控制器的声明周期，下面我们着重来讲解下视图控制器的声明周期。 ## 了解重要的三个函数 ​ 视图控制器的声明周期我们讲解3个函数:1.loadView，2.viewDidLoad，3.viewDIdUnload。 ​ 1.loadView是我们每次访问VC的view时而且view为nil时，loadView就会调用。loadVIew是用来创建VC的view的。默认的实现方式是下面这两个： * 先去查找与VC相关的xib文件，通过xib文件来创建VC的view。 ​ 如果初始化VC时指定了xib文件，就会根据xib文件名来加载对应的xib文件，比如我们代码是这样写的 ```objective-c ViewController *view...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E5%A6%82%E4%BD%95%E7%94%A8%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F%E9%9A%90%E8%97%8F%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82">
+        <section class="post">
+            <h2>如何用类族模式隐藏实现细节</h2>
+            <p>​ 类族是一种很有用的模式，可以隐藏“抽象基类”中的实现细节。这里的抽象基类是指在这个类中只提供接口，并没有提供实现细节，通常是子类重写这个接口，来实现其中的细节。OC中的系统框架普遍应用这个模式。下面我们来举个例子，iOS中有个UIButton的类，想要创建一个按钮，需要调用下面这个方法： + (instancetype)buttonWithType:(UIButtonType)buttonType; ​ 该方法返回的对象，其类型取决于传入的按钮类型。然而不管返回什么类型的对象，他们都继承自同意基类，就是UIButton。这么做的意义在于，UIButton类的使用者无需关心创建出来的按钮具体属于哪个子类，也不用考虑按钮的绘制方式等实现细节。使用者只需知道如何创建按钮，怎么设置title这样的属性，怎么增加监听动作的目标对象等问题就好。 ​ 回到开头说的问题，我们可以把各种按钮的绘制逻辑都放在一个类里面，并根据类型来切换： -(void)drawRect:(CGRect)rect{ if (_type = TypeA) { //绘制TypeA类型button...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

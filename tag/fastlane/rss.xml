@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>freelf.me</title>
+   
+   <link></link>
+   <description>Freelf's Blog</description>
+   <language>en-uk</language>
+   <managingEditor> Freelf</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>记录一次解决安装fastlane报错过程</title>
+	  <link>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-05-29T22:50:06+00:00</pubDate>
+	  <guid>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B</guid>
+	  <description><![CDATA[
+	     <p>最近做新项目，因为将来会涉及到频繁打包去测试。为了提高打包效率，决定使用下 fastlane。按照流程先来安装。结果不出意料的报错了。</p>
+
+<!--more-->
+
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/1527133572.png" alt="" />
+我去，我命令行本来就不熟悉，再加上这个是一个 ruby 工具。我更不会 ruby。心里一万只草泥马奔过。做 iOS 需要会的好多啊。结果从下午 5 点半搞到 7 点也没搞定。算了回家吃饭了。回到家，用家里的电脑装，发现异常顺利，一点错不报，一下就成功了。这让我好难受，心里想估计是 Xcode command tools 错了。今天来到公司把 Xcode 命令行工具删了，重新下载。再次安装，妈的，还是一样。后来没办法了，网上的方法不对头啊，去看日志，发现有报错。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527133989.png" alt="" />
+然后就去搜这个错误的解决方法，在https://github.com/cython/cython/issues/2009 这里找到答案。没办法，试一下吧。抱着把系统玩坏的想法，删了/usr/local/include 这个文件，然后用 brew 重新下载了 llvm。再试一次，我去，终于成功了。放张图纪念下～
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527134186.png" alt="" />
+经过这次安装过程，我发现，找问题还是要去看日志，看到底哪里错误了，去解决根本问题。装这个东西浪费了一上午时间，虽然过程很坎坷，但是结果很美丽。以后可以随便打包啦！先安装上，还没开始用，等用完之后，再来写一下使用的感觉。</p>
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>

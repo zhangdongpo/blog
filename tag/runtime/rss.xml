@@ -1,0 +1,1123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>freelf.me</title>
+   
+   <link></link>
+   <description>Freelf's Blog</description>
+   <language>en-uk</language>
+   <managingEditor> Freelf</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>Objective-C Runtime --- 消息发送</title>
+	  <link>//Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-05-20T19:01:38+00:00</pubDate>
+	  <guid>//Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81</guid>
+	  <description><![CDATA[
+	     <p>上篇文章分析了对象的数据结构，这篇我们就结合源码来分析下Objective-C最核心的东西——消息发送。在Objective-C中，我们调用方法，其实都是发送消息。发送消息为Objective-C增加了动态特性，下面我们就来看一下Objective-C的消息发送过程。
+<!--more--></p>
+<h1 id="objc_msgsend简介">objc_msgSend简介</h1>
+<p>其实我们看大部分runtime文章，都是从这个函数看起的。在Objective-C中，我们调用方法的语法是这样的<code class="highlighter-rouge">[receiver message]</code>。编译期会把这个方法调用转换成下面这个函数：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc_msgSend(receiver, selector, arg1, arg2, ...)
+</code></pre></div></div>
+<p>其中第一个函数就是我们调用方法的recevier，第二个是个方法选择器，类型是<code class="highlighter-rouge">SEL</code>，我们看下<code class="highlighter-rouge">SEL</code>的定义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// An opaque type that represents a method selector.
+typedef struct objc_selector *SEL;
+</code></pre></div></div>
+<p><code class="highlighter-rouge">objc_selector</code>是一个映射到方法的C字符串。我们可以通过调用<code class="highlighter-rouge">@selector()</code>和<code class="highlighter-rouge">sel_registerName</code>生成一个<code class="highlighter-rouge">SEL</code>。等下会具体分析<code class="highlighter-rouge">SEL</code>。现在继续分析objc_msgSend函数。
+当receiver收到一条消息，消息发送函数通过isa指针找到类对象，在其类对象中查找方法实现。如果类对象中没有，通过superclass指针，找到其父类对象，在其中查找实现。一直查找到<code class="highlighter-rouge">NSObject</code>，只要找到实现就会去调用。这就是runtime查找方法实现的过程。为了加快方法调用，runtime系统缓存了已经调用过的方法。接下来我们会通过源码来分析。如果receiver为<code class="highlighter-rouge">nil</code>，会直接返回，并不会报错。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526885161.png" alt="" /></p>
+<h1 id="objc_msgsend源码解析">objc_msgSend源码解析</h1>
+<h2 id="selector">@selector</h2>
+<p>在<code class="highlighter-rouge">objc_msgSend</code>中，第一个参数我们不用过多解释。第二个参数selector，看起来简单，其实有些东西需要我们明白。这里需要我们注意的是：<strong>不同类中，相同方法名不带参数的方法所对应的方法选择器相同，如果方法有参数且参数数量相同，所对应的方法选择器也相同(和参数类型无关)。</strong>。前面这句话有点不太好懂，用代码来看一下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">TestObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span><span class="p">;</span> <span class="c1">// 1
+</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">a</span><span class="p">;</span> <span class="c1">// 2
+</span><span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">TestObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">a</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%d"</span><span class="p">,</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class="nc">TestTwoObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span><span class="p">;</span>  <span class="c1">// 3
+</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">str</span><span class="p">;</span> <span class="c1">// 4
+</span><span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">TestTwoObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">str</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>其中1和3对应的方法选择器相同，2和4对应的方法选择器相同。</p>
+<blockquote>
+  <ol>
+    <li>Objective-C为我们维护了一个方法选择器表。</li>
+    <li>使用<code class="highlighter-rouge">@selector()</code>时会从这个选择器表中查找对应的<code class="highlighter-rouge">SEL</code>，如果没有找到，会生成一个新的<code class="highlighter-rouge">SEL</code>添加到表中。</li>
+    <li>在编译期间会扫描全部的头文件和实现文件将其中的方法以及使用<code class="highlighter-rouge">@selector()</code>生成的选择子加入到方法选择器表中。</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>具体分析请看<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E4%BB%8E%E6%BA%90%E4%BB%A3%E7%A0%81%E7%9C%8B%20ObjC%20%E4%B8%AD%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%91%E9%80%81.md">从源代码看 ObjC 中消息的发送</a></p>
+</blockquote>
+
+<h2 id="解析objc_msgsend">解析objc_msgSend</h2>
+<p><code class="highlighter-rouge">objc_msgSend</code>是使用汇编写的，在<code class="highlighter-rouge">objc-msg-arm64.s</code>和<code class="highlighter-rouge">objc-msg-x86_64.s</code>中，有对应实现。由于自己能力不够，读不懂汇编，但是从里面的注释可以看出来，在<code class="highlighter-rouge">objc_msgSend</code>中，先会去缓存中查找方法，如果缓存没有找到，会调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数。<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数在runtime源码中是有实现的：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/***********************************************************************
+* _class_lookupMethodAndLoadCache.
+* Method lookup for dispatchers ONLY. OTHER CODE SHOULD USE lookUpImp().
+* This lookup avoids optimistic cache scan because the dispatcher
+* already tried that.
+**********************************************************************/
+IMP _class_lookupMethodAndLoadCache3(id obj, SEL sel, Class cls)
+{
+    return lookUpImpOrForward(cls, sel, obj, 
+                              YES/*initialize*/, NO/*cache*/, YES/*resolver*/);
+}
+</code></pre></div></div>
+<p>我们看到它调用了<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数，并且传递cache参数为NO，因为调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>之前，已经进行了cache查找，没有找到才调用<code class="highlighter-rouge">_class_lookupMethodAndLoadCache3</code>，所以这里传NO是避免再次查找缓存。
+具体的汇编代码分析请看<a href="https://www.jianshu.com/p/4d619b097e20">神经病院Objective-C Runtime住院第二天——消息发送与转发</a>。
+对objc_msgSend的分析有两种情况，一种是有缓存，一种是无缓存。我们向TestObject发送两次相同的消息就可以模拟出来。代码如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        TestObject *object = [TestObject new];
+        [object sayHello];
+        [object sayHello];
+    }
+    return 0;
+}
+</code></pre></div></div>
+<h3 id="无缓存">无缓存</h3>
+<p>我们先在第一次调用方法这一行打断点：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974679.png" alt="" />
+当到达这个断点之后在<code class="highlighter-rouge">lookUpImpOrForward</code>函数打断点，确保查找的消息是<code class="highlighter-rouge">sayHello</code>。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974777.png" alt="" />
+当断点到达<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数，左侧调用栈如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974866.png" alt="" />
+从图中可以看出来<code class="highlighter-rouge">objc_msgSend</code>并没有直接调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>，而是通过<code class="highlighter-rouge">_objc_msgSend_uncached</code>调用。下面我们就来分析下<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数。这个才是实际干活的。</p>
+<h4 id="lookupimporforward">lookUpImpOrForward</h4>
+<p>由于<code class="highlighter-rouge">lookUpImpOrForward</code>涉及很多的函数调用，我们将它分成几个部分来分析：</p>
+
+<ol>
+  <li>无锁的缓存查找。</li>
+  <li>加锁。</li>
+  <li>如果类没有实现或初始化，实现或初始化。</li>
+  <li>在当前类的缓存中查找。</li>
+  <li>在当前类的方法列表中查找。</li>
+  <li>在父类的缓存和方法列表中查找。</li>
+  <li>没有找到实现，尝试方法解析。</li>
+  <li>使用消息转发。</li>
+  <li>解锁返回实现。</li>
+</ol>
+
+<p>下面，我们来看下这个过程的具体实现</p>
+<h5 id="无锁的缓存查找">无锁的缓存查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>runtimeLock.assertUnlocked();
+
+// Optimistic cache lookup
+if (cache) {
+    imp = cache_getImp(cls, sel);
+    if (imp) return imp;
+}
+</code></pre></div></div>
+<p>由于通过<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>调用<code class="highlighter-rouge">lookUpImpOrForward</code>时传入cache为<code class="highlighter-rouge">NO</code>，所以这一步的缓存查找直接略过了。</p>
+<h5 id="加锁">加锁</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// runtimeLock is held during isRealized and isInitialized checking
+// to prevent races against concurrent realization.
+
+// runtimeLock is held during method search to make
+// method-lookup + cache-fill atomic with respect to method addition.
+// Otherwise, a category could be added but ignored indefinitely because
+// the cache was re-filled with the old value after the cache flush on
+// behalf of the category.
+runtimeLock.read();
+</code></pre></div></div>
+<p>通过注释我们可以看到，<code class="highlighter-rouge">runtimeLock</code>需要在<code class="highlighter-rouge">isRealized</code>和<code class="highlighter-rouge">isInitialized</code>检查过程中加锁，避免并发实现过程中的资源竞争(其实锁这些东西我也不太明白，后面学操作系统时会补一下这方面知识)。</p>
+<h5 id="如果类没有实现或初始化实现或初始化">如果类没有实现或初始化，实现或初始化</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (!cls-&gt;isRealized()) {
+        // Drop the read-lock and acquire the write-lock.
+        // realizeClass() checks isRealized() again to prevent
+        // a race while the lock is down.
+        runtimeLock.unlockRead();
+        runtimeLock.write();
+
+        realizeClass(cls);
+
+        runtimeLock.unlockWrite();
+        runtimeLock.read();
+    }
+
+if (initialize  &amp;&amp;  !cls-&gt;isInitialized()) {
+    runtimeLock.unlockRead();
+    _class_initialize (_class_getNonMetaClass(cls, inst));
+     runtimeLock.read();
+     // If sel == initialize, _class_initialize will send +initialize and 
+    // then the messenger will send +initialize again after this 
+    // procedure finishes. Of course, if this is not being called 
+    // from the messenger then it won't happen. 2778172
+}
+</code></pre></div></div>
+<p>在Objective-C运行时初始化过程中，会通过<code class="highlighter-rouge">realizeClass()</code>为类分配可读写的<code class="highlighter-rouge">class_rw_t</code>。<code class="highlighter-rouge">_class_initialize</code>会调用类的<code class="highlighter-rouge">+initialize</code>方法。以后会分析<code class="highlighter-rouge">+initialize</code>方法。</p>
+<h5 id="在当前类的缓存中查找">在当前类的缓存中查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imp = cache_getImp(cls, sel);
+if (imp) goto done;
+</code></pre></div></div>
+<p>这个很简单，直接调用<code class="highlighter-rouge">cache_getImp</code>函数，从类的<code class="highlighter-rouge">cache</code>属性中查找，找到实现直接执行<code class="highlighter-rouge">goto done</code>。我们先看下<code class="highlighter-rouge">done</code>的实现。很简单，直接解锁，返回实现。<code class="highlighter-rouge">cache_getImp</code>也是使用汇编写的。感兴趣可以去看<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a>。其原理就是在类的cache中查找实现并返回。因为我们这个小节是模拟无缓存消息发送，所以这一步查找不到，继续下一步。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>done:
+runtimeLock.unlockRead();
+return imp;
+</code></pre></div></div>
+<h5 id="在当前类的方法列表中查找">在当前类的方法列表中查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Try this class's method lists.
+{
+    Method meth = getMethodNoSuper_nolock(cls, sel);
+    if (meth) {
+        log_and_fill_cache(cls, meth-&gt;imp, sel, inst, cls);
+        imp = meth-&gt;imp;
+        goto done;
+    }
+}
+</code></pre></div></div>
+<p>通过调用<code class="highlighter-rouge">getMethodNoSuper_nolock</code>函数查找方法的结构体指针<code class="highlighter-rouge">method_t *</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static method_t *
+getMethodNoSuper_nolock(Class cls, SEL sel)
+{
+    runtimeLock.assertLocked();
+
+    assert(cls-&gt;isRealized());
+    // fixme nil cls? 
+    // fixme nil sel?
+
+    for (auto mlists = cls-&gt;data()-&gt;methods.beginLists(), 
+              end = cls-&gt;data()-&gt;methods.endLists(); 
+         mlists != end;
+         ++mlists)
+    {
+        method_t *m = search_method_list(*mlists, sel);
+        if (m) return m;
+    }
+
+    return nil;
+}
+
+</code></pre></div></div>
+<p>因为类对象中<code class="highlighter-rouge">method_array_t</code>是一个二维数组，所以循环<code class="highlighter-rouge">method_array_t</code>之后还需要<code class="highlighter-rouge">search_method_list</code>这个函数去查找对应的<code class="highlighter-rouge">method_t</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static method_t *search_method_list(const method_list_t *mlist, SEL sel)
+{
+    int methodListIsFixedUp = mlist-&gt;isFixedUp();
+    int methodListHasExpectedSize = mlist-&gt;entsize() == sizeof(method_t);
+    
+    if (__builtin_expect(methodListIsFixedUp &amp;&amp; methodListHasExpectedSize, 1)) {
+        return findMethodInSortedMethodList(sel, mlist);
+    } else {
+        // Linear search of unsorted method list
+        for (auto&amp; meth : *mlist) {
+            if (meth.name == sel) return &amp;meth;
+        }
+    }
+
+#if DEBUG
+    // sanity-check negative results
+    if (mlist-&gt;isFixedUp()) {
+        for (auto&amp; meth : *mlist) {
+            if (meth.name == sel) {
+                _objc_fatal("linear search worked when binary search did not");
+            }
+        }
+    }
+#endif
+
+    return nil;
+}
+</code></pre></div></div>
+<p>在这个方法中，会判断mlist是否是一个有序列表，如果是有序列表，会使用<code class="highlighter-rouge">findMethodInSortedMethodList</code>这个函数执行二分查找，如果无序就遍历查找。
+如果<code class="highlighter-rouge">getMethodNoSuper_nolock</code>这个方法找到了<code class="highlighter-rouge">Method</code>，通过<code class="highlighter-rouge">log_and_fill_cache</code>将实现加入缓存中。这个操作最后通过<code class="highlighter-rouge">cache_fill_nolock</code>完成。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static void cache_fill_nolock(Class cls, SEL sel, IMP imp, id receiver)
+{
+    cacheUpdateLock.assertLocked();
+
+    // Never cache before +initialize is done
+    if (!cls-&gt;isInitialized()) return;
+
+    // Make sure the entry wasn't added to the cache by some other thread 
+    // before we grabbed the cacheUpdateLock.
+    if (cache_getImp(cls, sel)) return;
+
+    cache_t *cache = getCache(cls);
+    cache_key_t key = getKey(sel);
+
+    // Use the cache as-is if it is less than 3/4 full
+    mask_t newOccupied = cache-&gt;occupied() + 1;
+    mask_t capacity = cache-&gt;capacity();
+    if (cache-&gt;isConstantEmptyCache()) {
+        // Cache is read-only. Replace it.
+        cache-&gt;reallocate(capacity, capacity ?: INIT_CACHE_SIZE);
+    }
+    else if (newOccupied &lt;= capacity / 4 * 3) {
+        // Cache is less than 3/4 full. Use it as-is.
+    }
+    else {
+        // Cache is too full. Expand it.
+        cache-&gt;expand();
+    }
+
+    // Scan for the first unused slot and insert there.
+    // There is guaranteed to be an empty slot because the 
+    // minimum size is 4 and we resized at 3/4 full.
+    bucket_t *bucket = cache-&gt;find(key, receiver);
+    if (bucket-&gt;key() == 0) cache-&gt;incrementOccupied();
+    bucket-&gt;set(key, imp);
+}
+</code></pre></div></div>
+<p>为了保证缓存有一个空的位置，当缓存中使用的容量大于总容量的3/4时，会扩充缓存，使缓存的大小翻倍。</p>
+<blockquote>
+  <p>在缓存翻倍的过程中，当前类全部的缓存都会被清空，Objective-C 出于性能的考虑不会将原有缓存的 bucket_t 拷贝到新初始化的内存中。</p>
+</blockquote>
+
+<p>缓存完成后执行<code class="highlighter-rouge">goto done</code>返回实现调用。</p>
+<h5 id="在父类的缓存和方法列表中查找">在父类的缓存和方法列表中查找。</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> // Try superclass caches and method lists.
+    {
+        unsigned attempts = unreasonableClassCount();
+        for (Class curClass = cls-&gt;superclass;
+             curClass != nil;
+             curClass = curClass-&gt;superclass)
+        {
+            // Halt if there is a cycle in the superclass chain.
+            if (--attempts == 0) {
+                _objc_fatal("Memory corruption in class list.");
+            }
+            
+            // Superclass cache.
+            imp = cache_getImp(curClass, sel);
+            if (imp) {
+                if (imp != (IMP)_objc_msgForward_impcache) {
+                    // Found the method in a superclass. Cache it in this class.
+                    log_and_fill_cache(cls, imp, sel, inst, curClass);
+                    goto done;
+                }
+                else {
+                    // Found a forward:: entry in a superclass.
+                    // Stop searching, but don't cache yet; call method 
+                    // resolver for this class first.
+                    break;
+                }
+            }
+            
+            // Superclass method list.
+            Method meth = getMethodNoSuper_nolock(curClass, sel);
+            if (meth) {
+                log_and_fill_cache(cls, meth-&gt;imp, sel, inst, curClass);
+                imp = meth-&gt;imp;
+                goto done;
+            }
+        }
+    }
+
+</code></pre></div></div>
+<p>这个过程和上面差不多，只是多了一个迭代父类的过程。和上面的区别是，在父类中找到的<code class="highlighter-rouge">_objc_msgForward_impcache</code>需要交给当前类来处理。</p>
+<h5 id="尝试方法解析器">尝试方法解析器</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> if (resolver  &amp;&amp;  !triedResolver) {
+    runtimeLock.unlockRead();
+    _class_resolveMethod(cls, sel, inst);
+    runtimeLock.read();
+    // Don't cache the result; we don't hold the lock so it may have 
+    // changed already. Re-do the search from scratch instead.
+    triedResolver = YES;
+    goto retry;
+ }
+</code></pre></div></div>
+<p>上面这部分代码调用了<code class="highlighter-rouge">_class_resolveMethod</code>来解析没有实现的方法:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void _class_resolveMethod(Class cls, SEL sel, id inst)
+{
+    if (! cls-&gt;isMetaClass()) {
+        // try [cls resolveInstanceMethod:sel]
+        _class_resolveInstanceMethod(cls, sel, inst);
+    } 
+    else {
+        // try [nonMetaClass resolveClassMethod:sel]
+        // and [cls resolveInstanceMethod:sel]
+        _class_resolveClassMethod(cls, sel, inst);
+        if (!lookUpImpOrNil(cls, sel, inst, 
+                            NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+        {
+            _class_resolveInstanceMethod(cls, sel, inst);
+        }
+    }
+}
+</code></pre></div></div>
+<p>先判断当前类是否为元类，如果为元类就调用<code class="highlighter-rouge">_class_resolveClassMethod</code>，如果不是就调用<code class="highlighter-rouge">_class_resolveInstanceMethod</code>。我们可以看到，在当前类为元类的时候，最后如果没有找到实现，还会再去调用<code class="highlighter-rouge">_class_resolveInstanceMethod</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static void _class_resolveInstanceMethod(Class cls, SEL sel, id inst)
+{
+    if (! lookUpImpOrNil(cls-&gt;ISA(), SEL_resolveInstanceMethod, cls, 
+                         NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+    {
+        // Resolver not implemented.
+        return;
+    }
+
+    BOOL (*msg)(Class, SEL, SEL) = (__typeof__(msg))objc_msgSend;
+    bool resolved = msg(cls, SEL_resolveInstanceMethod, sel);
+
+    // Cache the result (good or bad) so the resolver doesn't fire next time.
+    // +resolveInstanceMethod adds to self a.k.a. cls
+    IMP imp = lookUpImpOrNil(cls, sel, inst, 
+                             NO/*initialize*/, YES/*cache*/, NO/*resolver*/);
+
+}
+
+static void _class_resolveClassMethod(Class cls, SEL sel, id inst)
+{
+    assert(cls-&gt;isMetaClass());
+
+    if (! lookUpImpOrNil(cls, SEL_resolveClassMethod, inst, 
+                         NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+    {
+        // Resolver not implemented.
+        return;
+    }
+
+    BOOL (*msg)(Class, SEL, SEL) = (__typeof__(msg))objc_msgSend;
+    bool resolved = msg(_class_getNonMetaClass(cls, inst), 
+                        SEL_resolveClassMethod, sel);
+
+    // Cache the result (good or bad) so the resolver doesn't fire next time.
+    // +resolveClassMethod adds to self-&gt;ISA() a.k.a. cls
+    IMP imp = lookUpImpOrNil(cls, sel, inst, 
+                             NO/*initialize*/, YES/*cache*/, NO/*resolver*/);
+}
+</code></pre></div></div>
+<p>这两个方法其实就是判断当前类是否实现了<code class="highlighter-rouge">+ (BOOL)resolveInstanceMethod:(SEL)sel</code>和<code class="highlighter-rouge">+ (BOOL)resolveClassMethod:(SEL)sel</code>这两个方法。如果实现了用objc_msgSend去调用。在调用解析方法后还会使用<code class="highlighter-rouge">lookUpImpOrNil</code>去判断是否添加上<code class="highlighter-rouge">sel</code>对应的<code class="highlighter-rouge">IMP</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IMP lookUpImpOrNil(Class cls, SEL sel, id inst, 
+                   bool initialize, bool cache, bool resolver)
+{
+    IMP imp = lookUpImpOrForward(cls, sel, inst, initialize, cache, resolver);
+    if (imp == _objc_msgForward_impcache) return nil;
+    else return imp;
+}
+</code></pre></div></div>
+<p>其中<code class="highlighter-rouge">_objc_msgForward_impcache</code>是一个汇编程序入口，作为缓存中消息转发的标记。上面这个函数就是查找有没有对应<code class="highlighter-rouge">SEL</code>的实现，不包括转发。
+调用完<code class="highlighter-rouge">_class_resolveMethod</code>后，会跳转到retry标签，重新查找。只不过不会再次调用<code class="highlighter-rouge">_class_resolveMethod</code>这个方法了，因为将<code class="highlighter-rouge">triedResolver</code>标记为了<code class="highlighter-rouge">YES</code>。</p>
+<h5 id="使用消息转发">使用消息转发</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// No implementation found, and method resolver didn't help. 
+// Use forwarding.
+
+imp = (IMP)_objc_msgForward_impcache;
+cache_fill(cls, sel, imp, inst);
+</code></pre></div></div>
+<p>上面注释写的很清楚了，没有找到方法实现，并且方法解析不帮忙，只能使用转发了。将<code class="highlighter-rouge">imp</code>设置为<code class="highlighter-rouge">_objc_msgForward_impcache</code>，加入缓存。</p>
+<h6 id="转发过程">转发过程</h6>
+<p>因为我们把<code class="highlighter-rouge">_objc_msgForward_impcache</code>返回，因为<code class="highlighter-rouge">_objc_msgForward_impcache</code>是一个汇编标记。如果是<code class="highlighter-rouge">_objc_msgForward_impcache</code>这个标记，就会去调用<code class="highlighter-rouge">_objc_msgForward</code>或<code class="highlighter-rouge">_objc_msgForward_stret</code>，从这两个函数名来看，一个是有返回值的函数，一个是无返回值。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MESSENGER_START
+nop
+MESSENGER_END_SLOW
+	
+jne	__objc_msgForward_stret
+jmp	__objc_msgForward
+
+END_ENTRY __objc_msgForward_impcache
+	
+	
+ENTRY __objc_msgForward
+// Non-stret version
+
+movq	__objc_forward_handler(%rip), %r11
+jmp	*%r11
+
+END_ENTRY __objc_msgForward
+
+
+ENTRY __objc_msgForward_stret
+// Struct-return version
+
+movq	__objc_forward_stret_handler(%rip), %r11
+jmp	*%r11
+
+END_ENTRY __objc_msgForward_stret
+</code></pre></div></div>
+<p>从汇编中可以看出<code class="highlighter-rouge">_objc_msgForward</code>和<code class="highlighter-rouge">_objc_msgForward_impcache</code>分别会去调用<code class="highlighter-rouge">__objc_forward_handler</code>和<code class="highlighter-rouge">__objc_forward_stret_handler</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#if !__OBJC2__
+
+// Default forward handler (nil) goes to forward:: dispatch.
+void *_objc_forward_handler = nil;
+void *_objc_forward_stret_handler = nil;
+
+#else
+
+// Default forward handler halts the process.
+__attribute__((noreturn)) void 
+objc_defaultForwardHandler(id self, SEL sel)
+{
+    _objc_fatal("%c[%s %s]: unrecognized selector sent to instance %p "
+                "(no message forward handler is installed)", 
+                class_isMetaClass(object_getClass(self)) ? '+' : '-', 
+                object_getClassName(self), sel_getName(sel), self);
+}
+void *_objc_forward_handler = (void*)objc_defaultForwardHandler;
+
+#if SUPPORT_STRET
+struct stret { int i[100]; };
+__attribute__((noreturn)) struct stret 
+objc_defaultForwardStretHandler(id self, SEL sel)
+{
+    objc_defaultForwardHandler(self, sel);
+}
+void *_objc_forward_stret_handler = (void*)objc_defaultForwardStretHandler;
+#endif
+</code></pre></div></div>
+<p>从上面代码可以看出，Objc2.0之前，<code class="highlighter-rouge">_objc_forward_handler</code>和<code class="highlighter-rouge">_objc_forward_stret_handler</code>都是<code class="highlighter-rouge">nil</code>，新版本中，都是<code class="highlighter-rouge">objc_defaultForwardHandler</code>。在<code class="highlighter-rouge">objc_defaultForwardHandler</code>中，我们看到了最熟悉的那段话<code class="highlighter-rouge">unrecognized selector sent to instance</code>。
+其实handler默认就是打印日志，触发crash，要实现消息转发，就是手动替换默认的handler。<code class="highlighter-rouge">objc_setForwardHandler</code>实现替换。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void objc_setForwardHandler(void *fwd, void *fwd_stret)
+{
+    _objc_forward_handler = fwd;
+#if SUPPORT_STRET
+    _objc_forward_stret_handler = fwd_stret;
+#endif
+}
+</code></pre></div></div>
+<p>有关对<code class="highlighter-rouge">objc_setForwardHandler</code>的调用，以及之后的消息转发调用栈，可以参考<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a>。
+我们直接来看这个过程：</p>
+<blockquote>
+  <ol>
+    <li>先调用<code class="highlighter-rouge">forwardingTargetForSelector</code>方法获取新的<code class="highlighter-rouge">target</code>作为<code class="highlighter-rouge">receiver</code>重新执行<code class="highlighter-rouge">selector</code>，如果返回的内容不合法（为<code class="highlighter-rouge">nil</code>或者跟旧<code class="highlighter-rouge">receiver</code>一样），那就进入第二步。</li>
+    <li>调用<code class="highlighter-rouge">methodSignatureForSelector</code>获取方法签名后，判断返回类型信息是否正确，再调用 <code class="highlighter-rouge">forwardInvocation</code>执行<code class="highlighter-rouge">NSInvocation</code>对象，并将结果返回。如果对象没实现<code class="highlighter-rouge">methodSignatureForSelector</code>方法，进入第三步。</li>
+    <li>调用 doesNotRecognizeSelector 方法</li>
+  </ol>
+</blockquote>
+
+<p>杨萧玉大神总结了一张图，在这里贴一下。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527064101.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a></p>
+</blockquote>
+
+<h4 id="运行结果">运行结果</h4>
+<p>通过<code class="highlighter-rouge">lookUpImpOrForward</code>，我们就完成了第一次方法调用。缓存中没有，但是在<code class="highlighter-rouge">TestObject</code>类对象方法列表中找到了对应的实现。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527056409.png" alt="" /></p>
+<h3 id="缓存命中">缓存命中</h3>
+<p>如果调用方法时，缓存命中了，那么情况就和上面不一样了。我们来看下。
+在第二次调用<code class="highlighter-rouge">sayHello</code>时，我们打个断点。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527057108.png" alt="" />
+当断点走到这里，我们在<code class="highlighter-rouge">lookUpImpOrForward</code>中打断点，然后继续运行，发现<code class="highlighter-rouge">lookUpImpOrForward</code>中的断点没有走，直接打印了结果。前面我们也说过，在调用<code class="highlighter-rouge">lookUpImpOrForward</code>这个方法前，objc_msgSend已经访问过了类的缓存，没有找到实现，才通过<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数调用的<code class="highlighter-rouge">lookUpImpOrForward</code>。如何验证下objc_msgSend在发送消息过程中先进行了缓存查找呢？</p>
+<h4 id="验证">验证</h4>
+<p>我们在调用前，手动加入错误缓存，看会有什么情况出现。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527060788.png" alt="" />
+在上面，第一次调用前，我们手动加入缓存。可以看到在调用<code class="highlighter-rouge">objc_msgSend</code>时会去使用错误的缓存去实现。由此可以推断，在<code class="highlighter-rouge">objc_msgSend</code>确实查找了缓存。这个可以很强力的说明了<code class="highlighter-rouge">objc_msgSend</code>会先去缓存中查找实现。</p>
+
+<h1 id="总结">总结</h1>
+<p>通过解析objc_msgSend，比较形象的了解了Objective-C中消息发送的过程，其中有一些汇编代码。虽然过程很痛苦，但是收获也是很大。虽然汇编看的似懂非懂，重点是理解这个过程。其实这个过程还是很直观的。</p>
+
+<ol>
+  <li>查找缓存</li>
+  <li>查找当前类的缓存和方法列表</li>
+  <li>查找父类的缓存和方法列表</li>
+  <li>动态方法解析</li>
+  <li>消息转发</li>
+</ol>
+
+<p>这两篇文章都比较虚，后面会来看一下，我们在工作中可以利用runtime来干些什么。毕竟实用才是王道</p>
+
+<h1 id="参考">参考</h1>
+<ul>
+  <li><a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E4%BB%8E%E6%BA%90%E4%BB%A3%E7%A0%81%E7%9C%8B%20ObjC%20%E4%B8%AD%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%91%E9%80%81.md">从源代码看 ObjC 中消息的发送</a></li>
+  <li><a href="https://www.jianshu.com/p/4d619b097e20">神经病院Objective-C Runtime住院第二天——消息发送与转发</a></li>
+  <li><a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a></li>
+  <li><a href="http://www.mulle-kybernetik.com/artikel/Optimization/opti-9.html">Obj-C Optimization: The faster objc_msgSend</a></li>
+  <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html">Objective-C Runtime Programming Guide</a></li>
+</ul>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>Objective-C Runtime —— 基础数据结构</title>
+	  <link>//%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-05-14T17:48:48+00:00</pubDate>
+	  <guid>//%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84</guid>
+	  <description><![CDATA[
+	     <p>iOS工作两年了，几乎每次面试都会被问到Runtime的东西，自己一直没有系统的学习过Runtime。正好这段时间比较闲，自己也想深入的学习下iOS。所以那就先了解下基础的东西吧。以前听到Runtime一直感觉很高深，什么黑魔法啊一堆名词，其实去了解下的话，没有那么神奇。这篇文章分三大部分来介绍Runtime，是一个循序渐进的过程。第一呢，我们需要了解Objective-C的对象模型，然后才能去理解消息发送的过程，再然后再去了解下Runtime都能干什么，毕竟如果一个技术没有落地的应用，那它就没啥价值了。这篇文章基于objc4-723源码进行分析，GitHub有一个可调试库，<a href="https://github.com/RetVal/objc-runtime">地址</a>。
+<!-- more --></p>
+<h1 id="简介">简介</h1>
+<p>Runtime是什么？官方文档第一段就给出了答案。</p>
+<blockquote>
+  <p>The Objective-C language defers as many decisions as it can from compile time and link time to runtime. Whenever possible, it does things dynamically. This means that the language requires not just a compiler, but also a runtime system to execute the compiled code. The runtime system acts as a kind of operating system for the Objective-C language; it’s what makes the language work.</p>
+</blockquote>
+
+<p>其实Runtime就是一个运行时库，我们在编译期调用的函数最终都会通过Runtime库去进行分发。Runtime的核心就是发送消息。Objective-C从三种层级和Runtime交互。</p>
+
+<ol>
+  <li>Objective-C源代码。<br />
+一般情况，我们只需编写Objective-C代码，Runtime会默默的工作。当编译包含Objective-C代码时，编译器会创建实现动态特性的数据结构和函数调用。主要的函数就是发送消息。</li>
+  <li>Runtime函数。<br />
+Runtime系统是由一系列函数和数据结构构成的，它有一系列公共接口。头文件在/usr/include/objc目录下。许多函数允许你用C函数来实现Objective-C中的功能。但是谁会去费这个力气呢？一般在写一些与其它语言桥接或者debug时会用到。在<a href="https://developer.apple.com/documentation/objectivec/objective_c_runtime">Objective-C Runtime Reference</a>中有对函数的详细解释。</li>
+  <li>NSObject方法。<br />
+在写Objective-C时，我们的对象大多数都继承自NSObject(NSProxy除外)。所以，我们可以通过NSObject的一些方法来与Runtime交互。比如：NSObject提供了一系列自省方法来查询Runtime信息。<br /></li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (BOOL)isKindOfClass:(Class)aClass;
+- (BOOL)isMemberOfClass:(Class)aClass;
+- (BOOL)conformsToProtocol:(Protocol *)aProtocol;
+- (BOOL)respondsToSelector:(SEL)aSelector;
+- (Class)superclass;
++ (Class)class OBJC_SWIFT_UNAVAILABLE("use 'aClass.self' instead");
+</code></pre></div></div>
+
+<h1 id="基础数据结构">基础数据结构</h1>
+<h2 id="类和对象的关系">类和对象的关系</h2>
+<p>由于我们在Objective-C中大多数都继承NSObject类，那我们就以NSObject为切入点来分析对象的数据结构。NSObject定义如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface NSObject &lt;NSObject&gt; {
+    Class isa  OBJC_ISA_AVAILABILITY;
+}
+</code></pre></div></div>
+<p>我们看到它有一个Class变量。那我们在看一下Class的定义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// An opaque type that represents an Objective-C class.
+typedef struct objc_class *Class;
+</code></pre></div></div>
+<p>可以看到他是一个objc_class指针，那objc_class是什么呢？在objc-runtime-new.h中找到了objc_class的定义，下面是一个简化版的定义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct objc_class : objc_object {
+    // Class ISA;
+    Class superclass;
+    cache_t cache;             // formerly cache pointer and vtable
+    class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags
+
+    class_rw_t *data() { 
+        return bits.data();
+    }
+};
+</code></pre></div></div>
+<p>我们可以看到objc_class是一个继承objc_object的结构体，下面是一个简化版objc_object定义，在文件中，我们还发现了id的定义。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct objc_object {
+private:
+    isa_t isa;
+};
+typedef struct objc_object *id;
+</code></pre></div></div>
+<p>从上面可以看出来，id是一个objc_object类型的指针，以前一直以为id和NSObject *等价，好无知啊。从上面看NSObject和objc_object的定义很像，只不过NSObject的isa是一个Class，而objc_object的isa是一个isa_t。下面，我们来看下isa_t是一个什么东西。isa_t定义如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>union isa_t 
+{
+    isa_t() { }
+    isa_t(uintptr_t value) : bits(value) { }
+
+    Class cls;
+    uintptr_t bits;
+
+#if SUPPORT_PACKED_ISA
+
+    // extra_rc must be the MSB-most field (so it matches carry/overflow flags)
+    // nonpointer must be the LSB (fixme or get rid of it)
+    // shiftcls must occupy the same bits that a real class pointer would
+    // bits + RC_ONE is equivalent to extra_rc + 1
+    // RC_HALF is the high bit of extra_rc (i.e. half of its range)
+
+    // future expansion:
+    // uintptr_t fast_rr : 1;     // no r/r overrides
+    // uintptr_t lock : 2;        // lock for atomic property, @synch
+    // uintptr_t extraBytes : 1;  // allocated with extra bytes
+
+# if __arm64__
+#   define ISA_MASK        0x0000000ffffffff8ULL
+#   define ISA_MAGIC_MASK  0x000003f000000001ULL
+#   define ISA_MAGIC_VALUE 0x000001a000000001ULL
+    struct {
+        uintptr_t nonpointer        : 1;
+        uintptr_t has_assoc         : 1;
+        uintptr_t has_cxx_dtor      : 1;
+        uintptr_t shiftcls          : 33; // MACH_VM_MAX_ADDRESS 0x1000000000
+        uintptr_t magic             : 6;
+        uintptr_t weakly_referenced : 1;
+        uintptr_t deallocating      : 1;
+        uintptr_t has_sidetable_rc  : 1;
+        uintptr_t extra_rc          : 19;
+#       define RC_ONE   (1ULL&lt;&lt;45)
+#       define RC_HALF  (1ULL&lt;&lt;18)
+    };
+
+# elif __x86_64__
+#   define ISA_MASK        0x00007ffffffffff8ULL
+#   define ISA_MAGIC_MASK  0x001f800000000001ULL
+#   define ISA_MAGIC_VALUE 0x001d800000000001ULL
+    struct {
+        uintptr_t nonpointer        : 1;
+        uintptr_t has_assoc         : 1;
+        uintptr_t has_cxx_dtor      : 1;
+        uintptr_t shiftcls          : 44; // MACH_VM_MAX_ADDRESS 0x7fffffe00000
+        uintptr_t magic             : 6;
+        uintptr_t weakly_referenced : 1;
+        uintptr_t deallocating      : 1;
+        uintptr_t has_sidetable_rc  : 1;
+        uintptr_t extra_rc          : 8;
+#       define RC_ONE   (1ULL&lt;&lt;56)
+#       define RC_HALF  (1ULL&lt;&lt;7)
+    };
+</code></pre></div></div>
+<p>可以看出isa_t是一个union类型结构体，也就是说isa_t，cls，bits和结构体共用一块内存结构。isa总共占64为内存结构(取决于结构体)。好了，把上面的源码转换成类图就是下面这样子了。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526375149.png" alt="图片来自冰霜的blog" /></p>
+<blockquote>
+  <p>图片来自冰霜的blog</p>
+</blockquote>
+
+<p>从上面源码我们可以看出，Objective-C中的对象都是一个objc_object结构体，objc_class继承objc_object，所以在Objective-C中，<strong>类也是一个对象。</strong>在objc_class中，除了isa还有superclass，cache，bits三个变量，分别表示父类指针，方法缓存，还有一个是类的数据区域。object和NSObject都包含一个objc_class的isa。</p>
+
+<p>类的isa指向的是什么呢？这就引出了元类(meta-class)的概念。关于元类可以看这篇文章<a href="http://www.cocoawithlove.com/2010/01/what-is-meta-class-in-objective-c.html">What is a meta-class in Objective-C?</a>。</p>
+
+<p>为什么会有元类呢？</p>
+
+<p>因为在Objective-C中，对象的方法并没有存储在对象的结构体中(如果每个对象都存储自己的方法，那我们程序中无数对象就都要存储自己的方法，那内存肯定就不够用了)。当我们调用实例方法时，它通过自己的isa查找到对应的类，然后在class_data_bits_t结构体中查找对应的方法实现。每一个objc_class也有一个superClass指向自己的父类，可以查找到继承的方法。那么如果调用实例方法怎么查找呢？这时，就需要引入元类来保证无论调用类方法和实例方法，都可以以相同的方式来查找。</p>
+
+<ul>
+  <li>调用实例方法，通过对象的isa在类中获取方法。</li>
+  <li>调用类方法，通过类的isa在元类中获取方法。</li>
+</ul>
+
+<p>类和元类的关系如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526378403.png" alt="类和元类" /></p>
+<blockquote>
+  <p>图片来自<a href="http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html">Classes and metaclasses</a></p>
+</blockquote>
+
+<h2 id="isa指针">isa指针</h2>
+<h3 id="isa初始化">isa初始化</h3>
+<p>下面我们来一步步解析类结构，先从isa指针来看起。上面我们说了isa是一个isa_t的union。那么我们看下isa是如何初始化的。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inline void 
+objc_object::initInstanceIsa(Class cls, bool hasCxxDtor)
+{
+    assert(!cls-&gt;instancesRequireRawIsa());
+    assert(hasCxxDtor == cls-&gt;hasCxxDtor());
+
+    initIsa(cls, true, hasCxxDtor);
+}
+inline void 
+objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor) 
+{ 
+    assert(!isTaggedPointer()); 
+    
+    if (!nonpointer) {
+        isa.cls = cls;
+    } else {
+        assert(!DisableNonpointerIsa);
+        assert(!cls-&gt;instancesRequireRawIsa());
+
+        isa_t newisa(0);
+
+#if SUPPORT_INDEXED_ISA
+        assert(cls-&gt;classArrayIndex() &gt; 0);
+        newisa.bits = ISA_INDEX_MAGIC_VALUE;
+        // isa.magic is part of ISA_MAGIC_VALUE
+        // isa.nonpointer is part of ISA_MAGIC_VALUE
+        newisa.has_cxx_dtor = hasCxxDtor;
+        newisa.indexcls = (uintptr_t)cls-&gt;classArrayIndex();
+#else
+        newisa.bits = ISA_MAGIC_VALUE;
+        // isa.magic is part of ISA_MAGIC_VALUE
+        // isa.nonpointer is part of ISA_MAGIC_VALUE
+        newisa.has_cxx_dtor = hasCxxDtor;
+        newisa.shiftcls = (uintptr_t)cls &gt;&gt; 3;
+#endif
+        isa = newisa;
+    }
+}
+</code></pre></div></div>
+<p>这里调用initIsa的第二个参数nonpointer传入了true，所以会直接进入else。</p>
+<blockquote>
+  <p>关于SUPPORT_INDEXED_ISA应该是对watchOS的优化，所以会走到#else</p>
+</blockquote>
+
+<p>我们看下isa_t内存布局：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526463593.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
+</blockquote>
+
+<p>ISA_MAGIC_VALUE = 0x000001a000000001ULL，转换成二进制是11010000000000000000000000000000000000001，所以把ISA_MAGIC_VALUE赋值给bits，isa_t的结构如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526464002.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
+</blockquote>
+
+<p>从上图可以看出，调用<code class="highlighter-rouge">newisa.bits = ISA_MAGIC_VALUE;</code>这句代码是给nonpointer和magic进行了赋值。</p>
+<h4 id="nonpointer和magic">nonpointer和magic</h4>
+<ul>
+  <li>nonpointer表示是否开启指针优化，1表示开启指针优化，0表示一个raw isa，也就是isa_t这个union没有结构体部分，访问对象的isa直接返回cls指针。不过现在都会开启指针优化。关于这个指针优化，后面会有一篇单独的文章来分析，就是关于Tagged Pointer技术。</li>
+  <li>magic判断对象是否初始化完成，在arm64中0x16是调试器判断当前对象是真的对象还是没有初始化的空间。</li>
+</ul>
+
+<h4 id="has_cxx_dtor">has_cxx_dtor</h4>
+<p>经过<code class="highlighter-rouge">newisa.has_cxx_dtor = hasCxxDtor;</code>这段代码，会设置isa_t的has_cxx_dtor，这一位表示当前对象有 C++ 或者 ObjC 的析构器(destructor)，如果没有析构器就会快速释放内存。设置完后结构如下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526465717.png" alt="" /></p>
+<blockquote>
+  <p>图片修改自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
+</blockquote>
+
+<h4 id="shiftcls">shiftcls</h4>
+<p>通过上面两行代码设置了nonpointer，magic，has_cxx_dtor。最后一行代码把当前对象的类指针存入了isa中。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newisa.shiftcls = (uintptr_t)cls &gt;&gt; 3;
+</code></pre></div></div>
+<p>为什么右移三位呢，引用Draveness的blog中一段话来解释下：</p>
+<blockquote>
+  <p>将当前地址右移三位的主要原因是用于将 Class 指针中无用的后三位清除减小内存的消耗，因为类的指针要按照字节（8 bits）对齐内存，其指针后三位都是没有意义的 0。</p>
+</blockquote>
+
+<blockquote>
+  <p>绝大多数机器的架构都是 <a href="https://en.wikipedia.org/wiki/Byte_addressing">byte-addressable</a> 的，但是对象的内存地址必须对齐到字节的倍数，这样可以提高代码运行的性能，在 iPhone5s 中虚拟地址为 33 位，所以用于对齐的最后三位比特为 000，我们只会用其中的 30 位来表示对象的地址。</p>
+</blockquote>
+
+<p>Objective-C中类的指针后三位也是0，在<code class="highlighter-rouge">_class_createInstanceFromZone</code>中打印类的地址可以看到最后一位不是0就是8，所以类的指针后三位是0。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526483409.png" alt="" />
+所以上面cls»3没有问题。我们尝试运行下面代码来形象说明下，理解的可以更加深刻。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *binaryWithInteger(NSUInteger decInt) {
+    NSString *string = @"";
+    NSUInteger x = decInt;
+    while (x &gt; 0) {
+        string = [[NSString stringWithFormat:@"%lu", x&amp;1] stringByAppendingString:string];
+        x = x &gt;&gt; 1;
+    }
+    return string;
+}
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        struct objc_object *object = (__bridge struct objc_object *)([NSObject new]);
+        NSLog(@"%@", binaryWithInteger(object-&gt;isa));
+        NSLog(@"%@", binaryWithInteger([NSObject class]));
+    }
+    return 0;
+}
+//打印结果
+object_isa 0000000001011101100000000000000100000000011101000000000100111001 // 补全64位
+class  100000000011101000000000100111000
+
+</code></pre></div></div>
+<p>打印出来object的isa的内容如下图所示：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526539598.png" alt="" /></p>
+<blockquote>
+  <p>图片修改自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
+</blockquote>
+
+<p>其中浅蓝色部分是类指针，和上面打印的class指针右移三位一样。这就验证了我们之前对于初始化isa是设置了nonpointer，magic，shiftclass的分析。我们也可以通过这种方式分析上面类结构那个图，验证下NSObject的isa是指向NSObject元类，NSObject元类的isa指向自己，superclass指向NSObject类对象。感兴趣的可以自己验证下，在这里就不去分析了。</p>
+<h3 id="isa总结">isa总结</h3>
+<p>下面我们总结下isa是如何初始化的。首先把ISA_MAGIC_VALUE赋值给bits设置了nonpoint和magic，然后设置has_cxx_dtor，最后把类指针右移三位设置给shiftcls。下面我们集中说一下结构体所有位的作用。</p>
+
+<p>| 位                | 代表信息                                                       |
+| —————– | ————————————————————– |
+| nonpointer        | 0 表示普通的 isa 指针，1 表示使用优化                          |
+| has_assoc         | 表示该对象是否包含 associated object，如果没有，则析构时会更快 |
+| has_cxx_dtor      | 表示该对象是否有 C++ 或 ARC 的析构函数，如果没有，则析构时更快 |
+| shiftcls          | 类的指针                                                       |
+| magic             | 固定值，用于在调试时分辨对象是否未完成初始化                   |
+| weakly_referenced | 表示该对象是否有过 weak 对象，如果没有，则析构时更快           |
+| deallocating      | 表示该对象是否正在析构                                         |
+| has_sidetable_rc  | 表示该对象的引用计数值是否过大无法存储在 isa 指针              |
+| extra_rc          | 存储引用计数值减一后的结果                                     |</p>
+<blockquote>
+  <p>解释来自http://www.sealiesoftware.com/blog/archive/2013/09/24/objc_explain_Non-pointer_isa.html</p>
+</blockquote>
+
+<h2 id="cache_t">cache_t</h2>
+<p>cache_t就比较简单了，先来看下具体代码</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct cache_t {
+    struct bucket_t *_buckets;
+    mask_t _mask;
+    mask_t _occupied;
+}
+struct bucket_t {
+private:
+    cache_key_t _key;
+    IMP _imp;
+}
+</code></pre></div></div>
+<ul>
+  <li>_buckets是一个散列表，用来存储方法缓存。bucket_t是一个key和IMP的结构体。</li>
+  <li>_mask分配bucket的总数。</li>
+  <li>_occupied表示目前占用缓存bucket的个数。</li>
+</ul>
+
+<p>Cache的作用主要是优化方法调用的性能，当对象收到消息后，会优先去Cache中查找，如果Cache中没有才会去类的方法列表找。如果没有Cache，我们每次调用方法都去类的方法找，会严重影响性能。</p>
+<h2 id="class_data_bits_t">class_data_bits_t</h2>
+<h3 id="class_data_bits_t结构体解析">class_data_bits_t结构体解析</h3>
+<p>在类的结构体中，isa我们已经解释过了，superclass是一个指向父类的指针，cache是为了加速方法调用，下面我们来分析一下class_data_bits_t，一个类的方法，属性和遵循的协议都在这个里面。我们先看下代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct class_data_bits_t {
+
+    // Values are the FAST_ flags above.
+    uintptr_t bits;
+}
+</code></pre></div></div>
+<p>它只有一个64位bits用来存储和类有关的信息。它有一个data()方法来返回class_rw_t *指针。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class_rw_t* data() {
+        return (class_rw_t *)(bits &amp; FAST_DATA_MASK);
+}
+</code></pre></div></div>
+<p>其中FAST_DATA_MASK = 0x00007ffffffffff8UL，bits与FAST_DATA_MASK位运算，取bits的[3,47]位转成class_rw_t。</p>
+<blockquote>
+  <p>在 x86_64 架构上，Mac OS 只使用了其中的 47 位来为对象分配地址。而且由于地址要按字节在内存中按字节对齐，所以掩码的后三位都是 0。</p>
+</blockquote>
+
+<p>因为class_rw_t *指针只存于[3,47]，所以后面三位可以存储当前类的的其他信息。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526550108.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// class is a Swift class
+#define FAST_IS_SWIFT           (1UL&lt;&lt;0)
+// class or superclass has default retain/release/autorelease/retainCount/
+//   _tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference
+#define FAST_HAS_DEFAULT_RR     (1UL&lt;&lt;1)
+// class's instances requires raw isa
+#define FAST_REQUIRES_RAW_ISA   (1UL&lt;&lt;2)
+</code></pre></div></div>
+<ul>
+  <li>FAST_IS_SWIFT 用于判断 Swift 类</li>
+  <li>FAST_HAS_DEFAULT_RR 当前类或者父类含有默认的 retain/release/autorelease/retainCount/_tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference 方法</li>
+  <li>FAST_REQUIRES_RAW_ISA 当前类的实例需要 raw isa</li>
+</ul>
+
+<p>当调用objc_class的data()方法也会返回class_rw_t *指针，这个方法也是调用了class_data_bits_t的data()方法。</p>
+<h3 id="class_rw_t和class_ro_t">class_rw_t和class_ro_t</h3>
+<p>我们来看下class_rw_t的结构：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct class_rw_t {
+    // Be warned that Symbolication knows the layout of this structure.
+    uint32_t flags;
+    uint32_t version;
+
+    const class_ro_t *ro;
+
+    method_array_t methods;
+    property_array_t properties;
+    protocol_array_t protocols;
+
+    Class firstSubclass;
+    Class nextSiblingClass;
+
+    char *demangledName;
+};
+</code></pre></div></div>
+<p>终于看到了和方法，属性，协议有关的东西。可以看到class_rw_t包含一个class_ro_t *指针，class_ro_t中存储了当前类在编译期就确定的属性，方法和遵守的协议。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct class_ro_t {
+    uint32_t flags;
+    uint32_t instanceStart;
+    uint32_t instanceSize;
+    uint32_t reserved;
+    const uint8_t * ivarLayout;
+    const char * name;
+    method_list_t * baseMethodList;
+    protocol_list_t * baseProtocols;
+    const ivar_list_t * ivars;
+
+    const uint8_t * weakIvarLayout;
+    property_list_t *baseProperties;
+};
+</code></pre></div></div>
+<p>下面我们说下class_rw_t和class_ro_t的关系，然后再来验证。在编译期间，类结构中的class_data_bits_t *data指向的是class_ro_t *指针，用类图来表示一下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526613551.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
+</blockquote>
+
+<p>然后在运行时会调用realizeClass方法：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ro = (const class_ro_t *)cls-&gt;data(); // 调用class_data_bits_t的data()方法，强制转换成class_ro_t *指针。
+class_rw_t *rw = (class_rw_t *)calloc(sizeof(class_rw_t), 1); 初始化class_rw_t结构体。
+rw-&gt;ro = ro; //设置ro
+rw-&gt;flags = RW_REALIZED|RW_REALIZING; //设置flag
+cls-&gt;setData(rw); // 把class_rw_t设置为class_data_bits_t旳data
+</code></pre></div></div>
+<p>经过上面的方法类图会变为下面这样的：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526607686.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
+</blockquote>
+
+<p>代码运行到这里class_rw_t中的方法，属性和协议列表是空的。这时需要调用methodizeClass方法来将类自己实现的方法(包括分类)，属性，协议加载到method，property，protocol列表中。</p>
+<h3 id="验证">验证</h3>
+<h4 id="验证类在编译期结构">验证类在编译期结构</h4>
+<p>下面我们来分析一下TestObject在初始化过程中内存的修改，下面是TestObject的代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//TestObject.h
+</span><span class="cp">#import &lt;Foundation/Foundation.h&gt;
+</span>
+<span class="k">@interface</span> <span class="nc">TestObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="cp">#import "TestObject.h"
+</span>
+<span class="c1">//TestObject.m
+</span><span class="k">@implementation</span> <span class="nc">TestObject</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+<span class="c1">//main.m
+</span><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="err">@autoreleasepool</span> <span class="p">{</span>
+        <span class="n">Class</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestObject</span> <span class="nf">class</span><span class="p">];</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%p</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">cls</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>因为<strong>类在内存中的地址是在编译期确定的，只要代码不变，类在内存中的位置不变。</strong>我们先来运行一次拿到类在内存中的位置。下面是打印结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x100002750
+</code></pre></div></div>
+<p>接下来在_objc_init方法打一个断点，这个方法是运行时初始化之前调用的。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526611021.png" alt="" />
+然后在lldb中输入下面的命令：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526611896.png" alt="" />
+通过上面的图我们可以看到，在class_ro_t中，只有baseMethodList和name有值，其他的都没值。因为类里面只有一个方法，没有属性，协议什么的。下面我们看下baseMethodList里面的内容：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526612249.png" alt="" />
+我们通过$5-&gt;get(0)可以获取到一个method_t结构体，可以看到就是我们在类中的sayHello方法。</p>
+<h4 id="验证realizeclass">验证realizeClass</h4>
+<p>下面我们来验证下realizeClass的作用，该方法的主要作用就是对类进行第一次初始化，包括：</p>
+<ul>
+  <li>分配可读写内存空间</li>
+  <li>返回真正的类结构</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static Class realizeClass(Class cls)
+</code></pre></div></div>
+<p>我们需要在这个方法打一个条件断点：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526612802.png" alt="" />
+这里使用指针相等的方式，来确定当前类是TestObject，之所以不用<code class="highlighter-rouge">[NSStringFromClass(cls) isEqualToString:@"TestObject"]</code>，是因为在这个时间点上这些方法还不能用。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526613287.png" alt="" />
+这个断点设置在这里，因为TestObject是一个正常类，所以会走else方法。运行代码时，因为每个类都会走这个方法，只有类是TestObject时才会进断点，所以可能会等会才进断点。
+在这时打印类结构，其中布局依然会是下图这样：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526613551.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
+</blockquote>
+
+<p>当运行完else中代码，我们再来打印下结构：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526614493.png" alt="" />
+通过打印可以看出来，当运行完else中代码，类的class_ro_t和class_rw_t都被正确设置了，但是class_rw_t中的methods，properties和protocols均未设置，这些将在<code class="highlighter-rouge">methodizeClass</code>中设置。
+下面我们就去验证下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526615057.png" alt="" />
+当代码运行到这一行，我们再执行下面的命令：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526615225.png" alt="" />
+在这里调用了<code class="highlighter-rouge">method_array_t</code>的<code class="highlighter-rouge">attachLists</code>方法，将<code class="highlighter-rouge">baseMethods</code>中的方法添加到<code class="highlighter-rouge">methods</code>数组之后。我们访问<code class="highlighter-rouge">methods</code>才会获取当前类的实例方法。</p>
+<h4 id="list_array_tt和method_t">list_array_tt和method_t</h4>
+<h5 id="list_array_tt">list_array_tt</h5>
+<p>当我们再看class_rw_t时，发现它们的方法，属性，协议列表分别是method_list_t，property_array_t和protocol_array_t。他们都继承自list_array_tt。list_array_tt是一个泛型结构体，用于存储一些元数据，其实是一个二维数组。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>template &lt;typename Element, typename List&gt;
+class list_array_tt {
+    struct array_t {
+        uint32_t count;
+        List* lists[0];
+    };
+}
+class method_array_t : 
+    public list_array_tt&lt;method_t, method_list_t&gt;
+</code></pre></div></div>
+<p>其中Element表示元数据类型，比如method_t，而List表示用来转载元数据的一维数组，比如method_list_t。</p>
+<blockquote>
+  <p>list_array_tt有三种状态：</p>
+  <ol>
+    <li>自身为空，可以类比为<code class="highlighter-rouge">[[]]</code></li>
+    <li>它只有一个指针，指向一个元数据的集合，可以类比为<code class="highlighter-rouge">[[1, 2]]</code></li>
+    <li>它有多个指针，指向多个元数据的集合，可以类比为<code class="highlighter-rouge">[[1, 2], [3, 4]]</code>
+当一个类刚创建时，它可能处于1，2状态，如果使用<code class="highlighter-rouge">class_addMethod</code>或者category添加方法，就会进入3状态，而且一旦进入3状态，就再也不可能回到其他状态。即使新增的方法移除掉</li>
+  </ol>
+</blockquote>
+
+<h5 id="method_t">method_t</h5>
+<p>下面来看下method_t的结构，method还是比较简单的，都比较容易理解。有关类型可以看官方文档的<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html#//apple_ref/doc/uid/TP4000804。">Type Encodings</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct method_t {
+    SEL name; // 方法名
+    const char *types; // 类型   
+    IMP imp; // 实现指针IMP
+}
+</code></pre></div></div>
+<p>我们上面TestObject的method_t就是下面这样的：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name = "sayHello"
+types = 0x0000000100001f9b "v16@0:8"
+imp = 0x0000000100001d10 (debug-objc`-[TestObject sayHello] at TestObject.m:11)
+</code></pre></div></div>
+<h1 id="总结">总结</h1>
+<ol>
+  <li>isa是一个union，里面包含一个结构体。每一个字段代表一段信息，其中它的类信息存在于shiftcls中。我们可以通过object_getClass()函数获取一个对象的类信息。这里需要注意一点，对象的<code class="highlighter-rouge">class</code>实例方法会调用object_getClass()方法，所以对于实例方法<code class="highlighter-rouge">object_getClass()</code>和<code class="highlighter-rouge">class</code>等价，但是同样还有一个<code class="highlighter-rouge">class</code>类方法，这个方法返回self，直接返回类对象。</li>
+  <li>类的内存中的位置在编译期间就决定了，在之后修改代码，也不会改变内存中的位置。</li>
+  <li>类的方法在编译期间存在于class_ro_t中，直到通过realizeClass方法后才放到class_rw_t指向的class_ro_t中，这样我们在运行时为class_rw_t添加方法，也不会影响类的只读结构。</li>
+  <li>在class_ro_t中的属性运行时就不会改变了，运行时添加方法，会修改class_rw_t的方法属性，对于方法添加，我们在消息发送的文章再来分析。</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> +(Class)class {
+    return self;
+ }
+ -(Class)class {
+    return object_getClass(self);
+ }
+</code></pre></div></div>
+<h1 id="参考资料">参考资料</h1>
+<ul>
+  <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008048-CH1-SW1">Objective-C Runtime Programming Guide</a></li>
+  <li><a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E4%BB%8E%20NSObject%20%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BA%86%E8%A7%A3%20isa.md">从 NSObject 的初始化了解 isa</a></li>
+  <li><a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></li>
+  <li><a href="https://www.jianshu.com/p/9d649ce6d0b8">神经病院Objective-C Runtime入院第一天——isa和Class</a></li>
+  <li><a href="https://www.desgard.com/isa/">用 isa 承载对象的类信息</a></li>
+  <li><a href="https://bestswifter.com/runtime-category/">结合 category 工作原理分析 OC2.0 中的 runtime</a></li>
+  <li><a href="http://www.sealiesoftware.com/blog/archive/2013/09/24/objc_explain_Non-pointer_isa.html">Non-pointer isa</a></li>
+  <li><a href="http://www.cocoawithlove.com/2010/01/what-is-meta-class-in-objective-c.html">What is a meta-class in Objective-C?</a></li>
+</ul>
+
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>

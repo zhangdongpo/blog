@@ -28,7 +28,7 @@
     <style>.hljs { background: none; }</style>
 
     <!-- Ghost outputs important style and meta data with this tag -->
-        <link rel="canonical" href="//" />
+        <link rel="canonical" href="//tag/UI/" />
     <meta name="referrer" content="origin" />
     <link rel="next" href="/page2/" />
 
@@ -36,14 +36,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="面向自由编程" />
     <meta property="og:description" content="Freelf's Blog" />
-    <meta property="og:url" content="//" />
-    <meta property="og:image" content="/assets/images/cover1.jpg" />
+    <meta property="og:url" content="//tag/UI/" />
+    <meta property="og:image" content="/assets/images/cover2.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="面向自由编程" />
     <meta name="twitter:description" content="Freelf's Blog" />
-    <meta name="twitter:url" content="//" />
-    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+    <meta name="twitter:url" content="//tag/UI/" />
+    <meta name="twitter:image:src" content="/assets/images/cover2.jpg" />
 
     <script type="application/ld+json">
 {
@@ -51,8 +51,8 @@
     "@type": "Website",
     "publisher": "面向自由编程",
     "name": "面向自由编程",
-    "url": "//",
-    "image": "/assets/images/cover1.jpg",
+    "url": "//tag/UI/",
+    "image": "/assets/images/cover2.jpg",
     "description": "Freelf's Blog"
 }
     </script>
@@ -62,7 +62,7 @@
 
 
 </head>
-<body class="home-template nav-closed">
+<body class="tag-template nav-closed">
 
     <!-- The blog navigation links -->
     <div class="nav">
@@ -71,7 +71,7 @@
         <span class="hidden">Close</span>
     </a>
     <ul>
-        <li class="nav-home  nav-current" role="presentation"><a href="/">Home</a></li>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
         <li class="nav-about " role="presentation"><a href="/about">About</a></li>
     </ul>
     <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
@@ -82,25 +82,30 @@
     <div class="site-wrapper">
 
         <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
-        <!-- < default -->
+        <!-- dynamically overriding backgrounds for tags as well as descriptions -->
+
+
+<!-- default -->
 <!-- The tag above means - insert everything in this file into the [body] of the default.hbs template -->
 
-<!-- The big featured header  -->
-<header class="main-header " style="background-image: url(/assets/images/cover1.jpg) ">
+<!-- If we have a tag cover, display that - else blog cover - else nothing -->
+<header class="main-header tag-head " style="background-image: url(/assets/images/cover2.jpg) ">
     <nav class="main-nav overlay clearfix">
-        <a class="blog-logo" href="/"><img src="/assets/images/ghost.png"
-                alt="Blog Logo" /></a>
+        <a class="blog-logo" href="/"><img src="/assets/images/ghost.png" alt="Blog Logo" /></a>
         
-        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+            <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
         
     </nav>
     <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">面向自由编程</h1>
-            <h2 class="page-description">Freelf's Blog</h2>
+            <h1 class="page-title">Ui</h1>
+            <h2 class="page-description">
+            
+			    A 4-post collection
+            
+            </h2>
         </div>
     </div>
-    <a class="scroll-down icon-arrow-left" href="#content" data-offset="-45"><span class="hidden">Scroll Down</span></a>
 </header>
 
 <!-- The main content area on the homepage -->
@@ -112,9 +117,7 @@
     
     <nav class="pagination" role="pagination">
     
-    <span class="page-number"> Page 1 of 6 </span>
-     
-        <a class="older-posts" href="/page2/" title="Next Page">Older Posts &raquo;</a>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
     
@@ -124,10 +127,10 @@
 
 <article class="post">
     <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern">读《Design-Patterns-by-Tutorials》笔记——Builder Pattern</a></h2>
+        <h2 class="post-title"><a href="/UIKit-Dynamic-Tutorial">UIKit Dynamic Tutorial</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>构造器模式允许一步一步的创建一个复杂的对象而不是一次创建完成。这个模式包括三个主要类型，UML 图如下： Director接收输入并且和 builder... <a class="read-more" href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern">&raquo;</a></p>
+        <p>这是一篇翻译自Raywenderlich上的文章，原文。 What’s UIKit Dynamic... <a class="read-more" href="/UIKit-Dynamic-Tutorial">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
@@ -146,20 +149,20 @@
         <!-- on -->
         
         
-        <a href='/tag/读书笔记'>读书笔记</a>
+        <a href='/tag/UI'>Ui</a>
         
         
         
-        <time class="post-date index-post-date" datetime="2018-10-09">09 Oct 2018</time>
+        <time class="post-date index-post-date" datetime="2017-06-15">15 Jun 2017</time>
     </footer>
 </article>
 
 <article class="post">
     <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern">读《Design-Patterns-by-Tutorials》笔记——Observer Pattern</a></h2>
+        <h2 class="post-title"><a href="/iOS9%E7%9A%84%E9%80%82%E9%85%8D">iOS9的适配</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>观察者模式让一个对象观察另一个对象的改变。在本章节，你将学习两种实现观察者模式的方法： 使用 KVO 使用一个Observable包装。... <a class="read-more" href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern">&raquo;</a></p>
+        <p>iOS9升级后相信很多人都是项目报错，因为项目要升级iOS9，从网上看了很多教程，就这篇教程还是比较全的，分享给大家，顺便自己记录下。网址是整理 iOS 9 适配中出现的坑（图文）。... <a class="read-more" href="/iOS9%E7%9A%84%E9%80%82%E9%85%8D">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
@@ -178,20 +181,20 @@
         <!-- on -->
         
         
-        <a href='/tag/读书笔记'>读书笔记</a>
+        <a href='/tag/UI'>Ui</a>
         
         
         
-        <time class="post-date index-post-date" datetime="2018-10-04">04 Oct 2018</time>
+        <time class="post-date index-post-date" datetime="2016-01-18">18 Jan 2016</time>
     </footer>
 </article>
 
 <article class="post">
     <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern">读《Design-Patterns-by-Tutorials》笔记——Memento Pattern</a></h2>
+        <h2 class="post-title"><a href="/iOS%E8%A7%86%E5%9B%BE%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">iOS视图控制器的生命周期</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>备忘录模式允许一个对象可以被保存和恢复。包括三个部分。 Originator: 需要被保存和恢复的对象。 Memento:... <a class="read-more" href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern">&raquo;</a></p>
+        <p>​ 我们去面试很多时候都被问到视图控制器的声明周期，下面我们着重来讲解下视图控制器的声明周期。 了解重要的三个函数 ​... <a class="read-more" href="/iOS%E8%A7%86%E5%9B%BE%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
@@ -210,20 +213,20 @@
         <!-- on -->
         
         
-        <a href='/tag/读书笔记'>读书笔记</a>
+        <a href='/tag/UI'>Ui</a>
         
         
         
-        <time class="post-date index-post-date" datetime="2018-10-03">03 Oct 2018</time>
+        <time class="post-date index-post-date" datetime="2015-10-14">14 Oct 2015</time>
     </footer>
 </article>
 
 <article class="post">
     <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern">读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern</a></h2>
+        <h2 class="post-title"><a href="/iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6">iOS事件响应机制</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>单例模式限制一个类仅仅有一个实例。每个这个类的引用都指向同一个实例。在 iOS 开发中非常常见这种模式，因为 Apple... <a class="read-more" href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern">&raquo;</a></p>
+        <p>​ 本文着重讲解iOS事件的传递机制，如有错误或者有意见不同者，欢迎指出讨论。 ​ iOS的事件有好几种：Touch... <a class="read-more" href="/iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
@@ -242,43 +245,11 @@
         <!-- on -->
         
         
-        <a href='/tag/读书笔记'>读书笔记</a>
+        <a href='/tag/UI'>Ui</a>
         
         
         
-        <time class="post-date index-post-date" datetime="2018-09-28">28 Sep 2018</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Strategy-Pattern">读《Design Patterns by Tutorials》笔记——Strategy Pattern</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>策略模式定义了一系列可交换的对象，这些对象可以在运行时设置或者切换。这个模式有三部分。 使用策略的对象：在 iOS 开发中这个对象通常是一个UIViewController，但是理论上可以是任何需要交换表现的对象。... <a class="read-more" href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Strategy-Pattern">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/读书笔记'>读书笔记</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2018-09-27">27 Sep 2018</time>
+        <time class="post-date index-post-date" datetime="2015-10-07">07 Oct 2015</time>
     </footer>
 </article>
 
@@ -287,14 +258,13 @@
 
 <nav class="pagination" role="pagination">
     
-    <span class="page-number"> Page 1 of 6 </span>
-     
-        <a class="older-posts" href="/page2/" title="Next Page">Older Posts &raquo;</a>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
 
 
 </main>
+
 
         <!-- The tiny footer at the very bottom -->
         <footer class="site-footer clearfix">

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>属性的特质</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="属性的特质" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="属性的特质" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "属性的特质",
+    "url": "//%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">属性的特质</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2015-09-03">03 Sep 2015</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>​    最近读了Effective Objective-C。开篇就当做一篇笔记吧。在使用属性的时候，我们需要注意一个问题，就是属性的各种特质（attribute）设定也会影响编译器所生成的存取方法，下面这行代码，相必大家都很熟悉了。这行代码就指定了三项特质。
+<!-- more --></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">readwrite</span><span class="p">,</span><span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">firstName</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>​         属性可以拥有的特质分为四类，下面为大家逐一讲解：</p>
+
+<ul>
+  <li>
+    <p>原子性</p>
+
+    <p>在默认情况下，右边一起所合成的方法会通过锁定机制确保其原子性（atomic）。如果属性具备nonatomic特质，就不使用同步锁。请注意，如果没有声明nonatomic，这个属性就是atomic。若是自己定义存取方法，那么就应该遵从与属性特质相符的原子性。</p>
+  </li>
+  <li>
+    <p>读/写权限</p>
+
+    <p>1.具备readwrite特质的属性拥有setter方法和getter方法，若是属性有<code class="highlighter-rouge">@syntehsize</code>实现，则编译器会自动生成这两个方法。</p>
+
+    <p>2.具备readonly特质的属性仅仅拥有getter方法，只有当该属性有<code class="highlighter-rouge">@synthesize</code>实现时，编译器才会为其合成getter方法。你可以用此特质把某个属性对外公开为只读属性，然后在“class-continuation分类”中将其重新定义为读写属性。后面将详细叙述这种做法</p>
+  </li>
+  <li>
+    <p>内存管理语句</p>
+
+    <p>属性用于封装数据，而数据则要有具体的所有权予以，下面这组特质仅仅会影响setter方法。例如，用setter方法设定一个新值时，它是应该retain此值呢，还是只将其赋值给底层的实例变量就好呢？编译器在合成存取方法时，要根据此特性来决定生成的代码。如果自己编写存取方法，那么就必须同有关属性所具备的的特质相符。</p>
+
+    <ol>
+      <li>assign  setter方法只会执行对基本类型的简单赋值操作。</li>
+      <li>strong  此特质表明该属性定义了一种拥有关系，为这种属性设置新值时，setter方法会先保留新值，并释放旧值，然后再将新值设置上去</li>
+      <li>weak    此特质表明该属性定义了一种非拥有关系，为这种属性设置新值时，setter方法既不保留新值，也不是放旧值。此特质同assign类似，然而在属性所指的对象遭到摧毁时，属性值也会清空。</li>
+      <li>unsafe_unretained   此特质语义和assign相同，但是它适用于对象类型，该特质表达一种非拥有关系，当目标对象遭到摧毁时，属性值不会自动置空，这一点与weak有区别。</li>
+      <li>copy   此特质所表达的所属关系与strong类似。但是setter方法并不保留新值，而是将其copy。当属性类型为NSString*时，经常用此特质来保护其封装性。因为传递给setter方法的新值可能指向一个NSMutableString类的实例。这个类是NSString的子类，表示一种可以修改的字符串，此时若不拷贝字符串，那么设置完属性后，字符串的值就肯呢个在对象不知情的情况下遭人修改。所以要拷贝一份不可变的字符串，确保对象中的字符串的值不会无意间变动。只要实现属性所用的对象是可变的，就应该设置新值时拷贝一份。</li>
+    </ol>
+  </li>
+  <li>
+    <p>方法名</p>
+
+    <p>可以通过如下特质指定存取方法的方法名：</p>
+
+    <ol>
+      <li>
+        <p>getter = <name> 指定getter方法的名字，如果某属性是bool类型，而你想在其getter方法加上is前缀，就可以通过这个办法来指定。</name></p>
+
+        <pre><code class="language-objective-c"> @property (nonatomic, assign,getter=isOn) BOOL on;
+</code></pre>
+
+        <p>​</p>
+      </li>
+      <li>
+        <p>setter = <name> 指定setter方法的名字，这种用法不太常见</name></p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<hr />
+
+<p>​        如果在其他的方法中设置属性值，那么同样需要遵守属性定义中所宣称的特性。例如我们扩充一下前面的Person类，如下图：</p>
+
+<pre><code class="language-objective-c">  @interface Person : NSObject
+  @property(copy) NSString *firstName;
+  @property(copy) NSString *lastName;
+  -(id)initWithFirstName:(NSString *)firstName
+                  lastName:(NSString *)lastName;
+  @end
+</code></pre>
+
+<p>​        我们为其增加了一个初始化方法，那么在.m文件中实现这个初始化方法中，一定要遵循属性定义中的copy语义，初始化方法的实现代码应该这样写：</p>
+
+<pre><code class="language-objective-c">  -(id)initWithFirstName:(NSString *)firstName lastName:(NSString *)lastName{
+      if ((self = [super init])) {
+          _firstName = [firstName copy];
+          _lastName  = [lastName copy];
+      }
+      return self;
+  }
+</code></pre>
+
+<p>​        也许你们会问，为何不调用对应的setter方法呢，如果调用了setter方法，不是总能保证准确的语义么。我么将在下一篇中解释为什么绝不应该在init（或者dealloc）方法中调用存取方法。</p>
+
+<p>​         atomic 和nonatomic的区别是什么呢？前面说过，具备atomic特质的getter方法会通过锁定机制来确保其原子性。这也就是说，如果两个线程读写同一属性，那么不论何时，总能看到有效的属性值。如果不加锁的话，那么其中一个线程正在改写某一个属性值时，另一个线程也许会突然闯入，把尚未修改好的属性值，读出来。发生这种情况时，线程读到的属性值可能不对。</p>
+
+<p>​         开发iOS程序，你就会发现，其中所有属性都声明为nonatomic。这样做的历史原因是：在iOS中使用同步锁的开销较大，这样带来性能问题。一般情况下并不要求属性必须是atomic，因为这并不能保证线程安全，若要实现线程安全的操作，还需采用更为深层的锁定机制才行，例如，一个线程连续多次读取某属性值得过程中有别的线程同事改写该值，那么即便将属性声明为atomic，也还是会读到不同的属性值。因此，开发iOS程序时，一般都会使用nonatomic属性。</p>
+
+<p>​         下面我们总结下：</p>
+
+<ol>
+  <li>
+    <p>可以通过<code class="highlighter-rouge"><span class="k">@property</span></code>语法定义对象中所封装的数据。</p>
+  </li>
+  <li>
+    <p>通过属性的特质来指定存储数据所需的正确语义。</p>
+  </li>
+  <li>
+    <p>在设置属性对应的实例变量时，一定要遵从该属性所声明的语义。</p>
+  </li>
+  <li>
+    <p>开发iOS程序应使用nonatomic属性，因为atomic属性严重影响性能。</p>
+
+    <p>​        今天就写到这里，下一篇我们将讲解下在对象内部访问实例变量到底应该通过属性访问，还是直接访问实例变量呢？</p>
+  </li>
+</ol>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=属性的特质&amp;url=%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F">
+        <section class="post">
+            <h2>对象内部应该如何访问实例变量</h2>
+            <p>​ 在上一篇中，我们讲解了一些属性的特质，接下来我们讲下访问实例变量的问题，在对象之外访问实例变量时，总是应该通过属性来做，那么在对象内部访问实例变量又该如何呢？OC的开发者一直在激烈的讨论这些问题。有的人认为，无论什么情况都应该使用属性访问实例变量，也有人说通过属性访问和直接访问应该搭配着使用。除了集中特殊情况外，在这里建议大家在读取实例变量时采用直接访问，在设置实例变量时通过属性来做。 ​ 请看下面这个类: ```objective-c @interface Person : NSObject @property(nonatomic, copy) NSString *firstName; @property(nonatomic, copy)...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

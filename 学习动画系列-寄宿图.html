@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>学习动画系列---寄宿图</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="学习动画系列---寄宿图" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="学习动画系列---寄宿图" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "学习动画系列---寄宿图",
+    "url": "//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">学习动画系列---寄宿图</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2016-11-22">22 Nov 2016</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/Core'>Core</a>,
+                
+                
+                
+                <a href='/tag/Animation'>Animation</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>  上一篇学习了下<code class="highlighter-rouge">CALayer</code>的概念，者一篇学习下<code class="highlighter-rouge">CALayer</code>的内部属性，我们先来解释下什么是寄宿图。在上一篇中，我们通过<code class="highlighter-rouge">CALayer</code>类创建了一个蓝色的背景图层，如果他仅仅是展现一个单调的颜色，~~那我还学他干啥？~~其实它还可以包含一张图片，它里面包含的图我们就叫寄宿图。这个名字太奇怪了。估计是翻译的问题吧。
+<!-- more --></p>
+<h1 id="contents属性">contents属性</h1>
+<h2 id="contents">contents</h2>
+<p>  <code class="highlighter-rouge">CALayer</code>有个<code class="highlighter-rouge">contents</code>属性，这个属性被定义为id类型，但是可不要被定义为id类型迷惑，如果给<code class="highlighter-rouge">contents</code>属性赋的值不是CGImage，那么他就是一个空白的layer。</p>
+
+<p>  这个奇怪的表现实由于Mac OS的历史原因造成的，因为在Mac OS中，这个属性对CGImage和NSImage都有作用。如果在iOS平台上将UIImage的值赋给它，只能得到一个空白的layer。</p>
+
+<p>  事实上，我们真正要赋值的是一个CGImageRef的指针，UIImage有个CGImage的属性，返回一个CGImageRef，如果我们直接把这个值赋给<code class="highlighter-rouge">contents</code>，编译器会提醒我们需要加上(__bridge id)，这是为啥呢，因为CGImageRef是一个Core Foundation类型的。因为Core Foundation对象和Cocoa对象在运行时是toll-free bridging的，所以我们可以通过__bridge关键字转换的。所以我们用下面的代码就可以让一个view现实一个图片，是不是很神奇。算了，当我没说。还是看代码吧：</p>
+
+<pre><code class="language-objective-c">    UIImage *image = [UIImage imageNamed:@"Slice1.png"];
+    _backView.layer.contents = (__bridge id)image.CGImage;
+</code></pre>
+
+<p>  通过上面的代码，我们可以实现如下图所示的效果：</p>
+
+<p><span><img src="\images\寄宿图\1.png" /></span></p>
+
+<p>  用这些简单的代码做了一件非常有趣的事情，就是我们利用<code class="highlighter-rouge">CALayer</code>在一个普通的<code class="highlighter-rouge">UIView</code>中显示了一个图片，而不是用UIImageView。通过操作<code class="highlighter-rouge">CALayer</code>可以让<code class="highlighter-rouge">UIView</code>更加有趣啦。哈哈哈！</p>
+
+<h2 id="contentgravity">contentGravity</h2>
+
+<p>  这个属性对应的是<code class="highlighter-rouge">UIView</code>的contentMode属性。但是它是一个<code class="highlighter-rouge">NSString</code>类型，contentGravity可选的常量值有一下这些：</p>
+
+<ul>
+  <li>kCAGravityCenter</li>
+  <li>kCAGravityTop</li>
+  <li>kCAGravityBottom</li>
+  <li>kCAGravityLeft</li>
+  <li>kCAGravityRight</li>
+  <li>kCAGravityTopLeft</li>
+  <li>kCAGravityTopRight</li>
+  <li>kCAGravityBottomLeft</li>
+  <li>kCAGravityBottomRight</li>
+  <li>kCAGravityResize</li>
+  <li>kCAGravityResizeAspect</li>
+  <li>kCAGravityResizeAspectFill</li>
+</ul>
+
+<p>和<code class="highlighter-rouge">UIView</code>的那些属性是对应的。</p>
+
+<h2 id="contentsscale">contentsScale</h2>
+
+<p>  contentsScale属性定义了寄宿图的像素尺寸和视图大小的比例，默认情况下它是1.0。contentsScale属性其实是适配Retina屏幕的，如果他的值为1.0，那么一个点绘制一个像素，如果为2.0，那么一个点绘制2个像素。所以当用代码手动处理寄宿图的时候，一定要记住手动设置图层的contentsScale属性，否则，你的图片在Retina屏幕上面就显示的不对啦！</p>
+
+<h2 id="masktobounds">maskToBounds</h2>
+
+<p>  这个属性对应<code class="highlighter-rouge">UIView</code>的clipsToBounds的属性，它可以用来决定是否显示超出边界的内容，把它设置为YES，图片就不会超出边界绘制了。</p>
+
+<h2 id="contentsrect">contentsRect</h2>
+
+<p>  <code class="highlighter-rouge">CALayer</code>的contentsRect属性允许我们再图层边框里显示寄宿图的一个子区域。这涉及到图片是如何显示和拉伸的，所以比contentsGravity灵活多了，和<code class="highlighter-rouge">bounds</code>、<code class="highlighter-rouge">frame</code>不同，这个属性不是按点来计算的，它使用了单位坐标。单位坐标是指定在0~1之间的。是一个相对的值。讲到这个，就有必要介绍下iOS使用的坐标系统了。</p>
+
+<ul>
+  <li>点–在iOS和Mac OS中最常见的坐标体系。点就像是虚拟的像素，也被称作逻辑像素。在标准设备上，一个点就是一个像素，但是在Retina设备上，一个点等于2*2个像素。iOS用电作为屏幕的坐标测算体系就是为了在Retina设备和普通设备能有一致的视觉效果。</li>
+  <li>像素–物理像素坐标不会用来屏幕布局，但是仍然与图片有相对关系。UIImage是一个屏幕分辨率解决方案，所以指定点来度量大小。但是一些底层的图片表示如CGImage就会使用像素，所以你要清楚再Retina设备和普通设备上，他们表现出来了不同的大小。</li>
+  <li>单位–对于与图片大小或是图层边界相关的显示，单位坐标是一个方便的度量方式，当大小改变的时候，也不需要再次调整。单位坐标在OpenGL这种纹理坐标系统中用得很多，Core Animation中也用到了单位坐标。</li>
+</ul>
+
+<p>默认的contentsRect是{0,0,1,1}，这意味着整个寄宿图都默认都是可见的，如果我们指定一个小一点的矩形，图片就会裁剪，这个我们可以自己去代码试验下。</p>
+
+<p>  事实上给contentsRect设置一个负数的原点或者是大于{1,1}的尺寸也是可以的。这种情况下，最外面的像素会被拉伸以填充剩下的区域。</p>
+
+<p>  利用contentsRect可以把一大张图切成小图显示，下面我们用代码来显示下，首先我们需要载入一张大图：</p>
+
+<p><span><img src="\images\寄宿图\Slice1.png" /></span></p>
+
+<p>我们怎么把这个大图分别裁成四个小图在app中显示呢，其实利用这个属性很简单。我们把这张大图赋值给四个独立的图层contents，然后设置每个layer的contentsRect来去掉我们不想要的部分。我们在StoryBoard上再拖四个view上来，然后看我们下面的代码：</p>
+
+<pre><code class="language-objective-c">- (void)viewDidLoad {
+    [super viewDidLoad];
+    UIImage *image = [UIImage imageNamed:@"Slice1.png"];
+    _backView.layer.contents = (__bridge id)image.CGImage;
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0, 0, 0.5, 0.5) toLayer:_gaoyuanyuan.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0.5, 0, 0.5, 0.5) toLayer:_jiangshuying.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0, 0.5, 0.5, 0.5) toLayer:_sijiali.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0.5, 0.5, 0.5, 0.5) toLayer:_anji.layer];
+}
+
+
+- (void)addSpriteImage:(UIImage *)image withContentRect:(CGRect)rect toLayer:(CALayer *)layer //set image
+{
+    layer.contents = (__bridge id)image.CGImage;
+   
+    layer.contentsGravity = kCAGravityResizeAspect;
+
+    layer.contentsRect = rect;
+}
+
+</code></pre>
+
+<p>这样就实现了我们的效果：</p>
+
+<p><span><img src="\images\寄宿图\2.png" /></span></p>
+
+<h2 id="contentscenter">contentsCenter</h2>
+
+<p>  现在我们介绍的最后一个和内容有关的属性是contentsCenter，看这个名字可能会以为跟图片的中心点位置有关。不过这个名字误导了我们。contentsCenter其实是一个CGRect，它定义了一个固定的边框和一个在图层上可以拉伸的区域。改变了contentsCenter的值并不会影响到寄宿图的显示，除非这个图层的位置改变了你才看得到效果。怎么理解contentsCenter呢，看下面这个图就懂啦！</p>
+
+<p><span><img src="\images\寄宿图\3.png" /></span></p>
+
+<p>  其实在IB中也可以设置这个就是:</p>
+
+<p><span><img src="\images\寄宿图\4.png" /></span></p>
+
+<h1 id="custom-drawing">Custom Drawing</h1>
+
+<p>  给contents设置CGImage不是唯一设置寄宿图的方法。我们还可以直接用Core Graphics直接绘制寄宿图。能够通过继承<code class="highlighter-rouge">UIView</code>并实现<code class="highlighter-rouge">-drawRect:</code>方法来绘制。</p>
+
+<p>  <code class="highlighter-rouge">-drawRect:</code>方法没有默认的实现，因为<code class="highlighter-rouge">UIView</code>并不在意寄宿图到底是单调的颜色还是图片，寄宿图并不是必须的。如果<code class="highlighter-rouge">UIView</code>检测到<code class="highlighter-rouge">-drawRect:</code>方法调用了，它就会给视图分配一个寄宿图，寄宿图的像素尺寸是视图大小乘以<code class="highlighter-rouge">contentsScale</code>的值。</p>
+
+<p>  如果我们不需要寄宿图，那就不要复写这个方法了，这回造成CUP资源和内存的浪费，这也是苹果为什么建议我们，如果没有自定义的绘制就不要在子类中写一个空的<code class="highlighter-rouge">-drawRect:</code>方法啦。</p>
+
+<p>  当视图在屏幕上出现的时候<code class="highlighter-rouge">-drawRect:</code>方法自动会调用。<code class="highlighter-rouge">-drawRect:</code>方法里面的代码利用了Core Graphics去绘制一个寄宿图，然后内容就会被缓存起来知道它需要被更新（通常是我们调用了<code class="highlighter-rouge">-setNeedsDisplay</code>方法，尽管影响到表现效果的属性值被更改时，一些试图类型会被自动重绘，如<code class="highlighter-rouge">bounds</code>属性）。虽然<code class="highlighter-rouge">-drawRect:</code>方法是一个UIView方法，事实上都是底层的CALayer安排了重绘工作和保存了因此产生的图片。</p>
+
+<p>  CALayer有一个可选的<code class="highlighter-rouge">delegate</code>属性，实现了<code class="highlighter-rouge">CALayerDelegate</code>协议，当CALayer需要一个内容特定的信息时，就会从协议中请求。CALayerDelegate是一个非正式协议，其实就是说没有CALayerDelegate @protocol可以让你在类里面饮用啦。你只需要调用你想调用的方法，CALayer会帮你做剩下的。</p>
+
+<p>  当需要被重绘时，CALayer会请求它的代理给它一个寄宿图来显示。它通过调用下面这个方法做到的：</p>
+
+<pre><code class="language-objective-c">-(void)displayLayer:(CALayerCALayer *)layer;
+</code></pre>
+
+<p>  趁这个机会，如果代理想直接设置contents属性的话，他就可以这么做，不然没有别的方法可以调用了。如果代理不实现<code class="highlighter-rouge">-displayLayer:</code>方法，CALayer就会转而尝试调用下面这个方法：</p>
+
+<pre><code class="language-objective-c">- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+</code></pre>
+
+<p>  在调用这个方法之前，CALayer创建了一个合适尺寸的空寄宿图（尺寸有bounds和contentsScale决定）和一个Core Graphics的绘制上下文环境，为绘制寄宿图做准备，他作为ctx参数传入。</p>
+
+<p>  让我们用代码来看一下他的作用：</p>
+
+<pre><code class="language-objective-c">- (void)viewDidLoad {
+    [super viewDidLoad];
+   CALayer *backLayer = _backView.layer;
+    
+    CALayer *blueLayer = [CALayer layer];
+    
+    blueLayer.backgroundColor = [UIColor blueColor].CGColor;
+    
+    blueLayer.frame = CGRectMake(0, 0, 100, 100);
+    
+    blueLayer.contentsScale = [UIScreen mainScreen].scale;
+    
+    blueLayer.delegate = self;
+    
+    [backLayer addSublayer:blueLayer];
+    
+    [blueLayer display];
+}
+    -(void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
+{
+    
+    CGContextSetLineWidth(ctx, 10.0f);
+    CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+    CGContextStrokeEllipseInRect(ctx, layer.bounds);
+}
+
+</code></pre>
+
+<p>通过上述代码就可以实现下图的效果：</p>
+
+<p><span><img src="\images\寄宿图\5.png" /></span></p>
+
+<p>注意一些东西：</p>
+
+<ul>
+  <li>我们再blueLayer上显示的调用了<code class="highlighter-rouge">-display</code>。不同于UIView，当图层显示在屏幕上时，CALayer不会自动重绘它的内容。它把重绘的决定权交给了开发者。</li>
+  <li>尽管我们没有用<code class="highlighter-rouge">masksToBounds</code>属性，绘制的那个圆依然沿边界被剪裁了，这是因为你当你使用CALayerDelegate绘制寄宿图的时候，并没有对超出边界外的内容提供绘制支持。</li>
+</ul>
+
+<p>  现在我们理解了CALayerDelegate，并知道怎么使用它。但是除非我们自己创建了一个单独的图层，几乎没有机会用到CALayerDelegate。因为当UIView创建了它的宿主图层时，它就自动把图层的delegate设置成自己了，并切提供了一个<code class="highlighter-rouge">-displayLayer:</code>的实现，那所有问题都没有了。</p>
+
+<p>  当使用寄宿了视图的图层的时候，我们也不必实现<code class="highlighter-rouge">-displayLayer:</code>和<code class="highlighter-rouge">-drawLayer:inContext:</code>方法来绘制我们的寄宿图。通常做法是实现UIView的<code class="highlighter-rouge">-drawRect:</code>方法，UIView会帮我们做完剩下的工作，包括在需要重绘时执行<code class="highlighter-rouge">-display</code>方法。</p>
+
+<p>  好啦，终于又看完了一章，坚持！！</p>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=学习动画系列---寄宿图&amp;url=%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/UIKit-Dynamic-Tutorial">
+        <section class="post">
+            <h2>UIKit Dynamic Tutorial</h2>
+            <p>这是一篇翻译自Raywenderlich上的文章，[原文][1]。 # What's UIKit Dynamic &emsp;&emsp;iOS7鼓励我们设计出一个物理动态的效果，这个听起来是一个很艰巨的任务。但是苹果爸爸已经为我们提供了一些非常好用的东西，就是UIKit Dynamics和Motion Effects。 * UIKit Dynamics 是一个被整合的UIKit中的完整物理引擎。它允许你通过添加一些重力，附件(弹簧），力等行为来创建感觉真实的效果。你只管定义界面元素采用的物理特征，其他的就交给UIKit Dynamics。 * Motion...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer">
+        <section class="post">
+            <h2>学习动画系列---理解CALayer</h2>
+            <p>  好长时间没写东西了，由于刚换了工作，一直在忙于熟悉业务，和一些新业务的开发，没有时间对自己的技术进行修行。这段时间终于闲下来了，可以找些自己感兴趣的东西来好好学习下了。最近在学习些高级动画，在gitbook上面看到一个iOS核心动画高级技巧，阅读了下，写的是一些动画的基础。毕竟学东西，我们要从基础学起嘛。你连1+1都不会算，怎么学习数学，这是一个道理。好吧，我有些跑题了😀。我们平常用的UIView可以实现一些基础的动画，但是有时产品🐶要做一个非常牛逼的动画时，我们就有些傻眼了。这里就需要用到一个高级东西了，在我们iOS里面叫Core Animation，下面我们就来系列学下这个牛逼的东西。先来学习下比UIView高级些的东西，这个东西就叫CALayer。 CALayer和UIView   iOS中所有的view都是UIView派生来的。UIView可以处理触摸事件，可以支持绘图，可以做仿射变换（其实就是旋转和缩放），UIView还可以做简单的类似于滑动，或者渐变动画。   CALayer和UIView类似，同样可以包含一些内容，管理layer的位置，它也有一些方法和属性用来做动画和变幻，和UIView最大的不同就是CALayer不能处理用户交互。   每一个UIView都有一个CALayer的实例的图层属性，UIView的职责就是负责管理创建这个layer，以确保党姿势图在层级关系中添加或者移除时，他们关联的图层也同样对应在层级关系树当中有同样的操作。   实际上这些背后关联的图层才是真正用来在屏幕上显示和做动画的，UIView仅仅是对它的一个封装。提供了一些iOS类似于处理触摸的具体功能，以及Core Animation底层方法的高级接口。至于为什么iOS要基于UIView和CALayer提供两个平行的层级关系呢？~~这不是多此一举么？~~这样做的原因在于职责分离，也能避免很多的重复代码。在iOS和Mac OS两个平台上，时间和用户交互有很多不同，这个大家都能理解，一个是多点触控，一个是鼠标键盘。把这种共能逻辑分开并应用的独立的Core Animation框架，苹果就能再iOS和Mac OS之间共享代码。反正底层都一样，只是封装成一个iOS用，一个Mac OS用。这就是iOS有UIKit，Mac OS有AppKit。   实际上，这里并不是两个层级关系，而是四个，处理视图层级和图层树，还存在呈现树和渲染树。我还没有看到这里，后面看到了在写后两个层级。😁 CALayer的能力...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

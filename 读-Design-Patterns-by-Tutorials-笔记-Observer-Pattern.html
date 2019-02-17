@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>读《Design-Patterns-by-Tutorials》笔记——Observer Pattern</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="读《Design-Patterns-by-Tutorials》笔记——Observer Pattern" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="读《Design-Patterns-by-Tutorials》笔记——Observer Pattern" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "读《Design-Patterns-by-Tutorials》笔记——Observer Pattern",
+    "url": "//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">读《Design-Patterns-by-Tutorials》笔记——Observer Pattern</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2018-10-04">04 Oct 2018</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>观察者模式让一个对象观察另一个对象的改变。在本章节，你将学习两种实现观察者模式的方法：</p>
+<ol>
+  <li>使用 KVO</li>
+  <li>使用一个<code class="highlighter-rouge">Observable</code>包装。</li>
+</ol>
+
+<p>UML 图如下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1538641129.png" alt="" /></p>
+
+<!-- more -->
+
+<p>这个模式包含两个主要对象：</p>
+<ol>
+  <li><strong>Subject</strong>是被观察对象。</li>
+  <li><strong>Observer</strong>是观察对象。</li>
+</ol>
+
+<p>不幸的是，Swift 4现在没有语言层面的 KVO 支持。我们需要继承<code class="highlighter-rouge">Foundation</code>的<code class="highlighter-rouge">NSObject</code>,<code class="highlighter-rouge">NSObject</code>使用<code class="highlighter-rouge">Objective-C</code>runtime来实现 KVO。如果你不想或者不能继承<code class="highlighter-rouge">NSObject</code>,你可以自己封装一个<code class="highlighter-rouge">Observable</code>类来代替。
+在本章，你将会使用 KVO 和<code class="highlighter-rouge">Observable</code>包装器来实现观察者模式。</p>
+
+<h2 id="when-should-you-use-it">When should you use it?</h2>
+
+<p>当你想要在另一个对象改变时收到改变消息时需要使用观察者模式。
+这个模式经常在 MVC 中使用，view controller 是观察者，model 作为被观察者。这样 model 可以在改变时可以将改变传递回 view controller 而不需要知道 view controller 的类型。因此，不同的 view controller 可以观察共享 model 类型的变化。</p>
+
+<h2 id="playground-example">Playground example</h2>
+
+<p><strong>观察者模式</strong>是一种<strong>表现类型模式</strong>，这是因为<strong>观察者模式</strong>是关于一个对象观察另一个对象。
+下面我们先用 KVO 来实现观察者模式，先添加一个<code class="highlighter-rouge">KVOUser</code>类：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">Foundation</span>
+<span class="c1">// MARK: - KVO</span>
+<span class="c1">// 1</span>
+<span class="kd">@objcMembers</span> <span class="kd">public</span> <span class="kd">class</span> <span class="kt">KVOUser</span><span class="p">:</span> <span class="kt">NSObject</span> <span class="p">{</span>
+    <span class="c1">// 2</span>
+    <span class="kd">dynamic</span> <span class="k">var</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="c1">// 3</span>
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>这段代码做了一下三件事情：</p>
+
+<ol>
+  <li><code class="highlighter-rouge">KVOUser</code>是一个<code class="highlighter-rouge">NSObject</code>子类，我们将要观察<code class="highlighter-rouge">KVOUser</code>。<code class="highlighter-rouge">@objcMembers</code>的作用和往没个属性前面加<code class="highlighter-rouge">@objc</code>的作用一样。在 Swift 4中，<code class="highlighter-rouge">NSObject</code>子类的属性没有自动暴露给<code class="highlighter-rouge">Objective-C</code>runtime。因为<code class="highlighter-rouge">NSObject</code>使用runtime 来实现 KVO。所以必须添加<code class="highlighter-rouge">@objcMembers</code>来让 KVO 工作。</li>
+  <li><code class="highlighter-rouge">dynamic</code>的意思是这个属性使用<code class="highlighter-rouge">Objective-C</code>动态派发系统去调用<code class="highlighter-rouge">setter</code>和<code class="highlighter-rouge">getter</code>方法。这是为了让 KVO 工作，因为 KVO 交换了这个属性的 setter 方法来插入一些必要的逻辑。</li>
+  <li>一个简单的构造器，设置了 name 的值。</li>
+</ol>
+
+<p>接下来，添加以下代码：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"---KVO Example---"</span><span class="p">)</span>
+<span class="c1">// 2</span>
+<span class="k">let</span> <span class="nv">kvoUser</span> <span class="o">=</span> <span class="kt">KVOUser</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"Ray"</span><span class="p">)</span>
+<span class="c1">// 3</span>
+<span class="k">var</span> <span class="nv">kvoObserver</span><span class="p">:</span> <span class="kt">NSKeyValueObservation</span><span class="p">?</span> <span class="o">=</span> <span class="n">kvoUser</span><span class="o">.</span><span class="nf">observe</span><span class="p">(</span><span class="err">\</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="n">initial</span><span class="p">,</span> <span class="o">.</span><span class="k">new</span><span class="p">])</span> <span class="p">{</span> <span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">change</span><span class="p">)</span> <span class="k">in</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"User's name is </span><span class="se">\(</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>这段代码做了一下三件事情：</p>
+<ol>
+  <li>在控制台打印”— KVO Example”</li>
+  <li>创建了一个 KVOUser 实例。</li>
+  <li>声明了一个<code class="highlighter-rouge">NSKeyValueObservation?</code>实例，命名为<code class="highlighter-rouge">kvoObserver</code>。这就是<strong>观察者</strong>对象。我们可以通过调用<code class="highlighter-rouge">kvoUser.observe</code>方法获得它。</li>
+</ol>
+
+<p>这个方法自动返回一个非可选<code class="highlighter-rouge">NSKeyValueObservation</code>类型.然而，我们明确声明这个类型为可选是为了在后面可以设置这个变量为<code class="highlighter-rouge">nil</code>。
+这个方法的第一个参数<code class="highlighter-rouge">keyPath</code>是观察的属性。我们可以通过使用<code class="highlighter-rouge">\.name</code>的简写形式来表达。根据上下文，Swift 会将其扩展为<code class="highlighter-rouge">\KVOUser.name</code>的完全 key path，来唯一标识<code class="highlighter-rouge">KVOUser</code>的 <code class="highlighter-rouge">name</code>。<code class="highlighter-rouge">options</code>是一个<code class="highlighter-rouge">NSKeyValueObservingOptions</code>的组合，这里我们具体说明我们想要收到<code class="highlighter-rouge">initial</code>和<code class="highlighter-rouge">new</code>的值。
+最后一个参数是一个闭包，提供了<code class="highlighter-rouge">user</code>和<code class="highlighter-rouge">change</code>对象。<code class="highlighter-rouge">user</code>是改变后的 user。如果<code class="highlighter-rouge">.new</code>动作触发了闭包，<code class="highlighter-rouge">change</code>可能包含一个<code class="highlighter-rouge">oldValue</code>。这里，我们打印了当前<code class="highlighter-rouge">user</code>的<code class="highlighter-rouge">name</code>。
+运行上面的代码可以看到在控制台打印了两行：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">---</span><span class="kt">KVO</span> <span class="kt">Example</span><span class="o">---</span>
+<span class="kt">User</span><span class="err">'</span><span class="n">s</span> <span class="n">name</span> <span class="k">is</span> <span class="kt">Ray</span>
+</code></pre></div></div>
+<p>闭包在我们初始化 observer 时被调用了，因为我们指定了<code class="highlighter-rouge">.initial</code>。这意味着当初始化时发送观察结果。
+接下来我们添加下面的代码来触发<code class="highlighter-rouge">.new</code>KVO 动作：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">kvoUser</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">"zdp"</span>
+</code></pre></div></div>
+<p>我们可以看到下面的打印：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">User</span><span class="err">'</span><span class="n">s</span> <span class="n">name</span> <span class="k">is</span> <span class="n">zdp</span>
+</code></pre></div></div>
+<p>最后我们添加下面的代码：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">kvoObserver</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="n">kvoUser</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">"Ray has left buliding"</span>
+</code></pre></div></div>
+<p>这里我们设置<code class="highlighter-rouge">kvoObserver</code>为 <code class="highlighter-rouge">nil</code>,我们可以观察到在设置<code class="highlighter-rouge">kvoObserver</code>为<code class="highlighter-rouge">nil</code>后，控制台不再打印信息。
+Swift 4 KVO 的一个非常棒的特性就是我们不用明确 remove KVO 的 observer 或者闭包。代替的，observer 是一个 weak 引用，并且他们相关的闭包在 observer 变为 <code class="highlighter-rouge">nil</code> 时将自动移除。在Swift 以前版本和<code class="highlighter-rouge">Objective-C</code>中，你不得不明确调用<code class="highlighter-rouge">removeObserver(_:forKeyPath:)</code>,否则，在我们视图访问一个deallocated的 observer 时，app 将会 crash。
+Swift 4 KVO 自动移除 observers 非常棒，但是这并不能弥补 KVO 最大的缺点，因为我们在使用 KVO 时必须继承<code class="highlighter-rouge">NSObject</code>并且使用<code class="highlighter-rouge">Objective-C</code>的 runtime。
+如果你不想这样做，你可以创建一个自己的<code class="highlighter-rouge">Observable</code>包装来打破这种限制。
+接下来，我们创建一个自己的<code class="highlighter-rouge">Observable</code>。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 1</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Observable</span><span class="o">&lt;</span><span class="k">Type</span><span class="o">&gt;</span> <span class="p">{</span>
+    
+    <span class="c1">// MARK: - CallBack</span>
+
+    <span class="c1">// 2</span>
+    <span class="kd">fileprivate</span> <span class="kd">class</span> <span class="kt">Callback</span> <span class="p">{</span>
+        <span class="kd">fileprivate</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">?</span>
+        <span class="kd">fileprivate</span> <span class="k">let</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">ObservableOptions</span><span class="p">]</span>
+        <span class="kd">fileprivate</span> <span class="k">let</span> <span class="nv">closure</span><span class="p">:</span> <span class="p">(</span><span class="k">Type</span><span class="p">,</span> <span class="kt">ObservableOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+        
+        <span class="kd">fileprivate</span> <span class="nf">init</span><span class="p">(</span><span class="nv">observer</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">,</span>
+                         <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">ObservableOptions</span><span class="p">],</span>
+                         <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="k">Type</span><span class="p">,</span> <span class="kt">ObservableOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">observer</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">closure</span> <span class="o">=</span> <span class="n">closure</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// MARK: - ObservableOptions</span>
+
+<span class="c1">// 3</span>
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ObservableOptions</span><span class="p">:</span> <span class="kt">OptionSet</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">initial</span> <span class="o">=</span> <span class="kt">ObservableOptions</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">old</span> <span class="o">=</span> <span class="kt">ObservableOptions</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">new</span> <span class="o">=</span> <span class="kt">ObservableOptions</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+    
+    
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="kt">Int</span>
+    
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValue</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>上面代码做了3件事：</p>
+<ol>
+  <li>声明了一个<code class="highlighter-rouge">Observable&lt;Type&gt;</code>的泛型类。</li>
+  <li>声明了一个内置的，<code class="highlighter-rouge">fileprivate</code>的类，叫做<code class="highlighter-rouge">Callback</code>。我们使用他来关联 <code class="highlighter-rouge">observer</code>,<code class="highlighter-rouge">options</code>和<code class="highlighter-rouge">closure</code>。注意，<code class="highlighter-rouge">observer</code>是一个 <code class="highlighter-rouge">weak</code>属性，所以需要是一个类。因此我们用<code class="highlighter-rouge">AnyObject</code>类型来表示它。最后，你将看到如何在 observer 变为 <code class="highlighter-rouge">nil</code>后去自动移除观察observer。</li>
+  <li>接下来，我们声明了一个<code class="highlighter-rouge">ObservableOptions</code>,它和 KVO 的<code class="highlighter-rouge">NSKeyValueObservingOptions</code>非常相似。因为 Swift 现在不允许内置 <code class="highlighter-rouge">OptionsSets</code>。所以，我们在<code class="highlighter-rouge">Observable&lt;Type&gt;</code>的外面声明它。</li>
+</ol>
+
+<p>接下来，我们继续给<code class="highlighter-rouge">Observable&lt;Type&gt;</code>添加代码：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - Properties</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="k">Type</span>
+<span class="c1">// MARK: - Object Lifecycle</span>
+<span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="k">Type</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>我们声明了一个 value 属性和初始化方法。接下来，我们添加操作 observers 的方法：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: - Managing Observers</span>
+    
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">callbacks</span><span class="p">:</span> <span class="p">[</span><span class="kt">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">addObserver</span><span class="p">(</span>
+        <span class="n">_</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">,</span>
+        <span class="nv">removeIfExists</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">ObservableOptions</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="k">new</span><span class="p">],</span>
+        <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="k">Type</span><span class="p">,</span> <span class="kt">ObservableOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">removeIfExists</span> <span class="p">{</span>
+            <span class="nf">removeObserver</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">callback</span> <span class="o">=</span> <span class="kt">Callback</span><span class="p">(</span><span class="nv">observer</span><span class="p">:</span> <span class="n">observer</span><span class="p">,</span>
+                                <span class="nv">options</span><span class="p">:</span> <span class="n">options</span><span class="p">,</span>
+                                <span class="nv">closure</span><span class="p">:</span> <span class="n">closure</span><span class="p">)</span>
+        <span class="n">callbacks</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="o">.</span><span class="n">initial</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nf">closure</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">.</span><span class="n">initial</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeObserver</span><span class="p">(</span><span class="n">_</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">filter</span> <span class="p">{</span>
+            <span class="nv">$0</span><span class="o">.</span><span class="n">observer</span> <span class="o">!==</span> <span class="n">observer</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+	<span class="kd">private</span> <span class="kd">func</span> <span class="nf">removeNilObserverCallbacks</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">filter</span> <span class="p">{</span>
+            <span class="nv">$0</span><span class="o">.</span><span class="n">observer</span> <span class="o">!=</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">notifyCallbacks</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="k">Type</span><span class="p">,</span>
+                                 <span class="nv">option</span><span class="p">:</span> <span class="kt">ObservableOptions</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">callbacksToNotify</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">filter</span> <span class="p">{</span>
+            <span class="nv">$0</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">callbacksToNotify</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span>
+            <span class="nv">$0</span><span class="o">.</span><span class="nf">closure</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+<p>我们需要在改变属性时通知 observer，所以我们需要在 <code class="highlighter-rouge">value</code>改变时去做一些事情：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kd">public</span> <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="k">Type</span> <span class="p">{</span>
+        <span class="k">didSet</span> <span class="p">{</span>
+            <span class="nf">removeNilObserverCallbacks</span><span class="p">()</span>
+            <span class="nf">notifyCallbacks</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">oldValue</span><span class="p">,</span> <span class="nv">option</span><span class="p">:</span> <span class="o">.</span><span class="n">old</span><span class="p">)</span>
+            <span class="nf">notifyCallbacks</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span> <span class="nv">option</span><span class="p">:</span> <span class="o">.</span><span class="k">new</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+</code></pre></div></div>
+<p>这里，我们在<code class="highlighter-rouge">value</code>的<code class="highlighter-rouge">didSet</code>方法中，添加了一些代码。到这里，我们的<code class="highlighter-rouge">Observable&lt;Type&gt;</code>已经封装完了，整体代码如下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">import</span> <span class="kt">Foundation</span>
+<span class="c1">// 1</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Observable</span><span class="o">&lt;</span><span class="k">Type</span><span class="o">&gt;</span> <span class="p">{</span>
+    
+    <span class="c1">// MARK: - CallBack</span>
+    <span class="kd">fileprivate</span> <span class="kd">class</span> <span class="kt">Callback</span> <span class="p">{</span>
+        <span class="kd">fileprivate</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">?</span>
+        <span class="kd">fileprivate</span> <span class="k">let</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">ObservableOptions</span><span class="p">]</span>
+        <span class="kd">fileprivate</span> <span class="k">let</span> <span class="nv">closure</span><span class="p">:</span> <span class="p">(</span><span class="k">Type</span><span class="p">,</span> <span class="kt">ObservableOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
+        
+        <span class="kd">fileprivate</span> <span class="nf">init</span><span class="p">(</span><span class="nv">observer</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">,</span>
+                         <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">ObservableOptions</span><span class="p">],</span>
+                         <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="k">Type</span><span class="p">,</span> <span class="kt">ObservableOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">observer</span> <span class="o">=</span> <span class="n">observer</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">options</span> <span class="o">=</span> <span class="n">options</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">closure</span> <span class="o">=</span> <span class="n">closure</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// MARK: - Properties</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="k">Type</span> <span class="p">{</span>
+        <span class="k">didSet</span> <span class="p">{</span>
+            <span class="nf">removeNilObserverCallbacks</span><span class="p">()</span>
+            <span class="nf">notifyCallbacks</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">oldValue</span><span class="p">,</span> <span class="nv">option</span><span class="p">:</span> <span class="o">.</span><span class="n">old</span><span class="p">)</span>
+            <span class="nf">notifyCallbacks</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span> <span class="nv">option</span><span class="p">:</span> <span class="o">.</span><span class="k">new</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// MARK: - Object Lifecycle</span>
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">value</span><span class="p">:</span> <span class="k">Type</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// MARK: - Managing Observers</span>
+    
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">callbacks</span><span class="p">:</span> <span class="p">[</span><span class="kt">Callback</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">addObserver</span><span class="p">(</span>
+        <span class="n">_</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">,</span>
+        <span class="nv">removeIfExists</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">ObservableOptions</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="k">new</span><span class="p">],</span>
+        <span class="nv">closure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="k">Type</span><span class="p">,</span> <span class="kt">ObservableOptions</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">removeIfExists</span> <span class="p">{</span>
+            <span class="nf">removeObserver</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">callback</span> <span class="o">=</span> <span class="kt">Callback</span><span class="p">(</span><span class="nv">observer</span><span class="p">:</span> <span class="n">observer</span><span class="p">,</span>
+                                <span class="nv">options</span><span class="p">:</span> <span class="n">options</span><span class="p">,</span>
+                                <span class="nv">closure</span><span class="p">:</span> <span class="n">closure</span><span class="p">)</span>
+        <span class="n">callbacks</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="o">.</span><span class="n">initial</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nf">closure</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="o">.</span><span class="n">initial</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeObserver</span><span class="p">(</span><span class="n">_</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">filter</span> <span class="p">{</span>
+            <span class="nv">$0</span><span class="o">.</span><span class="n">observer</span> <span class="o">!==</span> <span class="n">observer</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">removeNilObserverCallbacks</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">filter</span> <span class="p">{</span>
+            <span class="nv">$0</span><span class="o">.</span><span class="n">observer</span> <span class="o">!=</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">notifyCallbacks</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="k">Type</span><span class="p">,</span>
+                                 <span class="nv">option</span><span class="p">:</span> <span class="kt">ObservableOptions</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">callbacksToNotify</span> <span class="o">=</span> <span class="n">callbacks</span><span class="o">.</span><span class="n">filter</span> <span class="p">{</span>
+            <span class="nv">$0</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="n">option</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">callbacksToNotify</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span>
+            <span class="nv">$0</span><span class="o">.</span><span class="nf">closure</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// MARK: - ObservableOptions</span>
+
+<span class="c1">// 3</span>
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ObservableOptions</span><span class="p">:</span> <span class="kt">OptionSet</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">initial</span> <span class="o">=</span> <span class="kt">ObservableOptions</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">old</span> <span class="o">=</span> <span class="kt">ObservableOptions</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">new</span> <span class="o">=</span> <span class="kt">ObservableOptions</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+    
+    
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="kt">Int</span>
+    
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValue</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>接下来，我们测试一下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//MARK: - Observable Example</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">User</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">Observable</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span>
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kt">Observable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Observer</span> <span class="p">{</span> <span class="p">}</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">""</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"--- Observable Example ---"</span><span class="p">)</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">User</code>是一个<strong>Subject</strong>,它有一个<code class="highlighter-rouge">name</code>属性，我们将观察这个属性。<code class="highlighter-rouge">Observer</code>是一个观察者<strong> observer</strong>，这可以是一个<code class="highlighter-rouge">NSObject</code>实例或者任意的类。
+到这里，控制台只打印了以下内容：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">---</span> <span class="kt">Observable</span> <span class="kt">Example</span> <span class="o">---</span>
+</code></pre></div></div>
+<p>我们接下来添加以下代码测试：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">user</span> <span class="o">=</span> <span class="kt">User</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"Madeline"</span><span class="p">)</span>
+
+<span class="k">var</span> <span class="nv">observer</span><span class="p">:</span> <span class="kt">Observer</span><span class="p">?</span> <span class="o">=</span> <span class="kt">Observer</span><span class="p">()</span>
+
+<span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="nf">addObserver</span><span class="p">(</span><span class="n">observer</span><span class="o">!</span><span class="p">,</span>
+                      <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="n">initial</span><span class="p">,</span> <span class="o">.</span><span class="k">new</span><span class="p">])</span> <span class="p">{</span>
+                        <span class="n">name</span> <span class="p">,</span> <span class="n">change</span> <span class="k">in</span>
+                        <span class="nf">print</span><span class="p">(</span><span class="s">"User's name is </span><span class="se">\(</span><span class="n">name</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    
+<span class="p">}</span>
+</code></pre></div></div>
+<p>运行到这里，可以看到控制台打印内容如下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">---</span> <span class="kt">Observable</span> <span class="kt">Example</span> <span class="o">---</span>
+<span class="kt">User</span><span class="err">'</span><span class="n">s</span> <span class="n">name</span> <span class="k">is</span> <span class="kt">Madeline</span>
+</code></pre></div></div>
+<p>接下来，添加以下代码：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s">"Amelia"</span>
+</code></pre></div></div>
+<p>控制台打印如下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">---</span> <span class="kt">Observable</span> <span class="kt">Example</span> <span class="o">---</span>
+<span class="kt">User</span><span class="err">'</span><span class="n">s</span> <span class="n">name</span> <span class="k">is</span> <span class="kt">Madeline</span>
+<span class="kt">User</span><span class="err">'</span><span class="n">s</span> <span class="n">name</span> <span class="k">is</span> <span class="kt">Amelia</span>
+</code></pre></div></div>
+<p>接下来测试吧 observer 置为<code class="highlighter-rouge">nil</code>,看下会不会自动移除。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">observer</span> <span class="o">=</span> <span class="kc">nil</span>
+
+<span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s">"Amelia is outta here!"</span>
+</code></pre></div></div>
+<p>控制台内容如下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">---</span> <span class="kt">Observable</span> <span class="kt">Example</span> <span class="o">---</span>
+<span class="kt">User</span><span class="err">'</span><span class="n">s</span> <span class="n">name</span> <span class="k">is</span> <span class="kt">Madeline</span>
+<span class="kt">User</span><span class="err">'</span><span class="n">s</span> <span class="n">name</span> <span class="k">is</span> <span class="kt">Amelia</span>
+</code></pre></div></div>
+<p>通过内容，我们可以看到，我们把 observer 置为 <code class="highlighter-rouge">nil</code>后，再改变 value，我们将观察不到任何信息。</p>
+
+<h2 id="what-should-you-be-careful-about">What should you be careful about?</h2>
+
+<p>对简单的 models 或者一些从来不会改变的属性使用观察者模式是一种过分的行为，这可能会导致一些不必要的工作。
+在我们实施观察者模式之前，我们需要确定我们希望改变什么以及在什么条件下改变。如果我们不能确定对象或者属性发生改变的原因，我们最好不要立马实施 KVO/Observable。
+作为一个特殊标识，如果一个属性从来不会改变，就不要去把它做为一个 observable 的属性。</p>
+
+<h2 id="tutorial-project">Tutorial project</h2>
+
+<p>这里我们会继续给以前的 app 增加功能。我们将使用这个模式在”Seletct Question Group”页面展示用户最新的分数。并且可以保存分数，当我们杀掉 app 后再次进来还会显示分数。在这个例子中，我们将使用<code class="highlighter-rouge">Observable</code>来代替 KVO。实现效果如下：</p>
+
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/2018-10-04%2021.23.38.gif?imageMogr2/auto-orient/thumbnail/375x/blur/1x0/quality/100|imageslim" width="375px" /></p>
+
+<p><a href="https://github.com/zhangdongpo/LearnDesignPattern/tree/Observer">Demo</a></p>
+<h2 id="预告">预告</h2>
+<p>下节我们将学习 Builder Pattern。下节，我们将会使用 Builder Pattern 给 app 增加让用户自己创建问题组的功能。</p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=读《Design-Patterns-by-Tutorials》笔记——Observer Pattern&amp;url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern">
+        <section class="post">
+            <h2>读《Design-Patterns-by-Tutorials》笔记——Builder Pattern</h2>
+            <p>构造器模式允许一步一步的创建一个复杂的对象而不是一次创建完成。这个模式包括三个主要类型，UML 图如下： ![构造器模式](http://ohg2bgicd.bkt.clouddn.com/1538746972.png) 1. **Director**接收输入并且和 builder 协调。**Director**通常是一个 view controller或者是view controller 使用的帮助类。 2. **Product**是被创建的复杂对象，可以是一个class 或者 struct，取决于是否想要引用语义。通常是一个...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern">
+        <section class="post">
+            <h2>读《Design-Patterns-by-Tutorials》笔记——Memento Pattern</h2>
+            <p>备忘录模式允许一个对象可以被保存和恢复。包括三个部分。 Originator: 需要被保存和恢复的对象。 Memento: 代表保存的状态。  Caretaker: 从 originator 请求保存，并且接收一个 memento 作为响应。caretaker 负责保管这些 memento，并在稍后向 originator 提供这些...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

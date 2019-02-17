@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>理解对象等同性</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="理解对象等同性" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="理解对象等同性" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "理解对象等同性",
+    "url": "//%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">理解对象等同性</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2015-09-17">17 Sep 2015</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>​          根据“等同性”来比较对象是一个非常有用的功能。不过，按照==操作符比较，未必是我们想要的结果，因为该操作比较的是两个指针的本身，而不是其所指的对象。我们应该使用NSObject协议声明的<code class="highlighter-rouge">isEqual</code>方法来判断两个对象的等同性。一般来说，两个类型不同的对象总是不相等的。某些对象提供了特殊的等同性判断方法，如果知道了两个对象都属于同一个类，那么久可以使用这种方法了。我们用下面的代码做例子：
+<!-- more --></p>
+
+<pre><code class="language-objective-c"> NSString *string1 = @"hehe123";
+    NSString *string2 = [NSString stringWithFormat:@"hehe%d",123];
+    BOOL equalA = (string1 == string2); //equalA = NO
+    BOOL equalB = [string1 isEqual:string2]; //equalB = YES
+    BOOL equalC = [string1 isEqualToString:string2]; //equalC = YES
+
+</code></pre>
+
+<p>​            大家可以看到==和等同性判断方法之间的差别。NSString类实现了一个自己独有的等同性判断方法，名字叫做<code class="highlighter-rouge">isEqualToString:</code>。传递给该方法的对象必须是NSString，否则就会报错。调用该方法比调用<code class="highlighter-rouge">isEqual:</code>快，后者还要执行额外的步骤，因为他不知道受测对象的类型。</p>
+
+<p>​         NSObject协议中有两个用于判断等同性的关键方法：</p>
+
+<pre><code class="language-objective-c">-(BOOL)isEqual:(id)object;
+-(BOOL)hash;
+</code></pre>
+
+<p>​         NSObject类对这两个方法的默认实现是：当且仅当指针值完全相等时，这两个对象才能相等。若想在自定义的对象中正确覆写这些方法，就必须先理解其约定。如果<code class="highlighter-rouge">isEqual:</code>方法判定两个对象相等，那么hash方法也必须返回同一个值。但是，如果两个对象的hash方法返回同一个值，那么<code class="highlighter-rouge">isEqual:</code>方法未必会认为两者相等。</p>
+
+<p>​         比如下面这个类：</p>
+
+<pre><code class="language-objective-c">@interface Person : NSObject
+@property (nonatomic, copy) NSString *firstName;
+@property (nonatomic, copy) NSString *lastName;
+@property (nonatomic, assign) NSUInteger age;
+@end
+</code></pre>
+
+<p>​        我们认为，如果Person的所有字段相等，那么两个对象就相等。于是<code class="highlighter-rouge">isEqual:</code>方法可以写成:</p>
+
+<pre><code class="language-objective-c">- (BOOL)isEqual:(id)object
+{
+    if (self == object ) return YES;
+    if ([self class] != [object class]) return NO;
+    Person *otherPerson = (Person *)object;
+    if (![_firstName isEqualToString:otherPerson.firstName]) return NO;
+    if (![_lastName isEqualToString:otherPerson.lastName]) return NO;
+    if (_age != otherPerson.age) return NO;
+    return YES;
+}
+
+</code></pre>
+
+<p>​           首先判断两个对象的指针是否相等，如果相等直接返回yes。如果两个指针不相等，判断两个对象是否是同一类，如果不是同一类，直接返回no，如果是同一类，接着判断两个对象的字段是否相等，如果字段全都相等，最后返回yes。不过，有时我们会认为，一个Person实例可能和其子类的实例相等，在继承体系中判断等同性，经常遭遇此类问题，所示实现<code class="highlighter-rouge">isEqual:</code>方法时，要考虑到这种情况。</p>
+
+<p>​          接下来该实现hash方法了，回想一下，根据等同性约定，若两个对象相等，则其hash码也相等，但是两个hash码相等的对象未必相等，这是能否覆写<code class="highlighter-rouge">isEqual:</code>方法的关键所在。下面这种写法完全可行：</p>
+
+<pre><code class="language-objective-c">- (NSUInteger)hash
+{
+    return 1332;
+}
+</code></pre>
+
+<p>​      不过，若是这样写的话，在collection中使用这种对象将产生性能问题，因为collection在检索哈希表时，会用对象的哈希码作为索引。假如，某个collection是用set来实现的，那么set可能会根据哈希码把对象分装到不同的数组中。在向set中添加新的对象时，要根据其哈希码找到与之相关的那个数组，依次检查其中各个元素，看数组中已有的对象是否和将要加入的对象相等，如果相等就说明要添加的对象已经在set里面了。由此可知，如果令每个对象都返回相同的哈希码，那么set中有100000个对象的情况下，若是继续向其中添加对象，则需要将这100000个对象全部扫描一遍。</p>
+
+<p>​        hash方法也可以这样实现：</p>
+
+<pre><code class="language-objective-c">- (NSUInteger)hash
+{
+    NSString *stringToHash = [NSString stringWithFormat:@"%@:%@:%zi",_firstName,_lastName,_age];
+    return [stringToHash hash];
+}
+</code></pre>
+
+<p>​          这次所用的方法是把属性都塞入一个字符串中，然后令hash方法返回该字符串的哈希码。这么做符合约定，因为两个相等的Person对象总会返回相同的哈希码，但是这样做还要负担创建字符串的开销，所以比返回单一值要慢。把这种对象添加到collection中，也会产生性能问题，因为想要添加，必须先计算其哈希码。</p>
+
+<p>​         再来看最后一种计算哈希码的方法:</p>
+
+<pre><code class="language-objective-c">- (NSUInteger)hash
+{
+    NSUInteger firstNameHash = [_firstName hash];
+    NSUInteger lastNameHash = [_lastName hash];
+    NSUInteger ageHash = _age;
+    return firstNameHash ^ lastNameHash ^ ageHash;
+}
+</code></pre>
+
+<p>​         这种做法既能保持高效率，又能使生成的哈希码至少在一定范围内，而且不会过于的重复。当然，此算法生成的哈希码还是会碰撞，不过至少可以保证哈希码有多种可能的值。编写hash发时，应当用当前的对象做实验，以便减少碰撞拼读与降低运算复杂程度之间的取舍。</p>
+
+<p>​           下面我们再看一下特定类所具有的等同性判断方法，除了刚才提到的NSString之外，NSArray和NSDictionary类也具有特殊的等同性判断方法，分别为<code class="highlighter-rouge">isEqualToArray:</code>和<code class="highlighter-rouge">isEqualToDictionary:</code>。如果和其相比较的不是数组或字典，那么两个方法将会抛出异常。由于OC在编译器不做强类型检查，这样容易不小心传入错误的对象，因此我们应该保证所传对象的类型是正确的。</p>
+
+<p>​          如果经常需要判断等同性，那么自己可以来创建等同性判断方法，因为无须检测参数类型，所以能大大提升检测速度。自己来编写判定方法的一个原因是，我们想令代码看上去更加美观，更易读，此动机和NSString类的创建原因类似，纯粹是装点门面，使用此种判断方法编写出来的代码更容易读懂，而且不再检查两个受测对象的类型了。</p>
+
+<p>​          在编写判定方法之前，也应该覆写<code class="highlighter-rouge">isEqual：</code>方法。后者的常见实现方式为：如果受测的参数与接收消息的参数属于同一个类，那么就调用自己编写的判定方法，否则就交由超类来判断。例如在Person类中可以实现如下方法：</p>
+
+<pre><code class="language-objective-c">-(BOOL)isEqualToPerson:(Person *)otherPerson{
+    if (self == otherPerson ) return YES;
+
+    if (![_firstName isEqualToString:otherPerson.firstName]) return NO;
+    if (![_lastName isEqualToString:otherPerson.lastName]) return NO;
+    if (_age != otherPerson.age) return NO;
+    return YES;
+}
+- (BOOL)isEqual:(id)object
+{
+    if ([self class] == [object class]) {
+       return  [self isEqualToPerson:object];
+    }else{
+       return  [super isEqual:object];
+    }
+}
+</code></pre>
+
+<p>​           下面我们再来谈一下等同性判断的执行深度，在创建等同性判断方法是，需要决定是通过整个对象来判断等同性，还是根据几个字段来判断。NSArray的检测方式是先看两个数组所含的对象个数是否相同，如果相同，再去判断相同位置两个对象是否等同，如果对应位置的对象均相等，那么这两个数组相同，这叫做“深度等同性判断”。不过有时候无需将所有的数据逐个比较，只需比较其中部分数据就可以判断两者是否相等，比如，我们假设Person对象是从数据库里根据数据创建而来，那么其中就可能含有一个主键的属性，这种情况下，我们只需判断主键是否相同即可。而不用比较其他字段。</p>
+
+<p>​            是否在等同性判断方法中检测全部字段信息取决于受测对象。只有编写这个类的人才可以确定两个对象在何种情况下应该判定相等。</p>
+
+<p>​         还有一种情况需要注意，就是在容器内放入可变类对象的时候，把某个对象放入collection中，就不应该改变其哈希码了。前面解释过，collection会把各个对象按哈希码分装到不同的箱子数组中。如果某对象放入箱子之后哈希码又变了，那么其实在所处的箱子它是错误的。要想解决这个问题，需要确保哈希码是根据不可变部分计算来的，保证放入collection之后就不改变对象内容了，我们后面将解释为什么要将对象做成不可变的，下面这个例子可以很好地说明问题。</p>
+
+<p>​         用一个NSMutableSet和几个NSMutableArray对象测试下就可以发现问题了。首先把一个数组加入set中:</p>
+
+<pre><code class="language-objective-c">   NSMutableSet *set = [NSMutableSet new];
+        NSMutableArray *arrayA = [@[@1,@2]mutableCopy];
+        [set addObject:arrayA];
+        NSLog(@"%@",set);//输出((1,2))
+</code></pre>
+
+<p>​      现在set中含有一个数组对象，数组中包含两个对象。再向set中加入一个数组次数组和前一个数组相同，顺序也相同，于是待加入的数组与set中已有的数组是相等的：</p>
+
+<pre><code class="language-objective-c">      NSMutableArray *arrayB = [@[@1,@2]mutableCopy];
+        [set addObject:arrayB];
+        NSLog(@"%@",set);//输出((1,2))
+</code></pre>
+
+<p>​         此时set中仍然只有一个对象，因为刚才加入的数组和set中已有的数组对象相等，所以set并不会改变，这次我们添加一个和set中已有数组对象不同的数组：</p>
+
+<pre><code class="language-objective-c">      NSMutableArray *arrayC = [@[@1]mutableCopy];
+        [set addObject:arrayC];
+        NSLog(@"%@",set);//输出{((1),(1,2))}
+</code></pre>
+
+<p>​      正如大家所料，现在set中有两个数组了，其中一个是最早加入的，另一个是刚加的，现在我们改变arrayC的内容，令其和最早加入的那个数组相同：</p>
+
+<pre><code class="language-objective-c">[arrayC addObject:@2];
+ NSLog(@"%@",set);//输出{((1,2),(1,2))}
+</code></pre>
+
+<p>​             set居然包含了两个彼此相等的数组！根据set的于是是不允许出现这样的情况的，然而现在却无法保证这一点了，因为我们修改了set中已有的对象，若是拷贝set就更糟糕了：</p>
+
+<pre><code class="language-objective-c">     NSSet *setB = [set copy];
+        NSLog(@"%@",setB);//输出{((1,2))}
+</code></pre>
+
+<p>​        复制过来的又只剩一个对象了，这个set看上去好像由一个空的set开始，通过逐个想其中添加新对象创建的。这可能符合你的需求，也许不符合。有的开发者想要忽略set中的错误，照原样赋值一个新的出来，还有开发者认为这样做挺合适的。这两种拷贝算法都说的通，于是就进一步印证了刚才提到的问题：如果把某对象放入set之后又修改其内容，那么后面的行为将很难预料。</p>
+
+<p>​        举这个例子是想告诉大家，把某对象放入collection之后改变其内容将会造成什么后果。并不是所绝对不能这样做，而是说如果真的这么做，那就得注意其隐患，并用相应的代码处理可能发生的问题。</p>
+
+<p>​           接下来总结下：</p>
+
+<ul>
+  <li>
+    <p>若想要检测对象的等同性，请提供<code class="highlighter-rouge">isEqual:</code>和hash方法。</p>
+  </li>
+  <li>
+    <p>相同的对象必须有相同的哈希码，但是两个哈希码相同的对象却未必相同。</p>
+  </li>
+  <li>
+    <p>不要盲目的逐个检测每条属性，而是应该依照具体需求制定解决方案。</p>
+  </li>
+  <li>
+    <p>编写hash方法是，应该尽量使用计算速度快而且哈希码碰撞几率比较低的算法。</p>
+
+    <p>下面的一篇我们将讲解下”类族模式“。</p>
+  </li>
+</ul>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=理解对象等同性&amp;url=%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E5%A6%82%E4%BD%95%E7%94%A8%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F%E9%9A%90%E8%97%8F%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82">
+        <section class="post">
+            <h2>如何用类族模式隐藏实现细节</h2>
+            <p>​ 类族是一种很有用的模式，可以隐藏“抽象基类”中的实现细节。这里的抽象基类是指在这个类中只提供接口，并没有提供实现细节，通常是子类重写这个接口，来实现其中的细节。OC中的系统框架普遍应用这个模式。下面我们来举个例子，iOS中有个UIButton的类，想要创建一个按钮，需要调用下面这个方法： ```objective-c + (instancetype)buttonWithType:(UIButtonType)buttonType; ``` ​ 该方法返回的对象，其类型取决于传入的按钮类型。然而不管返回什么类型的对象，他们都继承自同意基类，就是UIButton。这么做的意义在于，UIButton类的使用者无需关心创建出来的按钮具体属于哪个子类，也不用考虑按钮的绘制方式等实现细节。使用者只需知道如何创建按钮，怎么设置title这样的属性，怎么增加监听动作的目标对象等问题就好。 ​ 回到开头说的问题，我们可以把各种按钮的绘制逻辑都放在一个类里面，并根据类型来切换： ```objective-c -(void)drawRect:(CGRect)rect{ if (_type =...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F">
+        <section class="post">
+            <h2>对象内部应该如何访问实例变量</h2>
+            <p>​ 在上一篇中，我们讲解了一些属性的特质，接下来我们讲下访问实例变量的问题，在对象之外访问实例变量时，总是应该通过属性来做，那么在对象内部访问实例变量又该如何呢？OC的开发者一直在激烈的讨论这些问题。有的人认为，无论什么情况都应该使用属性访问实例变量，也有人说通过属性访问和直接访问应该搭配着使用。除了集中特殊情况外，在这里建议大家在读取实例变量时采用直接访问，在设置实例变量时通过属性来做。 ​ 请看下面这个类: @interface Person : NSObject @property(nonatomic, copy) NSString *firstName; @property(nonatomic, copy) NSString...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

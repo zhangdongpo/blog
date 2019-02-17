@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>读《Design Patterns by Tutorials》笔记——UML图</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="读《Design Patterns by Tutorials》笔记——UML图" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="读《Design Patterns by Tutorials》笔记——UML图" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "读《Design Patterns by Tutorials》笔记——UML图",
+    "url": "//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">读《Design Patterns by Tutorials》笔记——UML图</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2018-08-10">10 Aug 2018</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>在学习设计模式之前，需要先来学习 UML 图。为什么先要学习 UML 图呢？因为后面的设计模式，我们都可以用一幅 UML 图来表示，所以当我们看到一幅 UML 图，就可以明白这是什么设计模式。然后如何用代码去实现它。
+<!-- more --></p>
+<h2 id="什么是-uml-图">什么是 UML 图</h2>
+<p>UML 图包含类、协议、属性、方法和关系。
+一个方块表示一个类。下面有一个非常简单的类 Dog：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1534068645.png" alt="Dog" />
+为了表示一个类继承另外一个类，使用一个空心箭头：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1534068758.png" alt="继承" />
+但是我们通常不把空心箭头叫做“inherits from”，而是叫成“is a”，例如：可以用下面的图表示 SheepDog 继承自 Dog 。
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340697063981.jpg" alt="" />
+我们可以这样来理解这个图“SheepDog 是一个 Dog”。
+在 UML 中使用一个简单的箭头表示属性，在 UML 中叫做“关联”。
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340698551173.jpg" alt="" />
+通常把属性这个箭头叫做“has a”，比如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340699550757.jpg" alt="" />
+也可以通过在箭头下面描述一个区间来表示一对多的关系，如下图表示一个 Farmer 有好多 Dog：
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340700470394.jpg" alt="" />
+可以在一个 UML 图中使用多个箭头和方块，下面这个图表示一个 Farmer 有一个 SheepDog，这个  SheepDog 是一个 Dog。
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340702450982.jpg" alt="" />
+在 UML 图中，也可以使用方块表示一个协议，为了区别类，需要在协议名前面加上«protocol»。
+下图表示一个 PetOwning 协议：
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340703702062.jpg" alt="" />
+使用一个空心箭头和虚线来表示一个类遵守了一个协议：
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340704239696.jpg" alt="" />
+你可以把它理解成“实现”或者“符合”。
+使用一个普通箭头和虚线来表示依赖。ULM 有意模糊依赖的概念。因此，无论什么时候使用依赖的关系都应该注释上使用的目的。比如，可以使用依赖箭头表示以下情况：</p>
+<ul>
+  <li>一个 weak 属性或者 delegate；</li>
+  <li>一个作为参数传递给一个方法的对象，并且没有作为属性引用；</li>
+  <li>一种松耦合或者回调，比如：一个从 view 到 controller 的 IBAction</li>
+</ul>
+
+<p>下图表示 Dog 代理到 PetOwning 对象：
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340823104115.jpg" alt="" />
+也可以在 ULM 中表示属性和方法，例如，下图表示 PetOwning 协议有一个 name 属性和 petNeedsFood(_:)方法：
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340824409631.jpg" alt="" />
+如果一个箭头的意义很明确，可以删除一些解释性文字，通常可以删除继承，属性和实现的解释文字。然而，应该保留依赖的文字。因为，他们的意义通常不太明确。
+下面是一副表示 Farmer 和 Dog 的完整的 UML 图。Dog 代理到 PetOwning 对象。
+<img src="http://ohg2bgicd.bkt.clouddn.com/15340826726564.jpg" alt="" />
+UML 图是学习设计模式得基础，我们已经简单学了一些基础的 UML 图。下面将去学习一些设计模式。</p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=读《Design Patterns by Tutorials》笔记——UML图&amp;url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-MVC">
+        <section class="post">
+            <h2>读《Design Patterns by Tutorials》笔记——MVC</h2>
+            <p>MVC 设计模式把对象分为三个不同的类型： Models，Views和 Controllers。 UML 图表示如下： ![](http://ohg2bgicd.bkt.clouddn.com/15341242390937.jpg) MVC 是在 iOS 编程中是非常常见的，因为 Apple 在 UIKit 中大量选用了这种设计模式。...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98">
+        <section class="post">
+            <h2>记录一次Reveal连接不上的问题</h2>
+            <p>由于换了新电脑，项目也告一段落，Reveal有一段时间没用了。最近开了新的项目，需要频繁的UI调整，所以需要用到Reveal，结果死活无法在Reveal发现。我用的是断点的方法，比较简单，官方文档给了三种方法。详情请看官方文档。 按照官方文档的断点教程走了一圈，运行App。Console打印出下面这句话： Loading Reveal Server from /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/RevealServer.framework/RevealServer... Reveal Server was loaded successfully. 心里想着应该可以了，打开Reveal，瞬间打脸。跑官方demo也不行。后来结果搜索，发现有个调试方法。跟着步骤来发现，在curl -s -D...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

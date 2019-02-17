@@ -8,15 +8,596 @@
     
       
       <item>
-        <title>哈哈昂昂</title>
+        <title>读《Design-Patterns-by-Tutorials》笔记——Builder Pattern</title>
         
-          <description>&lt;p&gt;My first blog in jekyll~~~&lt;/p&gt;
+          <description>&lt;p&gt;构造器模式允许一步一步的创建一个复杂的对象而不是一次创建完成。这个模式包括三个主要类型，UML 图如下：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1538746972.png&quot; alt=&quot;构造器模式&quot; /&gt;&lt;/p&gt;
+
 </description>
         
-        <pubDate>Tue, 12 Aug 2014 10:18:00 +0000</pubDate>
+        <pubDate>Tue, 09 Oct 2018 15:45:52 +0000</pubDate>
         <link>
-        /First-blog</link>
-        <guid isPermaLink="true">/First-blog</guid>
+        /%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern</link>
+        <guid isPermaLink="true">/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>读《Design-Patterns-by-Tutorials》笔记——Observer Pattern</title>
+        
+          <description>&lt;p&gt;观察者模式让一个对象观察另一个对象的改变。在本章节，你将学习两种实现观察者模式的方法：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;使用 KVO&lt;/li&gt;
+  &lt;li&gt;使用一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Observable&lt;/code&gt;包装。&lt;/li&gt;
+&lt;/ol&gt;
+
+</description>
+        
+        <pubDate>Thu, 04 Oct 2018 21:44:56 +0000</pubDate>
+        <link>
+        /%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern</link>
+        <guid isPermaLink="true">/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>读《Design-Patterns-by-Tutorials》笔记——Memento Pattern</title>
+        
+          <description>&lt;p&gt;备忘录模式允许一个对象可以被保存和恢复。包括三个部分。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;Originator&lt;/strong&gt;: 需要被保存和恢复的对象。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Memento&lt;/strong&gt;: 代表保存的状态。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt; Caretaker&lt;/strong&gt;: 从 originator 请求保存，并且接收一个 memento 作为响应。caretaker 负责保管这些 memento，并在稍后向 originator 提供这些 memento来恢复 originator 的状态。
+虽然不是严格要求，iOS通常使用&lt;code class=&quot;highlighter-rouge&quot;&gt;Encoder&lt;/code&gt;来讲 originator 的状态保存到 memento，并且使用&lt;code class=&quot;highlighter-rouge&quot;&gt;Decoder&lt;/code&gt;把 memento 恢复到 originator。这使编码和解码的逻辑可以通用。比如：&lt;code class=&quot;highlighter-rouge&quot;&gt;JSONEncoder&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;JSONDecoder&lt;/code&gt;允许一个对象可以编码为 &lt;code class=&quot;highlighter-rouge&quot;&gt;JSON&lt;/code&gt; 数据，也可以从&lt;code class=&quot;highlighter-rouge&quot;&gt;JSON&lt;/code&gt;数据中解码。
+UML 图如下：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1538272701.png&quot; alt=&quot;&quot; /&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+</description>
+        
+        <pubDate>Wed, 03 Oct 2018 11:15:11 +0000</pubDate>
+        <link>
+        /%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern</link>
+        <guid isPermaLink="true">/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Memento-Pattern</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>读《Design-Patterns-by-Tutorials》笔记——Singleton Pattern</title>
+        
+          <description>&lt;p&gt;单例模式限制一个类仅仅有一个实例。每个这个类的引用都指向同一个实例。在 iOS 开发中非常常见这种模式，因为 Apple 广泛使用单例模式。
+UML 图如下：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1538101105.png&quot; alt=&quot;&quot; /&gt;
+“singleton plus”模式也很常用，这个模式提供了一个共享单例，但是也允许其他实例被创建。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Fri, 28 Sep 2018 12:27:27 +0000</pubDate>
+        <link>
+        /%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern</link>
+        <guid isPermaLink="true">/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Singleton-Pattern</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>读《Design Patterns by Tutorials》笔记——Strategy Pattern</title>
+        
+          <description>&lt;p&gt;策略模式定义了一系列可交换的对象，这些对象可以在运行时设置或者切换。这个模式有三部分。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;使用策略的对象&lt;/strong&gt;：在 iOS 开发中这个对象通常是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;UIViewController&lt;/code&gt;，但是理论上可以是任何需要交换表现的对象。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;策略协议&lt;/strong&gt;：定义了每个策略必须实现的方法。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;策略对象&lt;/strong&gt;：遵守策略协议的对象。&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Thu, 27 Sep 2018 19:32:17 +0000</pubDate>
+        <link>
+        /%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Strategy-Pattern</link>
+        <guid isPermaLink="true">/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Strategy-Pattern</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>读《Design Patterns by Tutorials》笔记——Delegation Pattern</title>
+        
+          <description>&lt;p&gt;委托模式使一个对象能够使用另一个对象来提供数据或者执行一些任务，这个模式有三个部分，UML 图如下：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15344108237603.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;一个&lt;strong&gt;对象需要委托&lt;/strong&gt;：也就是委托对象。通常这个对象有一个&lt;code class=&quot;highlighter-rouge&quot;&gt;weak&lt;/code&gt; 属性 &lt;code class=&quot;highlighter-rouge&quot;&gt;delegate&lt;/code&gt;，防止循环引用。&lt;/li&gt;
+  &lt;li&gt;一个&lt;strong&gt;委托协议&lt;/strong&gt;：这个协议定义了委托应该实现或者可能实现的方法。&lt;/li&gt;
+  &lt;li&gt;一个&lt;strong&gt;委托&lt;/strong&gt;：实现委托方法的对象。&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Thu, 16 Aug 2018 16:44:01 +0000</pubDate>
+        <link>
+        /%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern</link>
+        <guid isPermaLink="true">/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Delegation-Pattern</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>读《Design Patterns by Tutorials》笔记——MVC</title>
+        
+          <description>&lt;p&gt;MVC 设计模式把对象分为三个不同的类型： Models，Views和 Controllers。
+UML 图表示如下：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15341242390937.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;!-- more --&gt;
+MVC 是在 iOS 编程中是非常常见的，因为 Apple 在 UIKit 中大量选用了这种设计模式。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Models&lt;/strong&gt;保持应用数据，通常为 structs 或者简单的 classes。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Views&lt;/strong&gt;在屏幕上显示看的见的元素和 controls，通常为&lt;code class=&quot;highlighter-rouge&quot;&gt;UIView&lt;/code&gt;的子类。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Controllers&lt;/strong&gt;在 models 和 views 中间协调，通常为&lt;code class=&quot;highlighter-rouge&quot;&gt;UIViewController&lt;/code&gt;的子类。&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Thu, 16 Aug 2018 16:15:13 +0000</pubDate>
+        <link>
+        /%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-MVC</link>
+        <guid isPermaLink="true">/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-MVC</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>读《Design Patterns by Tutorials》笔记——UML图</title>
+        
+          <description>&lt;p&gt;在学习设计模式之前，需要先来学习 UML 图。为什么先要学习 UML 图呢？因为后面的设计模式，我们都可以用一幅 UML 图来表示，所以当我们看到一幅 UML 图，就可以明白这是什么设计模式。然后如何用代码去实现它。
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;h2 id=&quot;什么是-uml-图&quot;&gt;什么是 UML 图&lt;/h2&gt;
+&lt;p&gt;UML 图包含类、协议、属性、方法和关系。
+一个方块表示一个类。下面有一个非常简单的类 Dog：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1534068645.png&quot; alt=&quot;Dog&quot; /&gt;
+为了表示一个类继承另外一个类，使用一个空心箭头：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1534068758.png&quot; alt=&quot;继承&quot; /&gt;
+但是我们通常不把空心箭头叫做“inherits from”，而是叫成“is a”，例如：可以用下面的图表示 SheepDog 继承自 Dog 。
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340697063981.jpg&quot; alt=&quot;&quot; /&gt;
+我们可以这样来理解这个图“SheepDog 是一个 Dog”。
+在 UML 中使用一个简单的箭头表示属性，在 UML 中叫做“关联”。
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340698551173.jpg&quot; alt=&quot;&quot; /&gt;
+通常把属性这个箭头叫做“has a”，比如下图：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340699550757.jpg&quot; alt=&quot;&quot; /&gt;
+也可以通过在箭头下面描述一个区间来表示一对多的关系，如下图表示一个 Farmer 有好多 Dog：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340700470394.jpg&quot; alt=&quot;&quot; /&gt;
+可以在一个 UML 图中使用多个箭头和方块，下面这个图表示一个 Farmer 有一个 SheepDog，这个  SheepDog 是一个 Dog。
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340702450982.jpg&quot; alt=&quot;&quot; /&gt;
+在 UML 图中，也可以使用方块表示一个协议，为了区别类，需要在协议名前面加上«protocol»。
+下图表示一个 PetOwning 协议：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340703702062.jpg&quot; alt=&quot;&quot; /&gt;
+使用一个空心箭头和虚线来表示一个类遵守了一个协议：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340704239696.jpg&quot; alt=&quot;&quot; /&gt;
+你可以把它理解成“实现”或者“符合”。
+使用一个普通箭头和虚线来表示依赖。ULM 有意模糊依赖的概念。因此，无论什么时候使用依赖的关系都应该注释上使用的目的。比如，可以使用依赖箭头表示以下情况：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;一个 weak 属性或者 delegate；&lt;/li&gt;
+  &lt;li&gt;一个作为参数传递给一个方法的对象，并且没有作为属性引用；&lt;/li&gt;
+  &lt;li&gt;一种松耦合或者回调，比如：一个从 view 到 controller 的 IBAction&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Fri, 10 Aug 2018 16:24:17 +0000</pubDate>
+        <link>
+        /%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE</link>
+        <guid isPermaLink="true">/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-UML%E5%9B%BE</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>记录一次Reveal连接不上的问题</title>
+        
+          <description>&lt;p&gt;由于换了新电脑，项目也告一段落，Reveal有一段时间没用了。最近开了新的项目，需要频繁的UI调整，所以需要用到Reveal，结果死活无法在Reveal发现。我用的是断点的方法，比较简单，官方文档给了三种方法。详情请看&lt;a href=&quot;http://support.revealapp.com/kb/getting-started/reveal-integration-guide&quot;&gt;官方文档&lt;/a&gt;。
+&lt;!--more--&gt;
+按照官方文档的断点教程走了一圈，运行App。Console打印出下面这句话：&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Loading Reveal Server from /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/RevealServer.framework/RevealServer...
+Reveal Server was loaded successfully.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;心里想着应该可以了，打开Reveal，瞬间打脸。跑官方demo也不行。后来结果搜索，发现有个&lt;a href=&quot;http://support.revealapp.com/kb/tips-tricks/bonjour-debugging-why-cant-i-connect-to-my-app&quot;&gt;调试方法&lt;/a&gt;。跟着步骤来发现，在&lt;code class=&quot;highlighter-rouge&quot;&gt;curl -s -D - http://localhost:51441/application -o /dev/null&lt;/code&gt;这一步，我失败了。
+理清下思绪，应该是最后请求Reveal的服务器失败了，但是我试了一下，把localhost改为127.0.0.1就成功了。在终端ping localhost发现localhost没有绑定上。最后通过编辑/etc/hosts文件，把localhost绑定上，再次运行，终于搞定了！关于绑定localhost可以参照&lt;a href=&quot;https://stackoverflow.com/questions/19732360/ping-cannot-resolve-localhost-unknown-host-os-x&quot;&gt;这个回答&lt;/a&gt;。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 07 Jun 2018 22:00:29 +0000</pubDate>
+        <link>
+        /%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98</link>
+        <guid isPermaLink="true">/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>记录一次解决安装fastlane报错过程</title>
+        
+          <description>&lt;p&gt;最近做新项目，因为将来会涉及到频繁打包去测试。为了提高打包效率，决定使用下 fastlane。按照流程先来安装。结果不出意料的报错了。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Tue, 29 May 2018 22:50:06 +0000</pubDate>
+        <link>
+        /%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B</link>
+        <guid isPermaLink="true">/%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>Objective-C Runtime --- 消息发送</title>
+        
+          <description>&lt;p&gt;上篇文章分析了对象的数据结构，这篇我们就结合源码来分析下Objective-C最核心的东西——消息发送。在Objective-C中，我们调用方法，其实都是发送消息。发送消息为Objective-C增加了动态特性，下面我们就来看一下Objective-C的消息发送过程。
+&lt;!--more--&gt;&lt;/p&gt;
+&lt;h1 id=&quot;objc_msgsend简介&quot;&gt;objc_msgSend简介&lt;/h1&gt;
+&lt;p&gt;其实我们看大部分runtime文章，都是从这个函数看起的。在Objective-C中，我们调用方法的语法是这样的&lt;code class=&quot;highlighter-rouge&quot;&gt;[receiver message]&lt;/code&gt;。编译期会把这个方法调用转换成下面这个函数：&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Sun, 20 May 2018 19:01:38 +0000</pubDate>
+        <link>
+        /Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81</link>
+        <guid isPermaLink="true">/Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>Objective-C Runtime —— 基础数据结构</title>
+        
+          <description>&lt;p&gt;iOS工作两年了，几乎每次面试都会被问到Runtime的东西，自己一直没有系统的学习过Runtime。正好这段时间比较闲，自己也想深入的学习下iOS。所以那就先了解下基础的东西吧。以前听到Runtime一直感觉很高深，什么黑魔法啊一堆名词，其实去了解下的话，没有那么神奇。这篇文章分三大部分来介绍Runtime，是一个循序渐进的过程。第一呢，我们需要了解Objective-C的对象模型，然后才能去理解消息发送的过程，再然后再去了解下Runtime都能干什么，毕竟如果一个技术没有落地的应用，那它就没啥价值了。这篇文章基于objc4-723源码进行分析，GitHub有一个可调试库，&lt;a href=&quot;https://github.com/RetVal/objc-runtime&quot;&gt;地址&lt;/a&gt;。
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;h1 id=&quot;简介&quot;&gt;简介&lt;/h1&gt;
+&lt;p&gt;Runtime是什么？官方文档第一段就给出了答案。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;The Objective-C language defers as many decisions as it can from compile time and link time to runtime. Whenever possible, it does things dynamically. This means that the language requires not just a compiler, but also a runtime system to execute the compiled code. The runtime system acts as a kind of operating system for the Objective-C language; it’s what makes the language work.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        
+        <pubDate>Mon, 14 May 2018 17:48:48 +0000</pubDate>
+        <link>
+        /%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84</link>
+        <guid isPermaLink="true">/%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>iOS UI开发捷径读书笔记一——基础概念理解</title>
+        
+          <description>&lt;p&gt;最近读了《iOS UI开发捷径–利用Interface Builder高效、优雅地开发UI》这本书。感觉受益匪浅，记录下自己在书里面学到的东西。这里只写自己学到的新知识，并不介绍一些简单的IB知识，想要具体学习，请买书自己学习。
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;h2 id=&quot;和interface-builder有关的几个重要概念&quot;&gt;和Interface Builder有关的几个重要概念&lt;/h2&gt;
+&lt;p&gt;下面介绍几个和IB有关的概念，学习下平常经常用，但是不了解的概念。&lt;/p&gt;
+&lt;h3 id=&quot;bundle&quot;&gt;Bundle&lt;/h3&gt;
+&lt;p&gt;这个我们在平常工作中应该经常用，比如创建IB的时候，还有获取资源路径的时候：&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Mon, 22 Jan 2018 09:57:39 +0000</pubDate>
+        <link>
+        /UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0</link>
+        <guid isPermaLink="true">/UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>迟来的2017总结</title>
+        
+          <description>&lt;p&gt;2017年过去了，今天是2018年01月10日，终于有时间整理一下过去，展望一下未来了。年初给自己定了几个目标，但是那时没有写东西的习惯(虽然现在也没有)，现在回想起来已然不记得什么了。只记得一个大概就是多读书，多写总结。然而并没有达到。只能说一年的时光又被我浪费掉了。从这篇文章开始，以后每周要写一篇文章了。对未来的展望，依然是多读书，多写文章。因为，读书是一个输入的过程，而写作是个输出的过程。希望自己写的都是自己实践过的，不写软文。先不展望未来了。先回忆下过去吧。下面从工作、生活、学习三方面做下总结。
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;h2 id=&quot;工作&quot;&gt;工作&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Wed, 10 Jan 2018 11:25:50 +0000</pubDate>
+        <link>
+        /%E8%BF%9F%E6%9D%A5%E7%9A%842017%E6%80%BB%E7%BB%93</link>
+        <guid isPermaLink="true">/%E8%BF%9F%E6%9D%A5%E7%9A%842017%E6%80%BB%E7%BB%93</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>读Objective-C高级编程笔记一——引用计数</title>
+        
+          <description>&lt;p&gt;最近读了《Objective-C高级编程》这本进阶书：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1503026660.png&quot; alt=&quot;Objective-C高级编程&quot; /&gt;。
+这本书有三章，我们先来介绍第一章。可以从下图看下第一章的整体结构。
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1503025584.png&quot; alt=&quot;内存管理&quot; /&gt;。
+&lt;!-- more --&gt;
+本篇是第一篇，来写下iOS的内存管理，其实iOS的内存管理无论是ARC还是MRC都是通过引用计数来管理的。每个对象都有一个&lt;code class=&quot;highlighter-rouge&quot;&gt;retainCount &lt;/code&gt;的属性。当一个对象的&lt;code class=&quot;highlighter-rouge&quot;&gt;retainCount &lt;/code&gt;为0，就说明没有地方使用该对象了，可以释放了。
+我们先看MRC，再看ARC，因为ARC其实是建立在MRC之上的，只是是编译器在合适的地方代替我们插入了内存管理的代码。&lt;/p&gt;
+&lt;h3 id=&quot;引用计数&quot;&gt;引用计数&lt;/h3&gt;
+&lt;p&gt;前面我们一直在说引用计数，到底什么是引用计数呢？下图可以表达这个概念。
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1503068536.png&quot; alt=&quot;照明管理&quot; /&gt;
+在Objective-C中，对象就相当于上图中的灯。使用计数功能计算需要照明的人数，办公室的灯得到了很好的管理。同样，使用引用计数功能，对象也能够得到很好的管理，这就是Objective-C的内存管理，如下图所示：
+&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1503071113.png&quot; alt=&quot;引用计数的内存管理&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;内存管理思考方式&quot;&gt;内存管理思考方式&lt;/h3&gt;
+&lt;p&gt;下面我们来了解下引用计数式的内存管理思考方式。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;自己生成的对象，自己持有。&lt;/li&gt;
+  &lt;li&gt;非自己生成的对象，自己也能持有。&lt;/li&gt;
+  &lt;li&gt;不再需要自己持有的对象时释放。&lt;/li&gt;
+  &lt;li&gt;非自己持有的对象不能释放。
+其实引用计数式的内存管理思考方式仅此而已。除了上文提到的“生成”，“持有”，“释放”三种对对象的操作方式，还有一种“废弃”方式，各个词表示的Objective-C方法如下表：
+| 对象操作                     | Objective-C方法
+| 生成并持有对象         | alloc/new/copy/mutableCopy方法
+| 持有对象                     | retain方法
+| 释放对象                     | release方法
+| 废弃对象                     | dealloc方法
+这些有关Objective-C内存管理的方法，实际上不包括在该语言中，而是包含在Cocoa框架中用于iOS，OS X应用开发。Cocoa中Foundation框架库的&lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;类负责内存管理的职责。Objective-C内存管理的alloc/retain/release/dealloc方法分别指代NSObject累的alloc方法，retain方法，release方法和dealloc方法。
+下面我们来详细了解下上面提到的内存管理思考方式。
+    &lt;h4 id=&quot;自己生成的对象自己持有&quot;&gt;自己生成的对象自己持有&lt;/h4&gt;
+    &lt;p&gt;使用以下名称开头的方法名意味着自己生成并持有对象：&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;alloc&lt;/li&gt;
+  &lt;li&gt;new&lt;/li&gt;
+  &lt;li&gt;copy&lt;/li&gt;
+  &lt;li&gt;mutableCopy
+例如：
+  id obj = [[NSObject alloc]init]
+这句话就自己生成并持有了对象，另外使用NSObject的new类也能自己生成并持有对象。&lt;code class=&quot;highlighter-rouge&quot;&gt;[NSObject new]&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;[[NSObject alloc]init]&lt;/code&gt;是完全一样的。
+同样的copy和mutableCopy方法也可以自己生成并持有对象。两者的差异就是copy生成的是不可变对象，而mutableCopy生成的是可变对象。
+另外，下列名称也意味着自己生成并持有对象：&lt;/li&gt;
+  &lt;li&gt;allocMyObject&lt;/li&gt;
+  &lt;li&gt;newThisObject&lt;/li&gt;
+  &lt;li&gt;copyThis&lt;/li&gt;
+  &lt;li&gt;mutableCopyYourObject
+但是对象一下名称，即使使用alloc/new/copy/mutableCopy名称开头，也并不属于同一类方法。&lt;/li&gt;
+  &lt;li&gt;allocate&lt;/li&gt;
+  &lt;li&gt;newer&lt;/li&gt;
+  &lt;li&gt;copying&lt;/li&gt;
+  &lt;li&gt;mutableCopyed
+反正只要记得上面说的几个方法是自己生成并持有对象就好。
+    &lt;h4 id=&quot;非自己生成的对象自己也能持有&quot;&gt;非自己生成的对象自己也能持有&lt;/h4&gt;
+    &lt;p&gt;因为是非自己生成并持有，所以该对象不是自己生成的，所以我们来使用上面说的几个方法外的方法试试。非常可以说明问题的就是NSMutableArray的array类方法：
+  id obj = [NSMutableArray array];
+上面代码中，其实obj是不持有生成的这个对象的，记得以前我还傻傻的以为这个和上面的一样会持有对象，结果一运行程序，直接崩溃了。我们可以使用retain方法来持有这个对象。&lt;/p&gt;
+    &lt;h4 id=&quot;不再需要自己持有的对象时释放&quot;&gt;不再需要自己持有的对象时释放&lt;/h4&gt;
+    &lt;p&gt;自己持有的对象，一旦不再需要，持有者有义务释放，使用release方法释放。无论是自己生成并持有的对象，还是通过retain方法持有的对象，在不需要时都需要通过release方法释放。下面我们来看下通过某个方法生成对象并将其return给调用方和调用&lt;code class=&quot;highlighter-rouge&quot;&gt;[NSMutableArray array] &lt;/code&gt;方法取得对象的区别：&lt;/p&gt;
+    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-(id)allocObject
+  {
+     id obj = [[NSObject alloc]init];
+     return obj;
+  }
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;像上面这样，原封不动的返回生成并持有的对象，就能让调用方也持有该对象。和前面说的自己生成并持有没区别，为什么&lt;code class=&quot;highlighter-rouge&quot;&gt;[NSMutableArray array] &lt;/code&gt;不行呢，下面我们来看下具体实现：&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Tue, 15 Aug 2017 23:27:57 +0000</pubDate>
+        <link>
+        /%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0</link>
+        <guid isPermaLink="true">/%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>UIKit Dynamic Tutorial</title>
+        
+          <description>&lt;p&gt;这是一篇翻译自Raywenderlich上的文章，&lt;a href=&quot;https://www.raywenderlich.com/50197/uikit-dynamics-tutorial&quot;&gt;原文&lt;/a&gt;。
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;h1 id=&quot;whats-uikit-dynamic&quot;&gt;What’s UIKit Dynamic&lt;/h1&gt;
+&lt;p&gt;  iOS7鼓励我们设计出一个物理动态的效果，这个听起来是一个很艰巨的任务。但是苹果爸爸已经为我们提供了一些非常好用的东西，就是UIKit Dynamics和Motion Effects。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;UIKit Dynamics 是一个被整合的UIKit中的完整物理引擎。它允许你通过添加一些重力，附件(弹簧），力等行为来创建感觉真实的效果。你只管定义界面元素采用的物理特征，其他的就交给UIKit Dynamics。&lt;/li&gt;
+  &lt;li&gt;Motion Effects 就是你创建的一些行为，比如上面提到的那些重力，附件等等的东西。
+当把这两个用在一起时，将会很自然的响应自己的行为。
+    &lt;h1 id=&quot;getting-started&quot;&gt;Getting started&lt;/h1&gt;
+    &lt;p&gt;我们新建一个项目，然后在viewController里面加上下面的代码：&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        
+        <pubDate>Thu, 15 Jun 2017 23:14:22 +0000</pubDate>
+        <link>
+        /UIKit-Dynamic-Tutorial</link>
+        <guid isPermaLink="true">/UIKit-Dynamic-Tutorial</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>学习动画系列---寄宿图</title>
+        
+          <description>&lt;p&gt;  上一篇学习了下&lt;code class=&quot;highlighter-rouge&quot;&gt;CALayer&lt;/code&gt;的概念，者一篇学习下&lt;code class=&quot;highlighter-rouge&quot;&gt;CALayer&lt;/code&gt;的内部属性，我们先来解释下什么是寄宿图。在上一篇中，我们通过&lt;code class=&quot;highlighter-rouge&quot;&gt;CALayer&lt;/code&gt;类创建了一个蓝色的背景图层，如果他仅仅是展现一个单调的颜色，~~那我还学他干啥？~~其实它还可以包含一张图片，它里面包含的图我们就叫寄宿图。这个名字太奇怪了。估计是翻译的问题吧。
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;h1 id=&quot;contents属性&quot;&gt;contents属性&lt;/h1&gt;
+&lt;h2 id=&quot;contents&quot;&gt;contents&lt;/h2&gt;
+&lt;p&gt;  &lt;code class=&quot;highlighter-rouge&quot;&gt;CALayer&lt;/code&gt;有个&lt;code class=&quot;highlighter-rouge&quot;&gt;contents&lt;/code&gt;属性，这个属性被定义为id类型，但是可不要被定义为id类型迷惑，如果给&lt;code class=&quot;highlighter-rouge&quot;&gt;contents&lt;/code&gt;属性赋的值不是CGImage，那么他就是一个空白的layer。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Tue, 22 Nov 2016 11:54:36 +0000</pubDate>
+        <link>
+        /%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE</link>
+        <guid isPermaLink="true">/%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>学习动画系列---理解CALayer</title>
+        
+          <description>&lt;p&gt;  好长时间没写东西了，由于刚换了工作，一直在忙于熟悉业务，和一些新业务的开发，没有时间对自己的技术进行修行。这段时间终于闲下来了，可以找些自己感兴趣的东西来好好学习下了。最近在学习些高级动画，在gitbook上面看到一个&lt;a href=&quot;https://www.gitbook.com/book/zsisme/ios-/details&quot;&gt;iOS核心动画高级技巧&lt;/a&gt;，阅读了下，写的是一些动画的基础。毕竟学东西，我们要从基础学起嘛。你连1+1都不会算，怎么学习数学，这是一个道理。好吧，我有些跑题了😀。我们平常用的UIView可以实现一些基础的动画，但是有时产品🐶要做一个非常牛逼的动画时，我们就有些傻眼了。这里就需要用到一个高级东西了，在我们iOS里面叫Core Animation，下面我们就来系列学下这个牛逼的东西。先来学习下比UIView高级些的东西，这个东西就叫CALayer。
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;h1 id=&quot;calayer和uiview&quot;&gt;CALayer和UIView&lt;/h1&gt;
+&lt;p&gt;  iOS中所有的view都是&lt;code class=&quot;highlighter-rouge&quot;&gt;UIView&lt;/code&gt;派生来的。&lt;code class=&quot;highlighter-rouge&quot;&gt;UIView&lt;/code&gt;可以处理触摸事件，可以支持绘图，可以做仿射变换（其实就是旋转和缩放），&lt;code class=&quot;highlighter-rouge&quot;&gt;UIView&lt;/code&gt;还可以做简单的类似于滑动，或者渐变动画。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Mon, 21 Nov 2016 15:42:49 +0000</pubDate>
+        <link>
+        /%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer</link>
+        <guid isPermaLink="true">/%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>理解属性</title>
+        
+          <description>&lt;p&gt;属性是Objective-C的一项特性，用于封装对象内的数据。OC对象常会把需要的数据保存为实例变量，实例变量一般通过存取方法（这里的存取方法指的就是setter/getter方法）来访问实例变量。其中setter方法用于写入变量的值，getter方法用于读取变量的值。大家也许已经使用过属性这一概念了，不过大家未必会知道其中所有的细节，而且还有很多与属性有关的麻烦事。这里将会告诉大家有哪些问题可以用属性解决，并指出其中所体现出的关键特性。
+&lt;!-- more --&gt;
+​       在一个描述个人信息的类中，我们可能会存放人名，生日，地址等内容，我们可以在类的.h文件中声明一些实例变量，如下图所示：
+&lt;span&gt;&lt;img src=&quot;\images\理解属性\1.png&quot; /&gt;&lt;/span&gt;
+以前写过java或者C++的人应该比较熟悉这种写法，可以定义实例变量的作用域，然而编写OC却很少这样做。这种写法的问题是：对象布局在编译器就已经固定了，只要碰到&lt;code class=&quot;highlighter-rouge&quot;&gt;_firstName&lt;/code&gt;变量的代码，编译器就把其替换为“偏移量”，这个偏移量是“硬编码”，表示该变量距离存放对象的内存区域的起始地址有多远。这样做目前看来没有什么问题，但是如果又增加了一个实例变量，如下图所示：
+&lt;span&gt;&lt;img src=&quot;\images\理解属性\2.png&quot; /&gt;&lt;/span&gt;
+原来表示&lt;code class=&quot;highlighter-rouge&quot;&gt;_firstName&lt;/code&gt;的偏移量现在却指向了&lt;code class=&quot;highlighter-rouge&quot;&gt;_dateOfBrith&lt;/code&gt;了，把偏移量硬编码于其中的那些代码都会读到错误的值，下面这个表可以演示这个过程，请自己对比加入&lt;code class=&quot;highlighter-rouge&quot;&gt;_dateOfBrith&lt;/code&gt;这一实例变量之前和之后的内容布局，其中假设指针为4个字节（64位系统为8个字节）
+&lt;span&gt;&lt;img src=&quot;\images\理解属性\3.png&quot; /&gt;&lt;/span&gt;
+​        如果代码使用了编译期计算出来的偏移量，那么在修改类定义后必须重新编译。否则就会出错，比如：某个代码库中的代码使用了一份旧的类定义，如果和其相链接的代码使用了新的类定义，那么运行时就会出现不兼容的现象。各种变成语言都有应对这个问题的方法。OC的做法是，把实例变量当做一种存储偏移量的“特殊变量”，交由类对象保留。偏移量会在运行期查找，如果类的定义改变了，那么存储的偏移量也就变了，这样无论何时访问实例变量，总是使用正确的偏移量。甚至可以在运行期向类中新增实例变量，这就是稳固的“应用程序二进制接口”（ABI），ABI定义了许多内容，其中一项就是生成代码时所应该遵循的规范，有这种稳固的ABI，我们就可以在“class-continuation分类”中或实现文件中定义实例变凉了，所以说，不一定要在接口中把全部实例变量都声明好，可以将某些变量从接口的public区段移走，以便保护和类实现有关的内容。
+​       这个问题还有一种解决方法，就是尽量不要直接访问实例变量，而是通过存取方法来做。虽说属性最终还是通过实例变量来实现，但它却提供了一种简洁的抽象机制。你可以自己编写存取方法。在OC的编码风格中，存取方法有着严格命名规范，正因为这种规范，所以OC才能根据名称自动创建存取方法，这是&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;k&quot;&gt;@property&lt;/span&gt;&lt;/code&gt;就派上用场了。
+​        在对象接口的定义中，可以使用属性，这是一种标准写法，能够访问封装在对象里的数据。因此可以把属性当成一种简称。其意思是说：编译器会自动写出一套存取方法，用以访问给定类型中具有给定名称的变量例如下面这个类:
+&lt;span&gt;&lt;img src=&quot;\images\理解属性\4.png&quot; /&gt;&lt;/span&gt;
+对于该类的使用者来说，上述代码写出来的类和下面这种写法等效；
+&lt;span&gt;&lt;img src=&quot;\images\理解属性\5.png&quot; /&gt;&lt;/span&gt;
+​        要访问属性，可以使用点语法，在纯C种，如果想访问分配在栈上的struct结构体里面的成员，也需要用类似的语法，编译器会把点语法转换为对存取方法的调用，使用点语法的效果和直接调用存取方法相同。因此使用点语法和直接调取存取方法之间没有丝毫的差别。
+​        然而属性还有更多的优势，如果用了属性，编译器会自动编写访问这些属性所需的方法，这个过程叫做“自动合成（autosynthesis）”，需要强调的是，这个过程编译器在编译器执行，所以编译器里面看不到这些“合成方法”的源代码。除了生成方法代码外，编译器还会向类中添加适当的实例变量，并且在属性名前加上下划线，以此作为实例变量的名字，在前面的例子中，会生成两个实例变量，分别是&lt;code class=&quot;highlighter-rouge&quot;&gt;_firstName&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;_lastName&lt;/code&gt;，也可以在类的.m文件中使用&lt;code class=&quot;highlighter-rouge&quot;&gt;@sythesize&lt;/code&gt;语法来指定实例变量的名字，如下图：
+&lt;span&gt;&lt;img src=&quot;\images\理解属性\5.png&quot; /&gt;&lt;/span&gt;
+​        不过一般不推荐这么做，因为所有人都用一套方案，那么写出来的代码大家都看的懂。
+​       如果不想令编译器自动合成存取方法，则可以自己在.m文件中实现，如果只是实现了一个，那么另一个还是编译器来合成。还有一种方法可以阻止编译器自动合成存取方法，就是使用&lt;code class=&quot;highlighter-rouge&quot;&gt;@dynamic&lt;/code&gt;关键字，它会告诉编译器不要自动创建实现属性所用的实例变量，也不要为其创建存取方法，而且在编译器访问属性代码时，即便发现没有定义存取方法，也不会报错，它相信这些方法可以在运行期找到。比如说：如果从CoreData框架中的NSManagedObject类里继承一个子类，那么就需要在运行期动态创建存取方法，继承NSManagedObject时之所以这样做，是因为子类的某些属性不是实例变量，其数据来自后端数据库中。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-objective-c&quot;&gt;@interface Person : NSManagedObject
+@property NSString *firstName;
+@property NSString *lastName;
+@end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;```objective-c
+@implementation Person
+@dynamic firstName,lastName;
+@end&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Mon, 29 Feb 2016 15:42:49 +0000</pubDate>
+        <link>
+        /%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7</link>
+        <guid isPermaLink="true">/%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>iOS9的适配</title>
+        
+          <description>&lt;p&gt;iOS9升级后相信很多人都是项目报错，因为项目要升级iOS9，从网上看了很多教程，就这篇教程还是比较全的，分享给大家，顺便自己记录下。网址是&lt;a href=&quot;http://www.cocoachina.com/ios/20151016/13715.html&quot;&gt;整理 iOS 9 适配中出现的坑（图文）&lt;/a&gt;。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Mon, 18 Jan 2016 13:46:30 +0000</pubDate>
+        <link>
+        /iOS9%E7%9A%84%E9%80%82%E9%85%8D</link>
+        <guid isPermaLink="true">/iOS9%E7%9A%84%E9%80%82%E9%85%8D</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>iOS视图控制器的生命周期</title>
+        
+          <description>&lt;p&gt;​        我们去面试很多时候都被问到视图控制器的声明周期，下面我们着重来讲解下视图控制器的声明周期。
+&lt;!-- more --&gt;&lt;/p&gt;
+&lt;h2 id=&quot;了解重要的三个函数&quot;&gt;了解重要的三个函数&lt;/h2&gt;
+
+</description>
+        
+        <pubDate>Wed, 14 Oct 2015 14:20:25 +0000</pubDate>
+        <link>
+        /iOS%E8%A7%86%E5%9B%BE%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F</link>
+        <guid isPermaLink="true">/iOS%E8%A7%86%E5%9B%BE%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>iOS事件响应机制</title>
+        
+          <description>&lt;p&gt;​         本文着重讲解iOS事件的传递机制，如有错误或者有意见不同者，欢迎指出讨论。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Wed, 07 Oct 2015 14:20:25 +0000</pubDate>
+        <link>
+        /iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6</link>
+        <guid isPermaLink="true">/iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>如何用类族模式隐藏实现细节</title>
+        
+          <description>&lt;p&gt;​         类族是一种很有用的模式，可以隐藏“抽象基类”中的实现细节。这里的抽象基类是指在这个类中只提供接口，并没有提供实现细节，通常是子类重写这个接口，来实现其中的细节。OC中的系统框架普遍应用这个模式。下面我们来举个例子，iOS中有个UIButton的类，想要创建一个按钮，需要调用下面这个方法：
+&lt;!-- more --&gt;&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 24 Sep 2015 14:20:25 +0000</pubDate>
+        <link>
+        /%E5%A6%82%E4%BD%95%E7%94%A8%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F%E9%9A%90%E8%97%8F%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82</link>
+        <guid isPermaLink="true">/%E5%A6%82%E4%BD%95%E7%94%A8%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F%E9%9A%90%E8%97%8F%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>理解对象等同性</title>
+        
+          <description>&lt;p&gt;​          根据“等同性”来比较对象是一个非常有用的功能。不过，按照==操作符比较，未必是我们想要的结果，因为该操作比较的是两个指针的本身，而不是其所指的对象。我们应该使用NSObject协议声明的&lt;code class=&quot;highlighter-rouge&quot;&gt;isEqual&lt;/code&gt;方法来判断两个对象的等同性。一般来说，两个类型不同的对象总是不相等的。某些对象提供了特殊的等同性判断方法，如果知道了两个对象都属于同一个类，那么久可以使用这种方法了。我们用下面的代码做例子：
+&lt;!-- more --&gt;&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 17 Sep 2015 14:20:25 +0000</pubDate>
+        <link>
+        /%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7</link>
+        <guid isPermaLink="true">/%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>对象内部应该如何访问实例变量</title>
+        
+          <description>&lt;p&gt;​          在上一篇中，我们讲解了一些属性的特质，接下来我们讲下访问实例变量的问题，在对象之外访问实例变量时，总是应该通过属性来做，那么在对象内部访问实例变量又该如何呢？OC的开发者一直在激烈的讨论这些问题。有的人认为，无论什么情况都应该使用属性访问实例变量，也有人说通过属性访问和直接访问应该搭配着使用。除了集中特殊情况外，在这里建议大家在读取实例变量时采用直接访问，在设置实例变量时通过属性来做。
+&lt;!-- more --&gt;
+​           请看下面这个类:&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 10 Sep 2015 15:26:23 +0000</pubDate>
+        <link>
+        /%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F</link>
+        <guid isPermaLink="true">/%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F</guid>
+      </item>
+      
+    
+      
+      <item>
+        <title>属性的特质</title>
+        
+          <description>&lt;p&gt;​    最近读了Effective Objective-C。开篇就当做一篇笔记吧。在使用属性的时候，我们需要注意一个问题，就是属性的各种特质（attribute）设定也会影响编译器所生成的存取方法，下面这行代码，相必大家都很熟悉了。这行代码就指定了三项特质。
+&lt;!-- more --&gt;&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Thu, 03 Sep 2015 14:36:23 +0000</pubDate>
+        <link>
+        /%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8</link>
+        <guid isPermaLink="true">/%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8</guid>
       </item>
       
     

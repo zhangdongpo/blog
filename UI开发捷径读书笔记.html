@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>iOS UI开发捷径读书笔记一——基础概念理解</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="iOS UI开发捷径读书笔记一——基础概念理解" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="iOS UI开发捷径读书笔记一——基础概念理解" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "iOS UI开发捷径读书笔记一——基础概念理解",
+    "url": "//UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">iOS UI开发捷径读书笔记一——基础概念理解</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2018-01-22">22 Jan 2018</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>最近读了《iOS UI开发捷径–利用Interface Builder高效、优雅地开发UI》这本书。感觉受益匪浅，记录下自己在书里面学到的东西。这里只写自己学到的新知识，并不介绍一些简单的IB知识，想要具体学习，请买书自己学习。
+<!-- more --></p>
+<h2 id="和interface-builder有关的几个重要概念">和Interface Builder有关的几个重要概念</h2>
+<p>下面介绍几个和IB有关的概念，学习下平常经常用，但是不了解的概念。</p>
+<h3 id="bundle">Bundle</h3>
+<p>这个我们在平常工作中应该经常用，比如创建IB的时候，还有获取资源路径的时候：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let bundle = Bundle.main
+</code></pre></div></div>
+<p>Bundle有两种表现形式：</p>
+<ol>
+  <li>保存可执行代码，比如我们整个App就是一个Bundle，也就是我们经常用的main bundle。</li>
+  <li>保存需要的资源。这里的资源包括XIB，Storyboard，图片，声音等，例如我们在使用一些第三方的SDK时用的bundle。
+    <h3 id="nib">nib</h3>
+    <p>我们创建XIB时，经常调用的方法是<code class="highlighter-rouge">loadNibName</code>，为啥是loadNib，而不是loadXIB呢。这里就少说一下XIB和nib的关系了，XIB用Source Code的方式显示可以看到其实他就是个xml文件，那么nib是什么呢，通俗的解释下，nib是工程被编译后，由XIB生成的一种文件类型。这里可以看出XIB和其他资源文件的不同，XIB是需要经过编译的，编译后XIB就不存在了，而在Bundle中生成了与之对应的nib文件，而其他文件只是简单的copy到bundle中。Storyboardc和Storyboard的对应关系和XIB和nib的对应关系是一样的。</p>
+    <h2 id="使用xib应该注意的事情">使用XIB应该注意的事情</h2>
+    <p>下面看下使用XIB时，应该注意的事情。</p>
+    <h3 id="files-owner的使用">File‘s Owner的使用</h3>
+    <p>在XIB文件中，左侧文件排列上，我们可以看到有一个File‘s Owner。从字面上理解，File‘s Owner就是文件的所有者。一般我们的File‘s Owner都是VC。这里为什么介绍File‘s Owner，是因为一个XIB可以同时和UIView和UIViewController进行连线，这里依靠的就是File‘s Owner。例如，一个XIB文件中，一个view即可以和File‘s Owner连线也可以和自己的view文件连线，这样就可以在view中处理一些view的逻辑，在VC中处理业务逻辑了。使用File‘s Owner时还应该注意的地方是，当创建XIB时，调用的函数：</p>
+  </li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func loadNibNamed(_ name: String, owner: Any?, options: [AnyHashable : Any]? = nil)
+</code></pre></div></div>
+<p>这里的owner参数，我们经常传入nil，这里要说下这个参数具体情况下应该传入什么，</p>
+<ol>
+  <li>当XIB没有设置File‘s Owner那么这里传入nil</li>
+  <li>当XIB设置File‘s Owner并且对应类就是使用XIB的这个类，这里可以传入self或者nil</li>
+  <li>当XIB设置的File‘s Owner不是当前使用该XIB文件的类，这里就必须传入与File‘s Owner相对应的类。
+    <h3 id="uinib的使用">UINib的使用</h3>
+    <p>加载XIB文件的方式有以下两种：</p>
+  </li>
+  <li><code class="highlighter-rouge">func loadNibNamed(_ name: String, owner: Any?, options: [AnyHashable : Any]? = nil)</code></li>
+  <li><code class="highlighter-rouge">open func instantiate(withOwner ownerOrNil: Any?, options optionsOrNil: [AnyHashable : Any]? = nil) -&gt; [Any]</code>
+这两种方法有啥不同的呢，第一种是频繁的加载XIB文件，第二种是利用UINib把XIB文件加载到内存中，然后从内存中加载。所以当我们需要频繁使用XIB文件时要用第二种，但只用一次时，应该用第一种。
+    <h3 id="uiviewcontroller和xib的使用">UIViewController和XIB的使用</h3>
+    <p>当我们创建VC时如果没有勾选also create XIB，后面又想使用XIB，我们就应该手动创建XIB，然后进行关联，关联的时候，我们需要把view和VC的view属性进行连线，否则程序会crash。</p>
+    <h2 id="xib和autolayout">XIB和AutoLayout</h2>
+    <p>这里不具体介绍AutoLayout，只介绍几个属性，新学到的。</p>
+    <h3 id="content-compression-resistance">Content Compression Resistance</h3>
+    <p>这个属性是指一个视图保护其内容完整性的能力，系数越大，改视图保护内容完整性越强，内容越不容易被压缩或者裁剪。</p>
+    <h3 id="content-hugging">Content Hugging</h3>
+    <p>这个属性是指一个视图保护它的尺寸与其内容尺寸相匹配的能力，系数越大，匹配能力越强。</p>
+    <h3 id="在xib中scrollview使用autolayout">在XIB中ScrollView使用AutoLayout</h3>
+    <p>ScrollView使用AutoLayout和其他view不同，我们需要设置它的子view大小明确，因为ScrollView需要计算自己的contentSize。所以原则是他的子view的约束需要可以推算出ScrollView的contentSize。</p>
+    <h2 id="storyboard使用">Storyboard使用</h2>
+    <p>Storyboard平常的使用和XIB差不多，但是Storyboard比XIB多了Extra View，segue和object的使用，这里我们主要介绍extra view，segue和object的使用。</p>
+    <h3 id="extra-view">Extra View</h3>
+    <p>我们通常会有这样的需求，一个VC在特定的情况下或者固定的操作后显示一个View，比如，没有网络的时候的提示页面。SB允许在Scene中添加Extra View来完成这些事情。下面介绍如何使用。我们拖一个View到First Responder和exit中间，如图所示：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1516606117.png" alt="" />
+然后在这个View上面添加无网络时展示的控件，添加的控件可以直接拖到VC中进行连线，还可以和自定义的UIView类进行关联，封装使用。我们将这个View和VC进行连线，然后在VC中添加入下代码：</p>
+  </li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ViewController: UIViewController {
+
+    @IBOutlet weak var reachabilityView: UIView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let noReachability = true
+        if noReachability {
+            reachabilityView.center = view.center
+            self.view.addSubview(reachabilityView)
+        }
+    }
+｝
+</code></pre></div></div>
+<h2 id="预告">预告</h2>
+<p>Segue、Storyboard reference、Object其实可以单独写篇文章，这里先暂时不介绍了，等写完文章附上地址。</p>
+
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=iOS UI开发捷径读书笔记一——基础概念理解&amp;url=UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <a class="read-next-story no-cover"
+        href="/%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">
+        <section class="post">
+            <h2>Objective-C Runtime —— 基础数据结构</h2>
+            <p>iOS工作两年了，几乎每次面试都会被问到Runtime的东西，自己一直没有系统的学习过Runtime。正好这段时间比较闲，自己也想深入的学习下iOS。所以那就先了解下基础的东西吧。以前听到Runtime一直感觉很高深，什么黑魔法啊一堆名词，其实去了解下的话，没有那么神奇。这篇文章分三大部分来介绍Runtime，是一个循序渐进的过程。第一呢，我们需要了解Objective-C的对象模型，然后才能去理解消息发送的过程，再然后再去了解下Runtime都能干什么，毕竟如果一个技术没有落地的应用，那它就没啥价值了。这篇文章基于objc4-723源码进行分析，GitHub有一个可调试库，[地址](https://github.com/RetVal/objc-runtime)。 # 简介 Runtime是什么？官方文档第一段就给出了答案。 > The Objective-C language defers as many decisions as it can...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E8%BF%9F%E6%9D%A5%E7%9A%842017%E6%80%BB%E7%BB%93">
+        <section class="post">
+            <h2>迟来的2017总结</h2>
+            <p>2017年过去了，今天是2018年01月10日，终于有时间整理一下过去，展望一下未来了。年初给自己定了几个目标，但是那时没有写东西的习惯(虽然现在也没有)，现在回想起来已然不记得什么了。只记得一个大概就是多读书，多写总结。然而并没有达到。只能说一年的时光又被我浪费掉了。从这篇文章开始，以后每周要写一篇文章了。对未来的展望，依然是多读书，多写文章。因为，读书是一个输入的过程，而写作是个输出的过程。希望自己写的都是自己实践过的，不写软文。先不展望未来了。先回忆下过去吧。下面从工作、生活、学习三方面做下总结。 工作 今年9月份离开了呆了一年半的公司。一年半，对于我来说，还是很珍贵的。在这一年半的时光里，我从一个菜鸟变成了不是那么菜的菜鸟。学到了很多，但是学习的速度不快，总的来说小有进步。过去的一年，我的内心是非常焦虑的。为什么呢？我不止一遍的问自己，主要还是自己能力的问题。在公司，发现自己好多想学的东西，没有办法去实现，离开公司吧，以自己的能力，很难找到一份中意的工作。就是这样矛盾着，到了9月份。公司因为业务问题，把我们移动端辞退了一部分，我就在这一部分中。现在想来也不是坏事，自己没勇气做的事情，别人逼了自己一把。接下来找工作的事情就不详细说了，总结下来一句话：能力不好，好工作自然不好找喽。经历了将近一个月，总算找到个自己还算满意的。接下来，进入新环境。刚来接手个新项目，领导说了，让我用Swift开发。卧槽，我Swift没看过，为了不表现出自己的菜，我开始了猛补Swift的道路。用了一个星期，把Swift的官方文档读了一遍，我突然发现，光读是没用的，用的时候还是忘记了。所以从这里面可以看出来，想学东西就要了解一下，然后撸起袖子就是干。在项目中学习，然后把那些突然让自己茅塞顿开的知识记录下来，写成文章，这也是一个输入与输出的过程啊。 从来到这个公司到现在，已经快四个月了，项目也接近了尾声，然而现在倒在了上线上。领导一直觉的是项目的问题，因为小公司，没有测试，软件质量没有保障，所以匆忙上线肯定是不行的。提了几次建议，没有被采纳，只是一味的屏蔽功能，感觉真的是无药可救。没办法，只能先忍着了。要么忍，要么狠，要么滚呗。自己能力不行，就要对自己狠。努力把项目做好，后面，我依然会提出我自己的建议，采不采纳是他们的问题，我自己尽力了，我尽力把自己能做的做好。问心无愧。 学习 每次都对自己说，要多读书，结果每天回到家。就被好看的电视剧吸引过去了，然后一看表，11点多了，该睡了，一页书都没开。然后感叹，自己进步好慢。想要提高自己，就要克制住自己的欲望，其实欲望也是可以利用的嘛，给自己规定一个小目标，看完多少书后可以释放下欲望。这里并不是说看完，是要自己真正的去理解了。劳逸结合，提高自己的效率。 今年读的书就比较少了，读了一本狮子书，然后感觉自己并没有完全的掌握。明白了里面说的，然而问到了具体的场景，就懵逼了。这也是为什么面试小红书会挂掉的原因。以后还是需要多实践啊。现在会想起来今年收获确实不是很大，还有两本书快看完了，然而，也忘记了不少。以后，需要改变下策略了，是不是没有做笔记的问题，有时候自己看的太细了，导致自己的速度下降了，其实不用看那么细，不懂的可以先跳过去。希望以后可以找到一个高效读书的方法。等找到了，再分享出来。 生活 今年的生活没有太大的变化。年中的时候办了一个健身卡，由于搬家的原因，就没用了，转出去赔了不少钱。以后一定要杜绝冲动消费。光是这些钱自己也是花了不少。希望自己明年可以坚持健身，感觉现在年龄不大，但是注意力很难集中。而且整个人精神不太好。希望可以坚持健身，改善下自己的精神面貌。还有，就是今年开始关注理财了，关注了且慢的长赢计划，截止到今天，没有多少收入，但是贵在坚持，希望自己以后多赚钱，坚持定投，然后研究下股票。来年也研究下保险。不能总想着自己赚工资，要学会理财，这也是个很重要的技能。这也是2017年一个不小的进步吧，自己有这个思想的转变就不错啦。 未来的展望 读书计划 继续巩固自己的计算机基础，希望自己可以研究下网络、算法，操作系统。网络方面，从图解HTTP，图解TCP/IP，网络是怎样连接的，然后读HTTP权威指南，HTTPS权威指南，TCP/IP详解。算法方面：算法图解，啊哈算法，大话数据结构，算法第四版。操作系统：程序是怎么跑起来的，程序员的自我修养，深入理解操作系统 写代码方面，希望自己研究下设计模式，架构，这方面：head first 设计模式，Swift...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

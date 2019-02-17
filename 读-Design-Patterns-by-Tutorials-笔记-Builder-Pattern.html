@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>读《Design-Patterns-by-Tutorials》笔记——Builder Pattern</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="读《Design-Patterns-by-Tutorials》笔记——Builder Pattern" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="读《Design-Patterns-by-Tutorials》笔记——Builder Pattern" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "读《Design-Patterns-by-Tutorials》笔记——Builder Pattern",
+    "url": "//%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">读《Design-Patterns-by-Tutorials》笔记——Builder Pattern</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2018-10-09">09 Oct 2018</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/读书笔记'>读书笔记</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>构造器模式允许一步一步的创建一个复杂的对象而不是一次创建完成。这个模式包括三个主要类型，UML 图如下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1538746972.png" alt="构造器模式" /></p>
+
+<!-- more -->
+
+<ol>
+  <li><strong>Director</strong>接收输入并且和 builder 协调。<strong>Director</strong>通常是一个 view controller或者是view controller 使用的帮助类。</li>
+  <li><strong>Product</strong>是被创建的复杂对象，可以是一个class 或者 struct，取决于是否想要引用语义。通常是一个 model。</li>
+  <li><strong>Builder</strong>接收一步步输入并且控制 product 的创建。经常是一个 class，可以通过引用被复用。</li>
+</ol>
+
+<h2 id="when-should-you-use-it">When should you use it?</h2>
+
+<p>当我们想要使用一系列步骤创建一个复杂对象时可以使用构造器模式。当一个 product 需要几个部分输入时这个模式工作尤其优秀。构造器将如何创建product 的输入抽象并且以 director 想要提供输入的任何顺序接收他们。比如：我们可以使用这个模式去实现一个”汉堡构造器”。product 可能是一个<code class="highlighter-rouge">humburger</code>对象，它有一些输入，比如：肉，配料和胡椒酱。director 可能是一个<code class="highlighter-rouge">employee</code>对象，这个对象知道如何做汉堡，或者可能是一个 view controller，它可以接收用户的输入。
+汉堡构造器可以以任意的顺序接收肉的选择，配料和胡椒酱并且根据需求创建一个汉堡。</p>
+
+<h2 id="playground-example">Playground example</h2>
+
+<p><strong>Builder</strong>是一个<strong>创造型模式</strong>。这是因为构造器模式是关于创造复杂产品的一个模式。这里我们将实现一个汉堡构造器的例子。
+首先，我们先来创建一个<strong> product</strong>：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - Product</span>
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Hamburger</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="k">let</span> <span class="nv">meat</span><span class="p">:</span> <span class="kt">Meat</span>
+  <span class="kd">public</span> <span class="k">let</span> <span class="nv">sauce</span><span class="p">:</span> <span class="kt">Sauces</span>
+  <span class="kd">public</span> <span class="k">let</span> <span class="nv">toppings</span><span class="p">:</span> <span class="kt">Toppings</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">Hamburger</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="k">var</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">meat</span><span class="o">.</span><span class="n">rawValue</span> <span class="o">+</span> <span class="s">" burger"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Meat</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="n">beef</span>
+  <span class="k">case</span> <span class="n">chicken</span>
+  <span class="k">case</span> <span class="n">kitten</span>
+  <span class="k">case</span> <span class="n">tofu</span>
+<span class="p">}</span>
+
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Sauces</span><span class="p">:</span> <span class="kt">OptionSet</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">mayonnaise</span> <span class="o">=</span> <span class="kt">Sauces</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">mustard</span> <span class="o">=</span> <span class="kt">Sauces</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">ketchup</span> <span class="o">=</span> <span class="kt">Sauces</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">secret</span> <span class="o">=</span> <span class="kt">Sauces</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span>
+  
+  <span class="kd">public</span> <span class="k">let</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="kt">Int</span>
+  <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValue</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Toppings</span><span class="p">:</span> <span class="kt">OptionSet</span> <span class="p">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">cheese</span> <span class="o">=</span> <span class="kt">Toppings</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">)</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">lettuce</span> <span class="o">=</span> <span class="kt">Toppings</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">pickles</span> <span class="o">=</span> <span class="kt">Toppings</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">tomatoes</span> <span class="o">=</span> <span class="kt">Toppings</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">3</span><span class="p">)</span>
+  
+  <span class="kd">public</span> <span class="k">let</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="kt">Int</span>
+  <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">rawValue</span> <span class="o">=</span> <span class="n">rawValue</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>接下来，我们定义一个<strong>builder</strong></p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - Builder</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">HamburgerBuilder</span> <span class="p">{</span>
+  
+  <span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Error</span><span class="p">:</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Error</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">soldOut</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">meat</span><span class="p">:</span> <span class="kt">Meat</span> <span class="o">=</span> <span class="o">.</span><span class="n">beef</span>
+  <span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">sauces</span><span class="p">:</span> <span class="kt">Sauces</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">toppings</span><span class="p">:</span> <span class="kt">Toppings</span> <span class="o">=</span> <span class="p">[]</span>
+  
+  <span class="kd">private</span> <span class="k">var</span> <span class="nv">soldOutMeats</span><span class="p">:</span> <span class="p">[</span><span class="kt">Meat</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="n">kitten</span><span class="p">]</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">addSauces</span><span class="p">(</span><span class="n">_</span> <span class="nv">sauce</span><span class="p">:</span> <span class="kt">Sauces</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">sauces</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="n">sauce</span><span class="p">)</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeSauces</span><span class="p">(</span><span class="n">_</span> <span class="nv">sauce</span><span class="p">:</span> <span class="kt">Sauces</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">sauces</span><span class="o">.</span><span class="nf">remove</span><span class="p">(</span><span class="n">sauce</span><span class="p">)</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">addToppings</span><span class="p">(</span><span class="n">_</span> <span class="nv">topping</span><span class="p">:</span> <span class="kt">Toppings</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">toppings</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">removeToppings</span><span class="p">(</span><span class="n">_</span> <span class="nv">topping</span><span class="p">:</span> <span class="kt">Toppings</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">toppings</span><span class="o">.</span><span class="nf">remove</span><span class="p">(</span><span class="n">topping</span><span class="p">)</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">setMeat</span><span class="p">(</span><span class="n">_</span> <span class="nv">meat</span><span class="p">:</span> <span class="kt">Meat</span><span class="p">)</span> <span class="k">throws</span> <span class="p">{</span>
+    <span class="k">guard</span> <span class="nf">isAvailable</span><span class="p">(</span><span class="n">meat</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">throw</span> <span class="kt">Error</span><span class="o">.</span><span class="n">soldOut</span> <span class="p">}</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">meat</span> <span class="o">=</span> <span class="n">meat</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">isAvailable</span><span class="p">(</span><span class="n">_</span> <span class="nv">meat</span><span class="p">:</span> <span class="kt">Meat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">!</span><span class="n">soldOutMeats</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="n">meat</span><span class="p">)</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">build</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Hamburger</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kt">Hamburger</span><span class="p">(</span><span class="nv">meat</span><span class="p">:</span> <span class="n">meat</span><span class="p">,</span>
+                     <span class="nv">sauce</span><span class="p">:</span> <span class="n">sauces</span><span class="p">,</span>
+                     <span class="nv">toppings</span><span class="p">:</span> <span class="n">toppings</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>接下来，我们添加<strong>director</strong>：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - Director</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kt">Employee</span> <span class="p">{</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">createCombo1</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Hamburger</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">builder</span> <span class="o">=</span> <span class="kt">HamburgerBuilder</span><span class="p">()</span>
+    <span class="k">try</span> <span class="n">builder</span><span class="o">.</span><span class="nf">setMeat</span><span class="p">(</span><span class="o">.</span><span class="n">beef</span><span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="nf">addSauces</span><span class="p">(</span><span class="o">.</span><span class="n">secret</span><span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="nf">addToppings</span><span class="p">([</span><span class="o">.</span><span class="n">lettuce</span><span class="p">,</span> <span class="o">.</span><span class="n">tomatoes</span><span class="p">,</span> <span class="o">.</span><span class="n">pickles</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="nf">build</span><span class="p">()</span>
+  <span class="p">}</span>
+  
+  <span class="kd">public</span> <span class="kd">func</span> <span class="nf">createKittenSpecial</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">Hamburger</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">builder</span> <span class="o">=</span> <span class="kt">HamburgerBuilder</span><span class="p">()</span>
+    <span class="k">try</span> <span class="n">builder</span><span class="o">.</span><span class="nf">setMeat</span><span class="p">(</span><span class="o">.</span><span class="n">kitten</span><span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="nf">addSauces</span><span class="p">(</span><span class="o">.</span><span class="n">mustard</span><span class="p">)</span>
+    <span class="n">builder</span><span class="o">.</span><span class="nf">addToppings</span><span class="p">([</span><span class="o">.</span><span class="n">lettuce</span><span class="p">,</span> <span class="o">.</span><span class="n">tomatoes</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">builder</span><span class="o">.</span><span class="nf">build</span><span class="p">()</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>接下来测试一下：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - Example</span>
+<span class="k">let</span> <span class="nv">burgerFlipper</span> <span class="o">=</span> <span class="kt">Employee</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="k">let</span> <span class="nv">combo1</span> <span class="o">=</span> <span class="k">try</span><span class="p">?</span> <span class="n">burgerFlipper</span><span class="o">.</span><span class="nf">createCombo1</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nf">print</span><span class="p">(</span><span class="s">"Nom nom "</span> <span class="o">+</span> <span class="n">combo1</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="k">let</span> <span class="nv">kittenBurger</span> <span class="o">=</span> <span class="k">try</span><span class="p">?</span>
+  <span class="n">burgerFlipper</span><span class="o">.</span><span class="nf">createKittenSpecial</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nf">print</span><span class="p">(</span><span class="s">"Nom nom nom "</span> <span class="o">+</span> <span class="n">kittenBurger</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+  
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="nf">print</span><span class="p">(</span><span class="s">"Sorry, no kitten burgers here... :["</span><span class="p">)</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>可以看到控制台打印：</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Nom</span> <span class="n">nom</span> <span class="n">beef</span> <span class="n">burger</span>
+<span class="kt">Sorry</span><span class="p">,</span> <span class="n">no</span> <span class="n">kitten</span> <span class="n">burgers</span> <span class="n">here</span><span class="o">...</span> <span class="p">:[</span>
+</code></pre></div></div>
+
+<h2 id="what-should-you-be-careful-about">What should you be careful about?</h2>
+
+<p>构造器模式对需要多次输入创建复杂对象工作起来很好。如果你的 product 没有几个输入或者不能一步步被创建，构造器可能不适合，便利构造器可能更适合。</p>
+
+<h2 id="tutorial-project">Tutorial project</h2>
+
+<p>这里我们继续为以前的 app 增加功能，这节我们将使用构造器模式来添加创建新的<code class="highlighter-rouge">QuestionGroup</code>功能。实现效果如下：</p>
+
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/Builder.gif" width="375px" /></p>
+
+<p><a href="https://github.com/zhangdongpo/LearnDesignPattern/tree/Builder">Demo</a></p>
+<h2 id="预告">预告</h2>
+<p>下节我们讲学习 MVVM 设计模式，将会开启一个新的工程。这个工程就到此为止了。</p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=读《Design-Patterns-by-Tutorials》笔记——Builder Pattern&amp;url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: location.pathname, // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+
+    <!-- [[! next_post ]] -->
+    
+    <!-- [[! /next_post ]] -->
+    <!-- [[! prev_post ]] -->
+    
+    <a class="read-next-story prev no-cover"
+        href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern">
+        <section class="post">
+            <h2>读《Design-Patterns-by-Tutorials》笔记——Observer Pattern</h2>
+            <p>观察者模式让一个对象观察另一个对象的改变。在本章节，你将学习两种实现观察者模式的方法： 使用 KVO 使用一个Observable包装。 UML 图如下： 这个模式包含两个主要对象： Subject是被观察对象。 Observer是观察对象。 不幸的是，Swift 4现在没有语言层面的 KVO 支持。我们需要继承Foundation的NSObject,NSObject使用Objective-Cruntime来实现 KVO。如果你不想或者不能继承NSObject,你可以自己封装一个Observable类来代替。 在本章，你将会使用...</p>
+        </section>
+    </a>
+    
+    <!-- [[! /prev_post ]] -->
+</aside>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

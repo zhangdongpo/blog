@@ -1,0 +1,2554 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>freelf.me</title>
+   
+   <link></link>
+   <description>Freelf's Blog</description>
+   <language>en-uk</language>
+   <managingEditor> Freelf</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>记录一次Reveal连接不上的问题</title>
+	  <link>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-06-07T22:00:29+00:00</pubDate>
+	  <guid>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98</guid>
+	  <description><![CDATA[
+	     <p>由于换了新电脑，项目也告一段落，Reveal有一段时间没用了。最近开了新的项目，需要频繁的UI调整，所以需要用到Reveal，结果死活无法在Reveal发现。我用的是断点的方法，比较简单，官方文档给了三种方法。详情请看<a href="http://support.revealapp.com/kb/getting-started/reveal-integration-guide">官方文档</a>。
+<!--more-->
+按照官方文档的断点教程走了一圈，运行App。Console打印出下面这句话：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Loading Reveal Server from /Applications/Reveal.app/Contents/SharedSupport/iOS-Libraries/RevealServer.framework/RevealServer...
+Reveal Server was loaded successfully.
+</code></pre></div></div>
+<p>心里想着应该可以了，打开Reveal，瞬间打脸。跑官方demo也不行。后来结果搜索，发现有个<a href="http://support.revealapp.com/kb/tips-tricks/bonjour-debugging-why-cant-i-connect-to-my-app">调试方法</a>。跟着步骤来发现，在<code class="highlighter-rouge">curl -s -D - http://localhost:51441/application -o /dev/null</code>这一步，我失败了。
+理清下思绪，应该是最后请求Reveal的服务器失败了，但是我试了一下，把localhost改为127.0.0.1就成功了。在终端ping localhost发现localhost没有绑定上。最后通过编辑/etc/hosts文件，把localhost绑定上，再次运行，终于搞定了！关于绑定localhost可以参照<a href="https://stackoverflow.com/questions/19732360/ping-cannot-resolve-localhost-unknown-host-os-x">这个回答</a>。</p>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>记录一次解决安装fastlane报错过程</title>
+	  <link>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-05-29T22:50:06+00:00</pubDate>
+	  <guid>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1%E8%A7%A3%E5%86%B3%E5%AE%89%E8%A3%85fastlane%E6%8A%A5%E9%94%99%E8%BF%87%E7%A8%8B</guid>
+	  <description><![CDATA[
+	     <p>最近做新项目，因为将来会涉及到频繁打包去测试。为了提高打包效率，决定使用下 fastlane。按照流程先来安装。结果不出意料的报错了。</p>
+
+<!--more-->
+
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/1527133572.png" alt="" />
+我去，我命令行本来就不熟悉，再加上这个是一个 ruby 工具。我更不会 ruby。心里一万只草泥马奔过。做 iOS 需要会的好多啊。结果从下午 5 点半搞到 7 点也没搞定。算了回家吃饭了。回到家，用家里的电脑装，发现异常顺利，一点错不报，一下就成功了。这让我好难受，心里想估计是 Xcode command tools 错了。今天来到公司把 Xcode 命令行工具删了，重新下载。再次安装，妈的，还是一样。后来没办法了，网上的方法不对头啊，去看日志，发现有报错。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527133989.png" alt="" />
+然后就去搜这个错误的解决方法，在https://github.com/cython/cython/issues/2009 这里找到答案。没办法，试一下吧。抱着把系统玩坏的想法，删了/usr/local/include 这个文件，然后用 brew 重新下载了 llvm。再试一次，我去，终于成功了。放张图纪念下～
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527134186.png" alt="" />
+经过这次安装过程，我发现，找问题还是要去看日志，看到底哪里错误了，去解决根本问题。装这个东西浪费了一上午时间，虽然过程很坎坷，但是结果很美丽。以后可以随便打包啦！先安装上，还没开始用，等用完之后，再来写一下使用的感觉。</p>
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>Objective-C Runtime --- 消息发送</title>
+	  <link>//Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-05-20T19:01:38+00:00</pubDate>
+	  <guid>//Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81</guid>
+	  <description><![CDATA[
+	     <p>上篇文章分析了对象的数据结构，这篇我们就结合源码来分析下Objective-C最核心的东西——消息发送。在Objective-C中，我们调用方法，其实都是发送消息。发送消息为Objective-C增加了动态特性，下面我们就来看一下Objective-C的消息发送过程。
+<!--more--></p>
+<h1 id="objc_msgsend简介">objc_msgSend简介</h1>
+<p>其实我们看大部分runtime文章，都是从这个函数看起的。在Objective-C中，我们调用方法的语法是这样的<code class="highlighter-rouge">[receiver message]</code>。编译期会把这个方法调用转换成下面这个函数：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc_msgSend(receiver, selector, arg1, arg2, ...)
+</code></pre></div></div>
+<p>其中第一个函数就是我们调用方法的recevier，第二个是个方法选择器，类型是<code class="highlighter-rouge">SEL</code>，我们看下<code class="highlighter-rouge">SEL</code>的定义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// An opaque type that represents a method selector.
+typedef struct objc_selector *SEL;
+</code></pre></div></div>
+<p><code class="highlighter-rouge">objc_selector</code>是一个映射到方法的C字符串。我们可以通过调用<code class="highlighter-rouge">@selector()</code>和<code class="highlighter-rouge">sel_registerName</code>生成一个<code class="highlighter-rouge">SEL</code>。等下会具体分析<code class="highlighter-rouge">SEL</code>。现在继续分析objc_msgSend函数。
+当receiver收到一条消息，消息发送函数通过isa指针找到类对象，在其类对象中查找方法实现。如果类对象中没有，通过superclass指针，找到其父类对象，在其中查找实现。一直查找到<code class="highlighter-rouge">NSObject</code>，只要找到实现就会去调用。这就是runtime查找方法实现的过程。为了加快方法调用，runtime系统缓存了已经调用过的方法。接下来我们会通过源码来分析。如果receiver为<code class="highlighter-rouge">nil</code>，会直接返回，并不会报错。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526885161.png" alt="" /></p>
+<h1 id="objc_msgsend源码解析">objc_msgSend源码解析</h1>
+<h2 id="selector">@selector</h2>
+<p>在<code class="highlighter-rouge">objc_msgSend</code>中，第一个参数我们不用过多解释。第二个参数selector，看起来简单，其实有些东西需要我们明白。这里需要我们注意的是：<strong>不同类中，相同方法名不带参数的方法所对应的方法选择器相同，如果方法有参数且参数数量相同，所对应的方法选择器也相同(和参数类型无关)。</strong>。前面这句话有点不太好懂，用代码来看一下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">TestObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span><span class="p">;</span> <span class="c1">// 1
+</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">a</span><span class="p">;</span> <span class="c1">// 2
+</span><span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">TestObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="kt">int</span><span class="p">)</span><span class="nv">a</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%d"</span><span class="p">,</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class="nc">TestTwoObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span><span class="p">;</span>  <span class="c1">// 3
+</span><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">str</span><span class="p">;</span> <span class="c1">// 4
+</span><span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">TestTwoObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">sayHello</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">str</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>其中1和3对应的方法选择器相同，2和4对应的方法选择器相同。</p>
+<blockquote>
+  <ol>
+    <li>Objective-C为我们维护了一个方法选择器表。</li>
+    <li>使用<code class="highlighter-rouge">@selector()</code>时会从这个选择器表中查找对应的<code class="highlighter-rouge">SEL</code>，如果没有找到，会生成一个新的<code class="highlighter-rouge">SEL</code>添加到表中。</li>
+    <li>在编译期间会扫描全部的头文件和实现文件将其中的方法以及使用<code class="highlighter-rouge">@selector()</code>生成的选择子加入到方法选择器表中。</li>
+  </ol>
+</blockquote>
+
+<blockquote>
+  <p>具体分析请看<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E4%BB%8E%E6%BA%90%E4%BB%A3%E7%A0%81%E7%9C%8B%20ObjC%20%E4%B8%AD%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%91%E9%80%81.md">从源代码看 ObjC 中消息的发送</a></p>
+</blockquote>
+
+<h2 id="解析objc_msgsend">解析objc_msgSend</h2>
+<p><code class="highlighter-rouge">objc_msgSend</code>是使用汇编写的，在<code class="highlighter-rouge">objc-msg-arm64.s</code>和<code class="highlighter-rouge">objc-msg-x86_64.s</code>中，有对应实现。由于自己能力不够，读不懂汇编，但是从里面的注释可以看出来，在<code class="highlighter-rouge">objc_msgSend</code>中，先会去缓存中查找方法，如果缓存没有找到，会调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数。<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数在runtime源码中是有实现的：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/***********************************************************************
+* _class_lookupMethodAndLoadCache.
+* Method lookup for dispatchers ONLY. OTHER CODE SHOULD USE lookUpImp().
+* This lookup avoids optimistic cache scan because the dispatcher
+* already tried that.
+**********************************************************************/
+IMP _class_lookupMethodAndLoadCache3(id obj, SEL sel, Class cls)
+{
+    return lookUpImpOrForward(cls, sel, obj, 
+                              YES/*initialize*/, NO/*cache*/, YES/*resolver*/);
+}
+</code></pre></div></div>
+<p>我们看到它调用了<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数，并且传递cache参数为NO，因为调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>之前，已经进行了cache查找，没有找到才调用<code class="highlighter-rouge">_class_lookupMethodAndLoadCache3</code>，所以这里传NO是避免再次查找缓存。
+具体的汇编代码分析请看<a href="https://www.jianshu.com/p/4d619b097e20">神经病院Objective-C Runtime住院第二天——消息发送与转发</a>。
+对objc_msgSend的分析有两种情况，一种是有缓存，一种是无缓存。我们向TestObject发送两次相同的消息就可以模拟出来。代码如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        TestObject *object = [TestObject new];
+        [object sayHello];
+        [object sayHello];
+    }
+    return 0;
+}
+</code></pre></div></div>
+<h3 id="无缓存">无缓存</h3>
+<p>我们先在第一次调用方法这一行打断点：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974679.png" alt="" />
+当到达这个断点之后在<code class="highlighter-rouge">lookUpImpOrForward</code>函数打断点，确保查找的消息是<code class="highlighter-rouge">sayHello</code>。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974777.png" alt="" />
+当断点到达<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数，左侧调用栈如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526974866.png" alt="" />
+从图中可以看出来<code class="highlighter-rouge">objc_msgSend</code>并没有直接调用<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>，而是通过<code class="highlighter-rouge">_objc_msgSend_uncached</code>调用。下面我们就来分析下<code class="highlighter-rouge">lookUpImpOrForward</code>这个函数。这个才是实际干活的。</p>
+<h4 id="lookupimporforward">lookUpImpOrForward</h4>
+<p>由于<code class="highlighter-rouge">lookUpImpOrForward</code>涉及很多的函数调用，我们将它分成几个部分来分析：</p>
+
+<ol>
+  <li>无锁的缓存查找。</li>
+  <li>加锁。</li>
+  <li>如果类没有实现或初始化，实现或初始化。</li>
+  <li>在当前类的缓存中查找。</li>
+  <li>在当前类的方法列表中查找。</li>
+  <li>在父类的缓存和方法列表中查找。</li>
+  <li>没有找到实现，尝试方法解析。</li>
+  <li>使用消息转发。</li>
+  <li>解锁返回实现。</li>
+</ol>
+
+<p>下面，我们来看下这个过程的具体实现</p>
+<h5 id="无锁的缓存查找">无锁的缓存查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>runtimeLock.assertUnlocked();
+
+// Optimistic cache lookup
+if (cache) {
+    imp = cache_getImp(cls, sel);
+    if (imp) return imp;
+}
+</code></pre></div></div>
+<p>由于通过<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>调用<code class="highlighter-rouge">lookUpImpOrForward</code>时传入cache为<code class="highlighter-rouge">NO</code>，所以这一步的缓存查找直接略过了。</p>
+<h5 id="加锁">加锁</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// runtimeLock is held during isRealized and isInitialized checking
+// to prevent races against concurrent realization.
+
+// runtimeLock is held during method search to make
+// method-lookup + cache-fill atomic with respect to method addition.
+// Otherwise, a category could be added but ignored indefinitely because
+// the cache was re-filled with the old value after the cache flush on
+// behalf of the category.
+runtimeLock.read();
+</code></pre></div></div>
+<p>通过注释我们可以看到，<code class="highlighter-rouge">runtimeLock</code>需要在<code class="highlighter-rouge">isRealized</code>和<code class="highlighter-rouge">isInitialized</code>检查过程中加锁，避免并发实现过程中的资源竞争(其实锁这些东西我也不太明白，后面学操作系统时会补一下这方面知识)。</p>
+<h5 id="如果类没有实现或初始化实现或初始化">如果类没有实现或初始化，实现或初始化</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (!cls-&gt;isRealized()) {
+        // Drop the read-lock and acquire the write-lock.
+        // realizeClass() checks isRealized() again to prevent
+        // a race while the lock is down.
+        runtimeLock.unlockRead();
+        runtimeLock.write();
+
+        realizeClass(cls);
+
+        runtimeLock.unlockWrite();
+        runtimeLock.read();
+    }
+
+if (initialize  &amp;&amp;  !cls-&gt;isInitialized()) {
+    runtimeLock.unlockRead();
+    _class_initialize (_class_getNonMetaClass(cls, inst));
+     runtimeLock.read();
+     // If sel == initialize, _class_initialize will send +initialize and 
+    // then the messenger will send +initialize again after this 
+    // procedure finishes. Of course, if this is not being called 
+    // from the messenger then it won't happen. 2778172
+}
+</code></pre></div></div>
+<p>在Objective-C运行时初始化过程中，会通过<code class="highlighter-rouge">realizeClass()</code>为类分配可读写的<code class="highlighter-rouge">class_rw_t</code>。<code class="highlighter-rouge">_class_initialize</code>会调用类的<code class="highlighter-rouge">+initialize</code>方法。以后会分析<code class="highlighter-rouge">+initialize</code>方法。</p>
+<h5 id="在当前类的缓存中查找">在当前类的缓存中查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>imp = cache_getImp(cls, sel);
+if (imp) goto done;
+</code></pre></div></div>
+<p>这个很简单，直接调用<code class="highlighter-rouge">cache_getImp</code>函数，从类的<code class="highlighter-rouge">cache</code>属性中查找，找到实现直接执行<code class="highlighter-rouge">goto done</code>。我们先看下<code class="highlighter-rouge">done</code>的实现。很简单，直接解锁，返回实现。<code class="highlighter-rouge">cache_getImp</code>也是使用汇编写的。感兴趣可以去看<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a>。其原理就是在类的cache中查找实现并返回。因为我们这个小节是模拟无缓存消息发送，所以这一步查找不到，继续下一步。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>done:
+runtimeLock.unlockRead();
+return imp;
+</code></pre></div></div>
+<h5 id="在当前类的方法列表中查找">在当前类的方法列表中查找</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// Try this class's method lists.
+{
+    Method meth = getMethodNoSuper_nolock(cls, sel);
+    if (meth) {
+        log_and_fill_cache(cls, meth-&gt;imp, sel, inst, cls);
+        imp = meth-&gt;imp;
+        goto done;
+    }
+}
+</code></pre></div></div>
+<p>通过调用<code class="highlighter-rouge">getMethodNoSuper_nolock</code>函数查找方法的结构体指针<code class="highlighter-rouge">method_t *</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static method_t *
+getMethodNoSuper_nolock(Class cls, SEL sel)
+{
+    runtimeLock.assertLocked();
+
+    assert(cls-&gt;isRealized());
+    // fixme nil cls? 
+    // fixme nil sel?
+
+    for (auto mlists = cls-&gt;data()-&gt;methods.beginLists(), 
+              end = cls-&gt;data()-&gt;methods.endLists(); 
+         mlists != end;
+         ++mlists)
+    {
+        method_t *m = search_method_list(*mlists, sel);
+        if (m) return m;
+    }
+
+    return nil;
+}
+
+</code></pre></div></div>
+<p>因为类对象中<code class="highlighter-rouge">method_array_t</code>是一个二维数组，所以循环<code class="highlighter-rouge">method_array_t</code>之后还需要<code class="highlighter-rouge">search_method_list</code>这个函数去查找对应的<code class="highlighter-rouge">method_t</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static method_t *search_method_list(const method_list_t *mlist, SEL sel)
+{
+    int methodListIsFixedUp = mlist-&gt;isFixedUp();
+    int methodListHasExpectedSize = mlist-&gt;entsize() == sizeof(method_t);
+    
+    if (__builtin_expect(methodListIsFixedUp &amp;&amp; methodListHasExpectedSize, 1)) {
+        return findMethodInSortedMethodList(sel, mlist);
+    } else {
+        // Linear search of unsorted method list
+        for (auto&amp; meth : *mlist) {
+            if (meth.name == sel) return &amp;meth;
+        }
+    }
+
+#if DEBUG
+    // sanity-check negative results
+    if (mlist-&gt;isFixedUp()) {
+        for (auto&amp; meth : *mlist) {
+            if (meth.name == sel) {
+                _objc_fatal("linear search worked when binary search did not");
+            }
+        }
+    }
+#endif
+
+    return nil;
+}
+</code></pre></div></div>
+<p>在这个方法中，会判断mlist是否是一个有序列表，如果是有序列表，会使用<code class="highlighter-rouge">findMethodInSortedMethodList</code>这个函数执行二分查找，如果无序就遍历查找。
+如果<code class="highlighter-rouge">getMethodNoSuper_nolock</code>这个方法找到了<code class="highlighter-rouge">Method</code>，通过<code class="highlighter-rouge">log_and_fill_cache</code>将实现加入缓存中。这个操作最后通过<code class="highlighter-rouge">cache_fill_nolock</code>完成。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static void cache_fill_nolock(Class cls, SEL sel, IMP imp, id receiver)
+{
+    cacheUpdateLock.assertLocked();
+
+    // Never cache before +initialize is done
+    if (!cls-&gt;isInitialized()) return;
+
+    // Make sure the entry wasn't added to the cache by some other thread 
+    // before we grabbed the cacheUpdateLock.
+    if (cache_getImp(cls, sel)) return;
+
+    cache_t *cache = getCache(cls);
+    cache_key_t key = getKey(sel);
+
+    // Use the cache as-is if it is less than 3/4 full
+    mask_t newOccupied = cache-&gt;occupied() + 1;
+    mask_t capacity = cache-&gt;capacity();
+    if (cache-&gt;isConstantEmptyCache()) {
+        // Cache is read-only. Replace it.
+        cache-&gt;reallocate(capacity, capacity ?: INIT_CACHE_SIZE);
+    }
+    else if (newOccupied &lt;= capacity / 4 * 3) {
+        // Cache is less than 3/4 full. Use it as-is.
+    }
+    else {
+        // Cache is too full. Expand it.
+        cache-&gt;expand();
+    }
+
+    // Scan for the first unused slot and insert there.
+    // There is guaranteed to be an empty slot because the 
+    // minimum size is 4 and we resized at 3/4 full.
+    bucket_t *bucket = cache-&gt;find(key, receiver);
+    if (bucket-&gt;key() == 0) cache-&gt;incrementOccupied();
+    bucket-&gt;set(key, imp);
+}
+</code></pre></div></div>
+<p>为了保证缓存有一个空的位置，当缓存中使用的容量大于总容量的3/4时，会扩充缓存，使缓存的大小翻倍。</p>
+<blockquote>
+  <p>在缓存翻倍的过程中，当前类全部的缓存都会被清空，Objective-C 出于性能的考虑不会将原有缓存的 bucket_t 拷贝到新初始化的内存中。</p>
+</blockquote>
+
+<p>缓存完成后执行<code class="highlighter-rouge">goto done</code>返回实现调用。</p>
+<h5 id="在父类的缓存和方法列表中查找">在父类的缓存和方法列表中查找。</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> // Try superclass caches and method lists.
+    {
+        unsigned attempts = unreasonableClassCount();
+        for (Class curClass = cls-&gt;superclass;
+             curClass != nil;
+             curClass = curClass-&gt;superclass)
+        {
+            // Halt if there is a cycle in the superclass chain.
+            if (--attempts == 0) {
+                _objc_fatal("Memory corruption in class list.");
+            }
+            
+            // Superclass cache.
+            imp = cache_getImp(curClass, sel);
+            if (imp) {
+                if (imp != (IMP)_objc_msgForward_impcache) {
+                    // Found the method in a superclass. Cache it in this class.
+                    log_and_fill_cache(cls, imp, sel, inst, curClass);
+                    goto done;
+                }
+                else {
+                    // Found a forward:: entry in a superclass.
+                    // Stop searching, but don't cache yet; call method 
+                    // resolver for this class first.
+                    break;
+                }
+            }
+            
+            // Superclass method list.
+            Method meth = getMethodNoSuper_nolock(curClass, sel);
+            if (meth) {
+                log_and_fill_cache(cls, meth-&gt;imp, sel, inst, curClass);
+                imp = meth-&gt;imp;
+                goto done;
+            }
+        }
+    }
+
+</code></pre></div></div>
+<p>这个过程和上面差不多，只是多了一个迭代父类的过程。和上面的区别是，在父类中找到的<code class="highlighter-rouge">_objc_msgForward_impcache</code>需要交给当前类来处理。</p>
+<h5 id="尝试方法解析器">尝试方法解析器</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> if (resolver  &amp;&amp;  !triedResolver) {
+    runtimeLock.unlockRead();
+    _class_resolveMethod(cls, sel, inst);
+    runtimeLock.read();
+    // Don't cache the result; we don't hold the lock so it may have 
+    // changed already. Re-do the search from scratch instead.
+    triedResolver = YES;
+    goto retry;
+ }
+</code></pre></div></div>
+<p>上面这部分代码调用了<code class="highlighter-rouge">_class_resolveMethod</code>来解析没有实现的方法:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void _class_resolveMethod(Class cls, SEL sel, id inst)
+{
+    if (! cls-&gt;isMetaClass()) {
+        // try [cls resolveInstanceMethod:sel]
+        _class_resolveInstanceMethod(cls, sel, inst);
+    } 
+    else {
+        // try [nonMetaClass resolveClassMethod:sel]
+        // and [cls resolveInstanceMethod:sel]
+        _class_resolveClassMethod(cls, sel, inst);
+        if (!lookUpImpOrNil(cls, sel, inst, 
+                            NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+        {
+            _class_resolveInstanceMethod(cls, sel, inst);
+        }
+    }
+}
+</code></pre></div></div>
+<p>先判断当前类是否为元类，如果为元类就调用<code class="highlighter-rouge">_class_resolveClassMethod</code>，如果不是就调用<code class="highlighter-rouge">_class_resolveInstanceMethod</code>。我们可以看到，在当前类为元类的时候，最后如果没有找到实现，还会再去调用<code class="highlighter-rouge">_class_resolveInstanceMethod</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static void _class_resolveInstanceMethod(Class cls, SEL sel, id inst)
+{
+    if (! lookUpImpOrNil(cls-&gt;ISA(), SEL_resolveInstanceMethod, cls, 
+                         NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+    {
+        // Resolver not implemented.
+        return;
+    }
+
+    BOOL (*msg)(Class, SEL, SEL) = (__typeof__(msg))objc_msgSend;
+    bool resolved = msg(cls, SEL_resolveInstanceMethod, sel);
+
+    // Cache the result (good or bad) so the resolver doesn't fire next time.
+    // +resolveInstanceMethod adds to self a.k.a. cls
+    IMP imp = lookUpImpOrNil(cls, sel, inst, 
+                             NO/*initialize*/, YES/*cache*/, NO/*resolver*/);
+
+}
+
+static void _class_resolveClassMethod(Class cls, SEL sel, id inst)
+{
+    assert(cls-&gt;isMetaClass());
+
+    if (! lookUpImpOrNil(cls, SEL_resolveClassMethod, inst, 
+                         NO/*initialize*/, YES/*cache*/, NO/*resolver*/)) 
+    {
+        // Resolver not implemented.
+        return;
+    }
+
+    BOOL (*msg)(Class, SEL, SEL) = (__typeof__(msg))objc_msgSend;
+    bool resolved = msg(_class_getNonMetaClass(cls, inst), 
+                        SEL_resolveClassMethod, sel);
+
+    // Cache the result (good or bad) so the resolver doesn't fire next time.
+    // +resolveClassMethod adds to self-&gt;ISA() a.k.a. cls
+    IMP imp = lookUpImpOrNil(cls, sel, inst, 
+                             NO/*initialize*/, YES/*cache*/, NO/*resolver*/);
+}
+</code></pre></div></div>
+<p>这两个方法其实就是判断当前类是否实现了<code class="highlighter-rouge">+ (BOOL)resolveInstanceMethod:(SEL)sel</code>和<code class="highlighter-rouge">+ (BOOL)resolveClassMethod:(SEL)sel</code>这两个方法。如果实现了用objc_msgSend去调用。在调用解析方法后还会使用<code class="highlighter-rouge">lookUpImpOrNil</code>去判断是否添加上<code class="highlighter-rouge">sel</code>对应的<code class="highlighter-rouge">IMP</code>。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IMP lookUpImpOrNil(Class cls, SEL sel, id inst, 
+                   bool initialize, bool cache, bool resolver)
+{
+    IMP imp = lookUpImpOrForward(cls, sel, inst, initialize, cache, resolver);
+    if (imp == _objc_msgForward_impcache) return nil;
+    else return imp;
+}
+</code></pre></div></div>
+<p>其中<code class="highlighter-rouge">_objc_msgForward_impcache</code>是一个汇编程序入口，作为缓存中消息转发的标记。上面这个函数就是查找有没有对应<code class="highlighter-rouge">SEL</code>的实现，不包括转发。
+调用完<code class="highlighter-rouge">_class_resolveMethod</code>后，会跳转到retry标签，重新查找。只不过不会再次调用<code class="highlighter-rouge">_class_resolveMethod</code>这个方法了，因为将<code class="highlighter-rouge">triedResolver</code>标记为了<code class="highlighter-rouge">YES</code>。</p>
+<h5 id="使用消息转发">使用消息转发</h5>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// No implementation found, and method resolver didn't help. 
+// Use forwarding.
+
+imp = (IMP)_objc_msgForward_impcache;
+cache_fill(cls, sel, imp, inst);
+</code></pre></div></div>
+<p>上面注释写的很清楚了，没有找到方法实现，并且方法解析不帮忙，只能使用转发了。将<code class="highlighter-rouge">imp</code>设置为<code class="highlighter-rouge">_objc_msgForward_impcache</code>，加入缓存。</p>
+<h6 id="转发过程">转发过程</h6>
+<p>因为我们把<code class="highlighter-rouge">_objc_msgForward_impcache</code>返回，因为<code class="highlighter-rouge">_objc_msgForward_impcache</code>是一个汇编标记。如果是<code class="highlighter-rouge">_objc_msgForward_impcache</code>这个标记，就会去调用<code class="highlighter-rouge">_objc_msgForward</code>或<code class="highlighter-rouge">_objc_msgForward_stret</code>，从这两个函数名来看，一个是有返回值的函数，一个是无返回值。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MESSENGER_START
+nop
+MESSENGER_END_SLOW
+	
+jne	__objc_msgForward_stret
+jmp	__objc_msgForward
+
+END_ENTRY __objc_msgForward_impcache
+	
+	
+ENTRY __objc_msgForward
+// Non-stret version
+
+movq	__objc_forward_handler(%rip), %r11
+jmp	*%r11
+
+END_ENTRY __objc_msgForward
+
+
+ENTRY __objc_msgForward_stret
+// Struct-return version
+
+movq	__objc_forward_stret_handler(%rip), %r11
+jmp	*%r11
+
+END_ENTRY __objc_msgForward_stret
+</code></pre></div></div>
+<p>从汇编中可以看出<code class="highlighter-rouge">_objc_msgForward</code>和<code class="highlighter-rouge">_objc_msgForward_impcache</code>分别会去调用<code class="highlighter-rouge">__objc_forward_handler</code>和<code class="highlighter-rouge">__objc_forward_stret_handler</code></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#if !__OBJC2__
+
+// Default forward handler (nil) goes to forward:: dispatch.
+void *_objc_forward_handler = nil;
+void *_objc_forward_stret_handler = nil;
+
+#else
+
+// Default forward handler halts the process.
+__attribute__((noreturn)) void 
+objc_defaultForwardHandler(id self, SEL sel)
+{
+    _objc_fatal("%c[%s %s]: unrecognized selector sent to instance %p "
+                "(no message forward handler is installed)", 
+                class_isMetaClass(object_getClass(self)) ? '+' : '-', 
+                object_getClassName(self), sel_getName(sel), self);
+}
+void *_objc_forward_handler = (void*)objc_defaultForwardHandler;
+
+#if SUPPORT_STRET
+struct stret { int i[100]; };
+__attribute__((noreturn)) struct stret 
+objc_defaultForwardStretHandler(id self, SEL sel)
+{
+    objc_defaultForwardHandler(self, sel);
+}
+void *_objc_forward_stret_handler = (void*)objc_defaultForwardStretHandler;
+#endif
+</code></pre></div></div>
+<p>从上面代码可以看出，Objc2.0之前，<code class="highlighter-rouge">_objc_forward_handler</code>和<code class="highlighter-rouge">_objc_forward_stret_handler</code>都是<code class="highlighter-rouge">nil</code>，新版本中，都是<code class="highlighter-rouge">objc_defaultForwardHandler</code>。在<code class="highlighter-rouge">objc_defaultForwardHandler</code>中，我们看到了最熟悉的那段话<code class="highlighter-rouge">unrecognized selector sent to instance</code>。
+其实handler默认就是打印日志，触发crash，要实现消息转发，就是手动替换默认的handler。<code class="highlighter-rouge">objc_setForwardHandler</code>实现替换。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>void objc_setForwardHandler(void *fwd, void *fwd_stret)
+{
+    _objc_forward_handler = fwd;
+#if SUPPORT_STRET
+    _objc_forward_stret_handler = fwd_stret;
+#endif
+}
+</code></pre></div></div>
+<p>有关对<code class="highlighter-rouge">objc_setForwardHandler</code>的调用，以及之后的消息转发调用栈，可以参考<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a>。
+我们直接来看这个过程：</p>
+<blockquote>
+  <ol>
+    <li>先调用<code class="highlighter-rouge">forwardingTargetForSelector</code>方法获取新的<code class="highlighter-rouge">target</code>作为<code class="highlighter-rouge">receiver</code>重新执行<code class="highlighter-rouge">selector</code>，如果返回的内容不合法（为<code class="highlighter-rouge">nil</code>或者跟旧<code class="highlighter-rouge">receiver</code>一样），那就进入第二步。</li>
+    <li>调用<code class="highlighter-rouge">methodSignatureForSelector</code>获取方法签名后，判断返回类型信息是否正确，再调用 <code class="highlighter-rouge">forwardInvocation</code>执行<code class="highlighter-rouge">NSInvocation</code>对象，并将结果返回。如果对象没实现<code class="highlighter-rouge">methodSignatureForSelector</code>方法，进入第三步。</li>
+    <li>调用 doesNotRecognizeSelector 方法</li>
+  </ol>
+</blockquote>
+
+<p>杨萧玉大神总结了一张图，在这里贴一下。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527064101.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a></p>
+</blockquote>
+
+<h4 id="运行结果">运行结果</h4>
+<p>通过<code class="highlighter-rouge">lookUpImpOrForward</code>，我们就完成了第一次方法调用。缓存中没有，但是在<code class="highlighter-rouge">TestObject</code>类对象方法列表中找到了对应的实现。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527056409.png" alt="" /></p>
+<h3 id="缓存命中">缓存命中</h3>
+<p>如果调用方法时，缓存命中了，那么情况就和上面不一样了。我们来看下。
+在第二次调用<code class="highlighter-rouge">sayHello</code>时，我们打个断点。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527057108.png" alt="" />
+当断点走到这里，我们在<code class="highlighter-rouge">lookUpImpOrForward</code>中打断点，然后继续运行，发现<code class="highlighter-rouge">lookUpImpOrForward</code>中的断点没有走，直接打印了结果。前面我们也说过，在调用<code class="highlighter-rouge">lookUpImpOrForward</code>这个方法前，objc_msgSend已经访问过了类的缓存，没有找到实现，才通过<code class="highlighter-rouge">class_lookupMethodAndLoadCache3</code>这个函数调用的<code class="highlighter-rouge">lookUpImpOrForward</code>。如何验证下objc_msgSend在发送消息过程中先进行了缓存查找呢？</p>
+<h4 id="验证">验证</h4>
+<p>我们在调用前，手动加入错误缓存，看会有什么情况出现。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1527060788.png" alt="" />
+在上面，第一次调用前，我们手动加入缓存。可以看到在调用<code class="highlighter-rouge">objc_msgSend</code>时会去使用错误的缓存去实现。由此可以推断，在<code class="highlighter-rouge">objc_msgSend</code>确实查找了缓存。这个可以很强力的说明了<code class="highlighter-rouge">objc_msgSend</code>会先去缓存中查找实现。</p>
+
+<h1 id="总结">总结</h1>
+<p>通过解析objc_msgSend，比较形象的了解了Objective-C中消息发送的过程，其中有一些汇编代码。虽然过程很痛苦，但是收获也是很大。虽然汇编看的似懂非懂，重点是理解这个过程。其实这个过程还是很直观的。</p>
+
+<ol>
+  <li>查找缓存</li>
+  <li>查找当前类的缓存和方法列表</li>
+  <li>查找父类的缓存和方法列表</li>
+  <li>动态方法解析</li>
+  <li>消息转发</li>
+</ol>
+
+<p>这两篇文章都比较虚，后面会来看一下，我们在工作中可以利用runtime来干些什么。毕竟实用才是王道</p>
+
+<h1 id="参考">参考</h1>
+<ul>
+  <li><a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E4%BB%8E%E6%BA%90%E4%BB%A3%E7%A0%81%E7%9C%8B%20ObjC%20%E4%B8%AD%E6%B6%88%E6%81%AF%E7%9A%84%E5%8F%91%E9%80%81.md">从源代码看 ObjC 中消息的发送</a></li>
+  <li><a href="https://www.jianshu.com/p/4d619b097e20">神经病院Objective-C Runtime住院第二天——消息发送与转发</a></li>
+  <li><a href="http://yulingtianxia.com/blog/2016/06/15/Objective-C-Message-Sending-and-Forwarding/">Objective-C 消息发送与转发机制原理</a></li>
+  <li><a href="http://www.mulle-kybernetik.com/artikel/Optimization/opti-9.html">Obj-C Optimization: The faster objc_msgSend</a></li>
+  <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html">Objective-C Runtime Programming Guide</a></li>
+</ul>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>Objective-C Runtime —— 基础数据结构</title>
+	  <link>//%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-05-14T17:48:48+00:00</pubDate>
+	  <guid>//%E5%9F%BA%E7%A1%80%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84</guid>
+	  <description><![CDATA[
+	     <p>iOS工作两年了，几乎每次面试都会被问到Runtime的东西，自己一直没有系统的学习过Runtime。正好这段时间比较闲，自己也想深入的学习下iOS。所以那就先了解下基础的东西吧。以前听到Runtime一直感觉很高深，什么黑魔法啊一堆名词，其实去了解下的话，没有那么神奇。这篇文章分三大部分来介绍Runtime，是一个循序渐进的过程。第一呢，我们需要了解Objective-C的对象模型，然后才能去理解消息发送的过程，再然后再去了解下Runtime都能干什么，毕竟如果一个技术没有落地的应用，那它就没啥价值了。这篇文章基于objc4-723源码进行分析，GitHub有一个可调试库，<a href="https://github.com/RetVal/objc-runtime">地址</a>。
+<!-- more --></p>
+<h1 id="简介">简介</h1>
+<p>Runtime是什么？官方文档第一段就给出了答案。</p>
+<blockquote>
+  <p>The Objective-C language defers as many decisions as it can from compile time and link time to runtime. Whenever possible, it does things dynamically. This means that the language requires not just a compiler, but also a runtime system to execute the compiled code. The runtime system acts as a kind of operating system for the Objective-C language; it’s what makes the language work.</p>
+</blockquote>
+
+<p>其实Runtime就是一个运行时库，我们在编译期调用的函数最终都会通过Runtime库去进行分发。Runtime的核心就是发送消息。Objective-C从三种层级和Runtime交互。</p>
+
+<ol>
+  <li>Objective-C源代码。<br />
+一般情况，我们只需编写Objective-C代码，Runtime会默默的工作。当编译包含Objective-C代码时，编译器会创建实现动态特性的数据结构和函数调用。主要的函数就是发送消息。</li>
+  <li>Runtime函数。<br />
+Runtime系统是由一系列函数和数据结构构成的，它有一系列公共接口。头文件在/usr/include/objc目录下。许多函数允许你用C函数来实现Objective-C中的功能。但是谁会去费这个力气呢？一般在写一些与其它语言桥接或者debug时会用到。在<a href="https://developer.apple.com/documentation/objectivec/objective_c_runtime">Objective-C Runtime Reference</a>中有对函数的详细解释。</li>
+  <li>NSObject方法。<br />
+在写Objective-C时，我们的对象大多数都继承自NSObject(NSProxy除外)。所以，我们可以通过NSObject的一些方法来与Runtime交互。比如：NSObject提供了一系列自省方法来查询Runtime信息。<br /></li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (BOOL)isKindOfClass:(Class)aClass;
+- (BOOL)isMemberOfClass:(Class)aClass;
+- (BOOL)conformsToProtocol:(Protocol *)aProtocol;
+- (BOOL)respondsToSelector:(SEL)aSelector;
+- (Class)superclass;
++ (Class)class OBJC_SWIFT_UNAVAILABLE("use 'aClass.self' instead");
+</code></pre></div></div>
+
+<h1 id="基础数据结构">基础数据结构</h1>
+<h2 id="类和对象的关系">类和对象的关系</h2>
+<p>由于我们在Objective-C中大多数都继承NSObject类，那我们就以NSObject为切入点来分析对象的数据结构。NSObject定义如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@interface NSObject &lt;NSObject&gt; {
+    Class isa  OBJC_ISA_AVAILABILITY;
+}
+</code></pre></div></div>
+<p>我们看到它有一个Class变量。那我们在看一下Class的定义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/// An opaque type that represents an Objective-C class.
+typedef struct objc_class *Class;
+</code></pre></div></div>
+<p>可以看到他是一个objc_class指针，那objc_class是什么呢？在objc-runtime-new.h中找到了objc_class的定义，下面是一个简化版的定义：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct objc_class : objc_object {
+    // Class ISA;
+    Class superclass;
+    cache_t cache;             // formerly cache pointer and vtable
+    class_data_bits_t bits;    // class_rw_t * plus custom rr/alloc flags
+
+    class_rw_t *data() { 
+        return bits.data();
+    }
+};
+</code></pre></div></div>
+<p>我们可以看到objc_class是一个继承objc_object的结构体，下面是一个简化版objc_object定义，在文件中，我们还发现了id的定义。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct objc_object {
+private:
+    isa_t isa;
+};
+typedef struct objc_object *id;
+</code></pre></div></div>
+<p>从上面可以看出来，id是一个objc_object类型的指针，以前一直以为id和NSObject *等价，好无知啊。从上面看NSObject和objc_object的定义很像，只不过NSObject的isa是一个Class，而objc_object的isa是一个isa_t。下面，我们来看下isa_t是一个什么东西。isa_t定义如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>union isa_t 
+{
+    isa_t() { }
+    isa_t(uintptr_t value) : bits(value) { }
+
+    Class cls;
+    uintptr_t bits;
+
+#if SUPPORT_PACKED_ISA
+
+    // extra_rc must be the MSB-most field (so it matches carry/overflow flags)
+    // nonpointer must be the LSB (fixme or get rid of it)
+    // shiftcls must occupy the same bits that a real class pointer would
+    // bits + RC_ONE is equivalent to extra_rc + 1
+    // RC_HALF is the high bit of extra_rc (i.e. half of its range)
+
+    // future expansion:
+    // uintptr_t fast_rr : 1;     // no r/r overrides
+    // uintptr_t lock : 2;        // lock for atomic property, @synch
+    // uintptr_t extraBytes : 1;  // allocated with extra bytes
+
+# if __arm64__
+#   define ISA_MASK        0x0000000ffffffff8ULL
+#   define ISA_MAGIC_MASK  0x000003f000000001ULL
+#   define ISA_MAGIC_VALUE 0x000001a000000001ULL
+    struct {
+        uintptr_t nonpointer        : 1;
+        uintptr_t has_assoc         : 1;
+        uintptr_t has_cxx_dtor      : 1;
+        uintptr_t shiftcls          : 33; // MACH_VM_MAX_ADDRESS 0x1000000000
+        uintptr_t magic             : 6;
+        uintptr_t weakly_referenced : 1;
+        uintptr_t deallocating      : 1;
+        uintptr_t has_sidetable_rc  : 1;
+        uintptr_t extra_rc          : 19;
+#       define RC_ONE   (1ULL&lt;&lt;45)
+#       define RC_HALF  (1ULL&lt;&lt;18)
+    };
+
+# elif __x86_64__
+#   define ISA_MASK        0x00007ffffffffff8ULL
+#   define ISA_MAGIC_MASK  0x001f800000000001ULL
+#   define ISA_MAGIC_VALUE 0x001d800000000001ULL
+    struct {
+        uintptr_t nonpointer        : 1;
+        uintptr_t has_assoc         : 1;
+        uintptr_t has_cxx_dtor      : 1;
+        uintptr_t shiftcls          : 44; // MACH_VM_MAX_ADDRESS 0x7fffffe00000
+        uintptr_t magic             : 6;
+        uintptr_t weakly_referenced : 1;
+        uintptr_t deallocating      : 1;
+        uintptr_t has_sidetable_rc  : 1;
+        uintptr_t extra_rc          : 8;
+#       define RC_ONE   (1ULL&lt;&lt;56)
+#       define RC_HALF  (1ULL&lt;&lt;7)
+    };
+</code></pre></div></div>
+<p>可以看出isa_t是一个union类型结构体，也就是说isa_t，cls，bits和结构体共用一块内存结构。isa总共占64为内存结构(取决于结构体)。好了，把上面的源码转换成类图就是下面这样子了。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526375149.png" alt="图片来自冰霜的blog" /></p>
+<blockquote>
+  <p>图片来自冰霜的blog</p>
+</blockquote>
+
+<p>从上面源码我们可以看出，Objective-C中的对象都是一个objc_object结构体，objc_class继承objc_object，所以在Objective-C中，<strong>类也是一个对象。</strong>在objc_class中，除了isa还有superclass，cache，bits三个变量，分别表示父类指针，方法缓存，还有一个是类的数据区域。object和NSObject都包含一个objc_class的isa。</p>
+
+<p>类的isa指向的是什么呢？这就引出了元类(meta-class)的概念。关于元类可以看这篇文章<a href="http://www.cocoawithlove.com/2010/01/what-is-meta-class-in-objective-c.html">What is a meta-class in Objective-C?</a>。</p>
+
+<p>为什么会有元类呢？</p>
+
+<p>因为在Objective-C中，对象的方法并没有存储在对象的结构体中(如果每个对象都存储自己的方法，那我们程序中无数对象就都要存储自己的方法，那内存肯定就不够用了)。当我们调用实例方法时，它通过自己的isa查找到对应的类，然后在class_data_bits_t结构体中查找对应的方法实现。每一个objc_class也有一个superClass指向自己的父类，可以查找到继承的方法。那么如果调用实例方法怎么查找呢？这时，就需要引入元类来保证无论调用类方法和实例方法，都可以以相同的方式来查找。</p>
+
+<ul>
+  <li>调用实例方法，通过对象的isa在类中获取方法。</li>
+  <li>调用类方法，通过类的isa在元类中获取方法。</li>
+</ul>
+
+<p>类和元类的关系如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526378403.png" alt="类和元类" /></p>
+<blockquote>
+  <p>图片来自<a href="http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html">Classes and metaclasses</a></p>
+</blockquote>
+
+<h2 id="isa指针">isa指针</h2>
+<h3 id="isa初始化">isa初始化</h3>
+<p>下面我们来一步步解析类结构，先从isa指针来看起。上面我们说了isa是一个isa_t的union。那么我们看下isa是如何初始化的。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inline void 
+objc_object::initInstanceIsa(Class cls, bool hasCxxDtor)
+{
+    assert(!cls-&gt;instancesRequireRawIsa());
+    assert(hasCxxDtor == cls-&gt;hasCxxDtor());
+
+    initIsa(cls, true, hasCxxDtor);
+}
+inline void 
+objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor) 
+{ 
+    assert(!isTaggedPointer()); 
+    
+    if (!nonpointer) {
+        isa.cls = cls;
+    } else {
+        assert(!DisableNonpointerIsa);
+        assert(!cls-&gt;instancesRequireRawIsa());
+
+        isa_t newisa(0);
+
+#if SUPPORT_INDEXED_ISA
+        assert(cls-&gt;classArrayIndex() &gt; 0);
+        newisa.bits = ISA_INDEX_MAGIC_VALUE;
+        // isa.magic is part of ISA_MAGIC_VALUE
+        // isa.nonpointer is part of ISA_MAGIC_VALUE
+        newisa.has_cxx_dtor = hasCxxDtor;
+        newisa.indexcls = (uintptr_t)cls-&gt;classArrayIndex();
+#else
+        newisa.bits = ISA_MAGIC_VALUE;
+        // isa.magic is part of ISA_MAGIC_VALUE
+        // isa.nonpointer is part of ISA_MAGIC_VALUE
+        newisa.has_cxx_dtor = hasCxxDtor;
+        newisa.shiftcls = (uintptr_t)cls &gt;&gt; 3;
+#endif
+        isa = newisa;
+    }
+}
+</code></pre></div></div>
+<p>这里调用initIsa的第二个参数nonpointer传入了true，所以会直接进入else。</p>
+<blockquote>
+  <p>关于SUPPORT_INDEXED_ISA应该是对watchOS的优化，所以会走到#else</p>
+</blockquote>
+
+<p>我们看下isa_t内存布局：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526463593.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
+</blockquote>
+
+<p>ISA_MAGIC_VALUE = 0x000001a000000001ULL，转换成二进制是11010000000000000000000000000000000000001，所以把ISA_MAGIC_VALUE赋值给bits，isa_t的结构如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526464002.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
+</blockquote>
+
+<p>从上图可以看出，调用<code class="highlighter-rouge">newisa.bits = ISA_MAGIC_VALUE;</code>这句代码是给nonpointer和magic进行了赋值。</p>
+<h4 id="nonpointer和magic">nonpointer和magic</h4>
+<ul>
+  <li>nonpointer表示是否开启指针优化，1表示开启指针优化，0表示一个raw isa，也就是isa_t这个union没有结构体部分，访问对象的isa直接返回cls指针。不过现在都会开启指针优化。关于这个指针优化，后面会有一篇单独的文章来分析，就是关于Tagged Pointer技术。</li>
+  <li>magic判断对象是否初始化完成，在arm64中0x16是调试器判断当前对象是真的对象还是没有初始化的空间。</li>
+</ul>
+
+<h4 id="has_cxx_dtor">has_cxx_dtor</h4>
+<p>经过<code class="highlighter-rouge">newisa.has_cxx_dtor = hasCxxDtor;</code>这段代码，会设置isa_t的has_cxx_dtor，这一位表示当前对象有 C++ 或者 ObjC 的析构器(destructor)，如果没有析构器就会快速释放内存。设置完后结构如下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526465717.png" alt="" /></p>
+<blockquote>
+  <p>图片修改自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
+</blockquote>
+
+<h4 id="shiftcls">shiftcls</h4>
+<p>通过上面两行代码设置了nonpointer，magic，has_cxx_dtor。最后一行代码把当前对象的类指针存入了isa中。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>newisa.shiftcls = (uintptr_t)cls &gt;&gt; 3;
+</code></pre></div></div>
+<p>为什么右移三位呢，引用Draveness的blog中一段话来解释下：</p>
+<blockquote>
+  <p>将当前地址右移三位的主要原因是用于将 Class 指针中无用的后三位清除减小内存的消耗，因为类的指针要按照字节（8 bits）对齐内存，其指针后三位都是没有意义的 0。</p>
+</blockquote>
+
+<blockquote>
+  <p>绝大多数机器的架构都是 <a href="https://en.wikipedia.org/wiki/Byte_addressing">byte-addressable</a> 的，但是对象的内存地址必须对齐到字节的倍数，这样可以提高代码运行的性能，在 iPhone5s 中虚拟地址为 33 位，所以用于对齐的最后三位比特为 000，我们只会用其中的 30 位来表示对象的地址。</p>
+</blockquote>
+
+<p>Objective-C中类的指针后三位也是0，在<code class="highlighter-rouge">_class_createInstanceFromZone</code>中打印类的地址可以看到最后一位不是0就是8，所以类的指针后三位是0。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526483409.png" alt="" />
+所以上面cls»3没有问题。我们尝试运行下面代码来形象说明下，理解的可以更加深刻。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *binaryWithInteger(NSUInteger decInt) {
+    NSString *string = @"";
+    NSUInteger x = decInt;
+    while (x &gt; 0) {
+        string = [[NSString stringWithFormat:@"%lu", x&amp;1] stringByAppendingString:string];
+        x = x &gt;&gt; 1;
+    }
+    return string;
+}
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        struct objc_object *object = (__bridge struct objc_object *)([NSObject new]);
+        NSLog(@"%@", binaryWithInteger(object-&gt;isa));
+        NSLog(@"%@", binaryWithInteger([NSObject class]));
+    }
+    return 0;
+}
+//打印结果
+object_isa 0000000001011101100000000000000100000000011101000000000100111001 // 补全64位
+class  100000000011101000000000100111000
+
+</code></pre></div></div>
+<p>打印出来object的isa的内容如下图所示：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526539598.png" alt="" /></p>
+<blockquote>
+  <p>图片修改自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
+</blockquote>
+
+<p>其中浅蓝色部分是类指针，和上面打印的class指针右移三位一样。这就验证了我们之前对于初始化isa是设置了nonpointer，magic，shiftclass的分析。我们也可以通过这种方式分析上面类结构那个图，验证下NSObject的isa是指向NSObject元类，NSObject元类的isa指向自己，superclass指向NSObject类对象。感兴趣的可以自己验证下，在这里就不去分析了。</p>
+<h3 id="isa总结">isa总结</h3>
+<p>下面我们总结下isa是如何初始化的。首先把ISA_MAGIC_VALUE赋值给bits设置了nonpoint和magic，然后设置has_cxx_dtor，最后把类指针右移三位设置给shiftcls。下面我们集中说一下结构体所有位的作用。</p>
+
+<p>| 位                | 代表信息                                                       |
+| —————– | ————————————————————– |
+| nonpointer        | 0 表示普通的 isa 指针，1 表示使用优化                          |
+| has_assoc         | 表示该对象是否包含 associated object，如果没有，则析构时会更快 |
+| has_cxx_dtor      | 表示该对象是否有 C++ 或 ARC 的析构函数，如果没有，则析构时更快 |
+| shiftcls          | 类的指针                                                       |
+| magic             | 固定值，用于在调试时分辨对象是否未完成初始化                   |
+| weakly_referenced | 表示该对象是否有过 weak 对象，如果没有，则析构时更快           |
+| deallocating      | 表示该对象是否正在析构                                         |
+| has_sidetable_rc  | 表示该对象的引用计数值是否过大无法存储在 isa 指针              |
+| extra_rc          | 存储引用计数值减一后的结果                                     |</p>
+<blockquote>
+  <p>解释来自http://www.sealiesoftware.com/blog/archive/2013/09/24/objc_explain_Non-pointer_isa.html</p>
+</blockquote>
+
+<h2 id="cache_t">cache_t</h2>
+<p>cache_t就比较简单了，先来看下具体代码</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct cache_t {
+    struct bucket_t *_buckets;
+    mask_t _mask;
+    mask_t _occupied;
+}
+struct bucket_t {
+private:
+    cache_key_t _key;
+    IMP _imp;
+}
+</code></pre></div></div>
+<ul>
+  <li>_buckets是一个散列表，用来存储方法缓存。bucket_t是一个key和IMP的结构体。</li>
+  <li>_mask分配bucket的总数。</li>
+  <li>_occupied表示目前占用缓存bucket的个数。</li>
+</ul>
+
+<p>Cache的作用主要是优化方法调用的性能，当对象收到消息后，会优先去Cache中查找，如果Cache中没有才会去类的方法列表找。如果没有Cache，我们每次调用方法都去类的方法找，会严重影响性能。</p>
+<h2 id="class_data_bits_t">class_data_bits_t</h2>
+<h3 id="class_data_bits_t结构体解析">class_data_bits_t结构体解析</h3>
+<p>在类的结构体中，isa我们已经解释过了，superclass是一个指向父类的指针，cache是为了加速方法调用，下面我们来分析一下class_data_bits_t，一个类的方法，属性和遵循的协议都在这个里面。我们先看下代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct class_data_bits_t {
+
+    // Values are the FAST_ flags above.
+    uintptr_t bits;
+}
+</code></pre></div></div>
+<p>它只有一个64位bits用来存储和类有关的信息。它有一个data()方法来返回class_rw_t *指针。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class_rw_t* data() {
+        return (class_rw_t *)(bits &amp; FAST_DATA_MASK);
+}
+</code></pre></div></div>
+<p>其中FAST_DATA_MASK = 0x00007ffffffffff8UL，bits与FAST_DATA_MASK位运算，取bits的[3,47]位转成class_rw_t。</p>
+<blockquote>
+  <p>在 x86_64 架构上，Mac OS 只使用了其中的 47 位来为对象分配地址。而且由于地址要按字节在内存中按字节对齐，所以掩码的后三位都是 0。</p>
+</blockquote>
+
+<p>因为class_rw_t *指针只存于[3,47]，所以后面三位可以存储当前类的的其他信息。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526550108.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
+</blockquote>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// class is a Swift class
+#define FAST_IS_SWIFT           (1UL&lt;&lt;0)
+// class or superclass has default retain/release/autorelease/retainCount/
+//   _tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference
+#define FAST_HAS_DEFAULT_RR     (1UL&lt;&lt;1)
+// class's instances requires raw isa
+#define FAST_REQUIRES_RAW_ISA   (1UL&lt;&lt;2)
+</code></pre></div></div>
+<ul>
+  <li>FAST_IS_SWIFT 用于判断 Swift 类</li>
+  <li>FAST_HAS_DEFAULT_RR 当前类或者父类含有默认的 retain/release/autorelease/retainCount/_tryRetain/_isDeallocating/retainWeakReference/allowsWeakReference 方法</li>
+  <li>FAST_REQUIRES_RAW_ISA 当前类的实例需要 raw isa</li>
+</ul>
+
+<p>当调用objc_class的data()方法也会返回class_rw_t *指针，这个方法也是调用了class_data_bits_t的data()方法。</p>
+<h3 id="class_rw_t和class_ro_t">class_rw_t和class_ro_t</h3>
+<p>我们来看下class_rw_t的结构：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct class_rw_t {
+    // Be warned that Symbolication knows the layout of this structure.
+    uint32_t flags;
+    uint32_t version;
+
+    const class_ro_t *ro;
+
+    method_array_t methods;
+    property_array_t properties;
+    protocol_array_t protocols;
+
+    Class firstSubclass;
+    Class nextSiblingClass;
+
+    char *demangledName;
+};
+</code></pre></div></div>
+<p>终于看到了和方法，属性，协议有关的东西。可以看到class_rw_t包含一个class_ro_t *指针，class_ro_t中存储了当前类在编译期就确定的属性，方法和遵守的协议。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct class_ro_t {
+    uint32_t flags;
+    uint32_t instanceStart;
+    uint32_t instanceSize;
+    uint32_t reserved;
+    const uint8_t * ivarLayout;
+    const char * name;
+    method_list_t * baseMethodList;
+    protocol_list_t * baseProtocols;
+    const ivar_list_t * ivars;
+
+    const uint8_t * weakIvarLayout;
+    property_list_t *baseProperties;
+};
+</code></pre></div></div>
+<p>下面我们说下class_rw_t和class_ro_t的关系，然后再来验证。在编译期间，类结构中的class_data_bits_t *data指向的是class_ro_t *指针，用类图来表示一下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526613551.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
+</blockquote>
+
+<p>然后在运行时会调用realizeClass方法：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ro = (const class_ro_t *)cls-&gt;data(); // 调用class_data_bits_t的data()方法，强制转换成class_ro_t *指针。
+class_rw_t *rw = (class_rw_t *)calloc(sizeof(class_rw_t), 1); 初始化class_rw_t结构体。
+rw-&gt;ro = ro; //设置ro
+rw-&gt;flags = RW_REALIZED|RW_REALIZING; //设置flag
+cls-&gt;setData(rw); // 把class_rw_t设置为class_data_bits_t旳data
+</code></pre></div></div>
+<p>经过上面的方法类图会变为下面这样的：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526607686.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
+</blockquote>
+
+<p>代码运行到这里class_rw_t中的方法，属性和协议列表是空的。这时需要调用methodizeClass方法来将类自己实现的方法(包括分类)，属性，协议加载到method，property，protocol列表中。</p>
+<h3 id="验证">验证</h3>
+<h4 id="验证类在编译期结构">验证类在编译期结构</h4>
+<p>下面我们来分析一下TestObject在初始化过程中内存的修改，下面是TestObject的代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//TestObject.h
+</span><span class="cp">#import &lt;Foundation/Foundation.h&gt;
+</span>
+<span class="k">@interface</span> <span class="nc">TestObject</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="cp">#import "TestObject.h"
+</span>
+<span class="c1">//TestObject.m
+</span><span class="k">@implementation</span> <span class="nc">TestObject</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">sayHello</span>
+<span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Hello"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+<span class="c1">//main.m
+</span><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+    <span class="err">@autoreleasepool</span> <span class="p">{</span>
+        <span class="n">Class</span> <span class="n">cls</span> <span class="o">=</span> <span class="p">[</span><span class="n">TestObject</span> <span class="nf">class</span><span class="p">];</span>
+        <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%p</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="n">cls</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>因为<strong>类在内存中的地址是在编译期确定的，只要代码不变，类在内存中的位置不变。</strong>我们先来运行一次拿到类在内存中的位置。下面是打印结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x100002750
+</code></pre></div></div>
+<p>接下来在_objc_init方法打一个断点，这个方法是运行时初始化之前调用的。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526611021.png" alt="" />
+然后在lldb中输入下面的命令：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526611896.png" alt="" />
+通过上面的图我们可以看到，在class_ro_t中，只有baseMethodList和name有值，其他的都没值。因为类里面只有一个方法，没有属性，协议什么的。下面我们看下baseMethodList里面的内容：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526612249.png" alt="" />
+我们通过$5-&gt;get(0)可以获取到一个method_t结构体，可以看到就是我们在类中的sayHello方法。</p>
+<h4 id="验证realizeclass">验证realizeClass</h4>
+<p>下面我们来验证下realizeClass的作用，该方法的主要作用就是对类进行第一次初始化，包括：</p>
+<ul>
+  <li>分配可读写内存空间</li>
+  <li>返回真正的类结构</li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static Class realizeClass(Class cls)
+</code></pre></div></div>
+<p>我们需要在这个方法打一个条件断点：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526612802.png" alt="" />
+这里使用指针相等的方式，来确定当前类是TestObject，之所以不用<code class="highlighter-rouge">[NSStringFromClass(cls) isEqualToString:@"TestObject"]</code>，是因为在这个时间点上这些方法还不能用。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526613287.png" alt="" />
+这个断点设置在这里，因为TestObject是一个正常类，所以会走else方法。运行代码时，因为每个类都会走这个方法，只有类是TestObject时才会进断点，所以可能会等会才进断点。
+在这时打印类结构，其中布局依然会是下图这样：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526613551.png" alt="" /></p>
+<blockquote>
+  <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
+</blockquote>
+
+<p>当运行完else中代码，我们再来打印下结构：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526614493.png" alt="" />
+通过打印可以看出来，当运行完else中代码，类的class_ro_t和class_rw_t都被正确设置了，但是class_rw_t中的methods，properties和protocols均未设置，这些将在<code class="highlighter-rouge">methodizeClass</code>中设置。
+下面我们就去验证下：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526615057.png" alt="" />
+当代码运行到这一行，我们再执行下面的命令：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1526615225.png" alt="" />
+在这里调用了<code class="highlighter-rouge">method_array_t</code>的<code class="highlighter-rouge">attachLists</code>方法，将<code class="highlighter-rouge">baseMethods</code>中的方法添加到<code class="highlighter-rouge">methods</code>数组之后。我们访问<code class="highlighter-rouge">methods</code>才会获取当前类的实例方法。</p>
+<h4 id="list_array_tt和method_t">list_array_tt和method_t</h4>
+<h5 id="list_array_tt">list_array_tt</h5>
+<p>当我们再看class_rw_t时，发现它们的方法，属性，协议列表分别是method_list_t，property_array_t和protocol_array_t。他们都继承自list_array_tt。list_array_tt是一个泛型结构体，用于存储一些元数据，其实是一个二维数组。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>template &lt;typename Element, typename List&gt;
+class list_array_tt {
+    struct array_t {
+        uint32_t count;
+        List* lists[0];
+    };
+}
+class method_array_t : 
+    public list_array_tt&lt;method_t, method_list_t&gt;
+</code></pre></div></div>
+<p>其中Element表示元数据类型，比如method_t，而List表示用来转载元数据的一维数组，比如method_list_t。</p>
+<blockquote>
+  <p>list_array_tt有三种状态：</p>
+  <ol>
+    <li>自身为空，可以类比为<code class="highlighter-rouge">[[]]</code></li>
+    <li>它只有一个指针，指向一个元数据的集合，可以类比为<code class="highlighter-rouge">[[1, 2]]</code></li>
+    <li>它有多个指针，指向多个元数据的集合，可以类比为<code class="highlighter-rouge">[[1, 2], [3, 4]]</code>
+当一个类刚创建时，它可能处于1，2状态，如果使用<code class="highlighter-rouge">class_addMethod</code>或者category添加方法，就会进入3状态，而且一旦进入3状态，就再也不可能回到其他状态。即使新增的方法移除掉</li>
+  </ol>
+</blockquote>
+
+<h5 id="method_t">method_t</h5>
+<p>下面来看下method_t的结构，method还是比较简单的，都比较容易理解。有关类型可以看官方文档的<a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html#//apple_ref/doc/uid/TP4000804。">Type Encodings</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct method_t {
+    SEL name; // 方法名
+    const char *types; // 类型   
+    IMP imp; // 实现指针IMP
+}
+</code></pre></div></div>
+<p>我们上面TestObject的method_t就是下面这样的：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>name = "sayHello"
+types = 0x0000000100001f9b "v16@0:8"
+imp = 0x0000000100001d10 (debug-objc`-[TestObject sayHello] at TestObject.m:11)
+</code></pre></div></div>
+<h1 id="总结">总结</h1>
+<ol>
+  <li>isa是一个union，里面包含一个结构体。每一个字段代表一段信息，其中它的类信息存在于shiftcls中。我们可以通过object_getClass()函数获取一个对象的类信息。这里需要注意一点，对象的<code class="highlighter-rouge">class</code>实例方法会调用object_getClass()方法，所以对于实例方法<code class="highlighter-rouge">object_getClass()</code>和<code class="highlighter-rouge">class</code>等价，但是同样还有一个<code class="highlighter-rouge">class</code>类方法，这个方法返回self，直接返回类对象。</li>
+  <li>类的内存中的位置在编译期间就决定了，在之后修改代码，也不会改变内存中的位置。</li>
+  <li>类的方法在编译期间存在于class_ro_t中，直到通过realizeClass方法后才放到class_rw_t指向的class_ro_t中，这样我们在运行时为class_rw_t添加方法，也不会影响类的只读结构。</li>
+  <li>在class_ro_t中的属性运行时就不会改变了，运行时添加方法，会修改class_rw_t的方法属性，对于方法添加，我们在消息发送的文章再来分析。</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> +(Class)class {
+    return self;
+ }
+ -(Class)class {
+    return object_getClass(self);
+ }
+</code></pre></div></div>
+<h1 id="参考资料">参考资料</h1>
+<ul>
+  <li><a href="https://developer.apple.com/library/content/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40008048-CH1-SW1">Objective-C Runtime Programming Guide</a></li>
+  <li><a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E4%BB%8E%20NSObject%20%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96%E4%BA%86%E8%A7%A3%20isa.md">从 NSObject 的初始化了解 isa</a></li>
+  <li><a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></li>
+  <li><a href="https://www.jianshu.com/p/9d649ce6d0b8">神经病院Objective-C Runtime入院第一天——isa和Class</a></li>
+  <li><a href="https://www.desgard.com/isa/">用 isa 承载对象的类信息</a></li>
+  <li><a href="https://bestswifter.com/runtime-category/">结合 category 工作原理分析 OC2.0 中的 runtime</a></li>
+  <li><a href="http://www.sealiesoftware.com/blog/archive/2013/09/24/objc_explain_Non-pointer_isa.html">Non-pointer isa</a></li>
+  <li><a href="http://www.cocoawithlove.com/2010/01/what-is-meta-class-in-objective-c.html">What is a meta-class in Objective-C?</a></li>
+</ul>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>iOS UI开发捷径读书笔记一——基础概念理解</title>
+	  <link>//UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0</link>
+	  <author>Freelf</author>
+	  <pubDate>2018-01-22T09:57:39+00:00</pubDate>
+	  <guid>//UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0</guid>
+	  <description><![CDATA[
+	     <p>最近读了《iOS UI开发捷径–利用Interface Builder高效、优雅地开发UI》这本书。感觉受益匪浅，记录下自己在书里面学到的东西。这里只写自己学到的新知识，并不介绍一些简单的IB知识，想要具体学习，请买书自己学习。
+<!-- more --></p>
+<h2 id="和interface-builder有关的几个重要概念">和Interface Builder有关的几个重要概念</h2>
+<p>下面介绍几个和IB有关的概念，学习下平常经常用，但是不了解的概念。</p>
+<h3 id="bundle">Bundle</h3>
+<p>这个我们在平常工作中应该经常用，比如创建IB的时候，还有获取资源路径的时候：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>let bundle = Bundle.main
+</code></pre></div></div>
+<p>Bundle有两种表现形式：</p>
+<ol>
+  <li>保存可执行代码，比如我们整个App就是一个Bundle，也就是我们经常用的main bundle。</li>
+  <li>保存需要的资源。这里的资源包括XIB，Storyboard，图片，声音等，例如我们在使用一些第三方的SDK时用的bundle。
+    <h3 id="nib">nib</h3>
+    <p>我们创建XIB时，经常调用的方法是<code class="highlighter-rouge">loadNibName</code>，为啥是loadNib，而不是loadXIB呢。这里就少说一下XIB和nib的关系了，XIB用Source Code的方式显示可以看到其实他就是个xml文件，那么nib是什么呢，通俗的解释下，nib是工程被编译后，由XIB生成的一种文件类型。这里可以看出XIB和其他资源文件的不同，XIB是需要经过编译的，编译后XIB就不存在了，而在Bundle中生成了与之对应的nib文件，而其他文件只是简单的copy到bundle中。Storyboardc和Storyboard的对应关系和XIB和nib的对应关系是一样的。</p>
+    <h2 id="使用xib应该注意的事情">使用XIB应该注意的事情</h2>
+    <p>下面看下使用XIB时，应该注意的事情。</p>
+    <h3 id="files-owner的使用">File‘s Owner的使用</h3>
+    <p>在XIB文件中，左侧文件排列上，我们可以看到有一个File‘s Owner。从字面上理解，File‘s Owner就是文件的所有者。一般我们的File‘s Owner都是VC。这里为什么介绍File‘s Owner，是因为一个XIB可以同时和UIView和UIViewController进行连线，这里依靠的就是File‘s Owner。例如，一个XIB文件中，一个view即可以和File‘s Owner连线也可以和自己的view文件连线，这样就可以在view中处理一些view的逻辑，在VC中处理业务逻辑了。使用File‘s Owner时还应该注意的地方是，当创建XIB时，调用的函数：</p>
+  </li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>func loadNibNamed(_ name: String, owner: Any?, options: [AnyHashable : Any]? = nil)
+</code></pre></div></div>
+<p>这里的owner参数，我们经常传入nil，这里要说下这个参数具体情况下应该传入什么，</p>
+<ol>
+  <li>当XIB没有设置File‘s Owner那么这里传入nil</li>
+  <li>当XIB设置File‘s Owner并且对应类就是使用XIB的这个类，这里可以传入self或者nil</li>
+  <li>当XIB设置的File‘s Owner不是当前使用该XIB文件的类，这里就必须传入与File‘s Owner相对应的类。
+    <h3 id="uinib的使用">UINib的使用</h3>
+    <p>加载XIB文件的方式有以下两种：</p>
+  </li>
+  <li><code class="highlighter-rouge">func loadNibNamed(_ name: String, owner: Any?, options: [AnyHashable : Any]? = nil)</code></li>
+  <li><code class="highlighter-rouge">open func instantiate(withOwner ownerOrNil: Any?, options optionsOrNil: [AnyHashable : Any]? = nil) -&gt; [Any]</code>
+这两种方法有啥不同的呢，第一种是频繁的加载XIB文件，第二种是利用UINib把XIB文件加载到内存中，然后从内存中加载。所以当我们需要频繁使用XIB文件时要用第二种，但只用一次时，应该用第一种。
+    <h3 id="uiviewcontroller和xib的使用">UIViewController和XIB的使用</h3>
+    <p>当我们创建VC时如果没有勾选also create XIB，后面又想使用XIB，我们就应该手动创建XIB，然后进行关联，关联的时候，我们需要把view和VC的view属性进行连线，否则程序会crash。</p>
+    <h2 id="xib和autolayout">XIB和AutoLayout</h2>
+    <p>这里不具体介绍AutoLayout，只介绍几个属性，新学到的。</p>
+    <h3 id="content-compression-resistance">Content Compression Resistance</h3>
+    <p>这个属性是指一个视图保护其内容完整性的能力，系数越大，改视图保护内容完整性越强，内容越不容易被压缩或者裁剪。</p>
+    <h3 id="content-hugging">Content Hugging</h3>
+    <p>这个属性是指一个视图保护它的尺寸与其内容尺寸相匹配的能力，系数越大，匹配能力越强。</p>
+    <h3 id="在xib中scrollview使用autolayout">在XIB中ScrollView使用AutoLayout</h3>
+    <p>ScrollView使用AutoLayout和其他view不同，我们需要设置它的子view大小明确，因为ScrollView需要计算自己的contentSize。所以原则是他的子view的约束需要可以推算出ScrollView的contentSize。</p>
+    <h2 id="storyboard使用">Storyboard使用</h2>
+    <p>Storyboard平常的使用和XIB差不多，但是Storyboard比XIB多了Extra View，segue和object的使用，这里我们主要介绍extra view，segue和object的使用。</p>
+    <h3 id="extra-view">Extra View</h3>
+    <p>我们通常会有这样的需求，一个VC在特定的情况下或者固定的操作后显示一个View，比如，没有网络的时候的提示页面。SB允许在Scene中添加Extra View来完成这些事情。下面介绍如何使用。我们拖一个View到First Responder和exit中间，如图所示：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1516606117.png" alt="" />
+然后在这个View上面添加无网络时展示的控件，添加的控件可以直接拖到VC中进行连线，还可以和自定义的UIView类进行关联，封装使用。我们将这个View和VC进行连线，然后在VC中添加入下代码：</p>
+  </li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class ViewController: UIViewController {
+
+    @IBOutlet weak var reachabilityView: UIView!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let noReachability = true
+        if noReachability {
+            reachabilityView.center = view.center
+            self.view.addSubview(reachabilityView)
+        }
+    }
+｝
+</code></pre></div></div>
+<h2 id="预告">预告</h2>
+<p>Segue、Storyboard reference、Object其实可以单独写篇文章，这里先暂时不介绍了，等写完文章附上地址。</p>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>读Objective-C高级编程笔记一——引用计数</title>
+	  <link>//%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0</link>
+	  <author>Freelf</author>
+	  <pubDate>2017-08-15T23:27:57+00:00</pubDate>
+	  <guid>//%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0</guid>
+	  <description><![CDATA[
+	     <p>最近读了《Objective-C高级编程》这本进阶书：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503026660.png" alt="Objective-C高级编程" />。
+这本书有三章，我们先来介绍第一章。可以从下图看下第一章的整体结构。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503025584.png" alt="内存管理" />。
+<!-- more -->
+本篇是第一篇，来写下iOS的内存管理，其实iOS的内存管理无论是ARC还是MRC都是通过引用计数来管理的。每个对象都有一个<code class="highlighter-rouge">retainCount </code>的属性。当一个对象的<code class="highlighter-rouge">retainCount </code>为0，就说明没有地方使用该对象了，可以释放了。
+我们先看MRC，再看ARC，因为ARC其实是建立在MRC之上的，只是是编译器在合适的地方代替我们插入了内存管理的代码。</p>
+<h3 id="引用计数">引用计数</h3>
+<p>前面我们一直在说引用计数，到底什么是引用计数呢？下图可以表达这个概念。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503068536.png" alt="照明管理" />
+在Objective-C中，对象就相当于上图中的灯。使用计数功能计算需要照明的人数，办公室的灯得到了很好的管理。同样，使用引用计数功能，对象也能够得到很好的管理，这就是Objective-C的内存管理，如下图所示：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503071113.png" alt="引用计数的内存管理" /></p>
+<h3 id="内存管理思考方式">内存管理思考方式</h3>
+<p>下面我们来了解下引用计数式的内存管理思考方式。</p>
+<ul>
+  <li>自己生成的对象，自己持有。</li>
+  <li>非自己生成的对象，自己也能持有。</li>
+  <li>不再需要自己持有的对象时释放。</li>
+  <li>非自己持有的对象不能释放。
+其实引用计数式的内存管理思考方式仅此而已。除了上文提到的“生成”，“持有”，“释放”三种对对象的操作方式，还有一种“废弃”方式，各个词表示的Objective-C方法如下表：
+| 对象操作                     | Objective-C方法
+| 生成并持有对象         | alloc/new/copy/mutableCopy方法
+| 持有对象                     | retain方法
+| 释放对象                     | release方法
+| 废弃对象                     | dealloc方法
+这些有关Objective-C内存管理的方法，实际上不包括在该语言中，而是包含在Cocoa框架中用于iOS，OS X应用开发。Cocoa中Foundation框架库的<code class="highlighter-rouge">NSObject</code>类负责内存管理的职责。Objective-C内存管理的alloc/retain/release/dealloc方法分别指代NSObject累的alloc方法，retain方法，release方法和dealloc方法。
+下面我们来详细了解下上面提到的内存管理思考方式。
+    <h4 id="自己生成的对象自己持有">自己生成的对象自己持有</h4>
+    <p>使用以下名称开头的方法名意味着自己生成并持有对象：</p>
+  </li>
+  <li>alloc</li>
+  <li>new</li>
+  <li>copy</li>
+  <li>mutableCopy
+例如：
+  id obj = [[NSObject alloc]init]
+这句话就自己生成并持有了对象，另外使用NSObject的new类也能自己生成并持有对象。<code class="highlighter-rouge">[NSObject new]</code>和<code class="highlighter-rouge">[[NSObject alloc]init]</code>是完全一样的。
+同样的copy和mutableCopy方法也可以自己生成并持有对象。两者的差异就是copy生成的是不可变对象，而mutableCopy生成的是可变对象。
+另外，下列名称也意味着自己生成并持有对象：</li>
+  <li>allocMyObject</li>
+  <li>newThisObject</li>
+  <li>copyThis</li>
+  <li>mutableCopyYourObject
+但是对象一下名称，即使使用alloc/new/copy/mutableCopy名称开头，也并不属于同一类方法。</li>
+  <li>allocate</li>
+  <li>newer</li>
+  <li>copying</li>
+  <li>mutableCopyed
+反正只要记得上面说的几个方法是自己生成并持有对象就好。
+    <h4 id="非自己生成的对象自己也能持有">非自己生成的对象自己也能持有</h4>
+    <p>因为是非自己生成并持有，所以该对象不是自己生成的，所以我们来使用上面说的几个方法外的方法试试。非常可以说明问题的就是NSMutableArray的array类方法：
+  id obj = [NSMutableArray array];
+上面代码中，其实obj是不持有生成的这个对象的，记得以前我还傻傻的以为这个和上面的一样会持有对象，结果一运行程序，直接崩溃了。我们可以使用retain方法来持有这个对象。</p>
+    <h4 id="不再需要自己持有的对象时释放">不再需要自己持有的对象时释放</h4>
+    <p>自己持有的对象，一旦不再需要，持有者有义务释放，使用release方法释放。无论是自己生成并持有的对象，还是通过retain方法持有的对象，在不需要时都需要通过release方法释放。下面我们来看下通过某个方法生成对象并将其return给调用方和调用<code class="highlighter-rouge">[NSMutableArray array] </code>方法取得对象的区别：</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(id)allocObject
+  {
+     id obj = [[NSObject alloc]init];
+     return obj;
+  }
+</code></pre></div>    </div>
+    <p>像上面这样，原封不动的返回生成并持有的对象，就能让调用方也持有该对象。和前面说的自己生成并持有没区别，为什么<code class="highlighter-rouge">[NSMutableArray array] </code>不行呢，下面我们来看下具体实现：</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(id)object
+	{
+	  id obj = [[NSObject alloc]init];
+	  [obj autorelease];
+	  return obj;
+	}
+</code></pre></div></div>
+<p>因为在这个里面使用了autorelease方法，使用这个方法，可以使取得的对象存在，但是自己并不持有该对象。autorelease提供了使对象在超出制定生存范围时能够自动并正确的释放，后面我们会对autorelease进行详细的说明。下图是autorelease和release的区别:
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503112187.png" alt="autorelease和release的区别" /></p>
+<h4 id="无法释放非自己持有的对象">无法释放非自己持有的对象</h4>
+<p>这点就非常好理解了，不是自己持有的对象自己干嘛要去释放，像下面代码就会导致程序崩溃：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id obj = [ [NSObject alloc]init];
+[obj release];
+[obj release];
+</code></pre></div></div>
+<p>在执行过一次release之后，obj指向的对象已经释放，再执行release肯定要访问到对象，访问已经废弃的对象时就boom了。
+上面的四项内容就是内存管理的思考方式，下面我们来介绍下操作引用计数的函数实现。</p>
+<h3 id="allocretainreleasedealloc实现">alloc/retain/release/dealloc实现</h3>
+<h4 id="gnustep的实现">GNUstep的实现</h4>
+<p>GNUstep是Cocoa框架的互换框架。所以理解了GNUstep就相当于理解了Cocoa框架的实现。
+我们先来看下alloc方法的实现：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+(id)alloc
+	{
+	       return [self allocWithZone:NSDefaultMallocZone()];
+	}
+	+(id)allocWithZone:(NSZone *)z
+	{
+	      return NSAllocateObject(self,0,z);
+	}
+</code></pre></div></div>
+<p>通过上面两个方法，我们看到其实最根本调用的是NSAllocateObject这个方法。下面我们来看看NSAllocateObject这个方法的实现：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct obj_layout
+	{
+	    NSUInteger retained;
+	}
+	
+	inline id NSAllocateObject(Class aClass,NSUInteger extraBytes,NSZone *zone)
+	{
+	     int size = 计算容纳对象大小的size；
+	     id new = NSZoneMalloc(zone,size);//分配对象内存
+	     memset(new,0,size);//初始化内存
+	     new = (id) &amp;  ((struce obj_layout *) new)[1];
+	}
+</code></pre></div></div>
+<p>NSZone是为了防止内存碎片化引入的结构，想要了解更多，那只能自己看书了，这里我们只介绍alloc方法操作引用计数的实现。
+下面是去掉NSZone之后的源代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>struct obj_layout
+	{
+	    NSUInteger retained;
+	}
+	+(id)alloc
+	{
+	     int size = sizeof(struct obj_layout) + 对象的大小；
+	     struct obj_layout *p = (struct obj_layout *)calloc(1,size); //将引用计数写入对象内存头部
+	     return (id)(p + 1); //返回对象的初始地址
+	}
+</code></pre></div></div>
+<p>alloc方法用struct <code class="highlighter-rouge">obj_layout</code>中的retained来保存引用计数，并将其写入对象内存头部，然后返回对象的初始地址。如下图所示：
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503327298.png" alt="alloc返回对象的内存图" />
+对象的引用计数可以通过retainCount来获得：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id obj = [ [NSObject alloc]init];
+	NSLog(@"retainCount = %d",[obj retainCount]);
+	//显示为retainCount = 1；
+执行alloc后对象的retainCount为1，下面我们来用GNUstep来看下原因：
+	-(NSUInteger)retainCount
+	{
+	      return NSExtraRefCount(self) + 1;
+	}
+	inline NSUInteger NSExtraRefCount(id anObject)
+	{
+	    return ((struct obj_layout *)anObject)[-1].retained;  //这里这个-1，我是这么理解的，先把对象转成obj_layout类型，然后减去1个obj_layout指针大小，正好就指向obj_layout。下面的图更加明确的表示：
+	}
+</code></pre></div></div>
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/1505032536.png" alt="通过对象访问头像内存头部" />
+因为分配时全部为0，所以retained为0.由 NSExtraRefCount(self)  + 1得出，retainCount为1.可以推测出，retain方法其实是让retained变量+1，二release方法使retained变量减1。
+下面我们正好来看下retain方法的GNUstep实现：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(id)retain
+	{
+	    NSIncrementExtraRefCount(self);
+	    return self;
+	}
+	inline void  NSIncrementExtraRefCount(id anObject)
+	{
+	    if(((struct obj_layout *)anObject)[-1].reatined == UINT_MAX - 1)
+	        [NSException raise: NSInternalInconsistencyException format:@"NSIncrementExtraRefCount() asked to increment too far"];
+	    ((struct obj_layout *)anObject)[-1].retained++;
+	}
+</code></pre></div></div>
+<p>虽然写入了当retained变量超出最大值是发生的异常代码，但是实际上执行的是retained变量+1的代码。同样，release实例方法执行-1的代码，并且当引用计数变量为0时执行dealloc方法，下面我们来看下release的实现：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(void)release
+	{
+	    if(NSDecrementExtraRefCountWasZero(self))
+	        [self dealloc]
+	}
+	BOOL  NSDecrementExtraRefCountWasZero(id anObject)
+	{
+	    if(((struct obj_layout *)anObject)[-1].retained == 0){
+	        return YES;
+	    }else{
+	        ((struct obj_layout *)anObject)[-1].retained--;
+	        return NO;
+	    }
+	}
+</code></pre></div></div>
+<p>和预想一样，release方法就是当retained变量大于0时减一，等于0时调用dealloc方法，废弃对象。（这里需要注意，我们调用retainedCount时，其实是retained变量+1，如果不是这样的话，那么会出现alloc后需要调用两次release才能dealloc）。下面我们来看下dealloc的实现：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(void)dealloc
+	{
+	    NSDeallocateObject(self);
+	}
+	inline void NSDeallocateObject(id anObject)
+	{
+	    struct obj_layout *o =  &amp;((struct obj_layout *)anObject)[-1];
+	    free(0);
+	}
+</code></pre></div></div>
+<p>以上就是alloc/retain/release/dealloc在GNUstep中的实现。具体的总结：</p>
+<ul>
+  <li>在OC对象中存有引用计数这一整数值。</li>
+  <li>调用alloc和retain方法引用计数+1.</li>
+  <li>调用release方法引用计数-1.</li>
+  <li>当引用计数值为0时，调用dealloc方法释放对象。
+    <h4 id="苹果的实现">苹果的实现</h4>
+    <p>因为NSObject类的源代码没有公开，所以我们利用lldb大概追溯其大概的实现过程。在alloc方法上打断点，可以看到程序的执行顺序如下：</p>
+    <ol>
+      <li>+alloc；</li>
+      <li>+allocWithZone</li>
+      <li>class_createInstance</li>
+      <li>calloc
+alloc方法首先调用allocWithZone:方法，这个和GNUstep是相同的。后面调用class_createInstance方法，这个方法可以在objc4的runtime/objc-runtime-new.mm中找到实现。然后再调用calloc来分配内存块。
+retainCount/retain/release又是怎样实现的呢，我们用上面同样的方法可以看到retainCount/retain/release所执行的函数：</li>
+    </ol>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-retainCount
+	__CFDoExternRefOperation
+	CFBasicHashGetCountOfKey
+	
+	-retain
+	__CFDoExternRefOperation
+	CFBasicHashAddValue
+	
+	-release
+	__CFDoExternRefOperation
+	CFBasicHashRemoveValue
+	CFBasicHashRemoveValue返回0事，-release调用dealloc
+</code></pre></div></div>
+<p>通过看上面三个方法，都调用了__CFDoExternRefOperation函数，这个函数的实现我们可以在CFRuntime.c中找到实现，下面是简化后的__CFDoExternRefOperation函数实现：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>int __CFDoExternRefOperation(uintptr_t op,id obj)
+	{
+	    CFBasicHashRef table = 取得对象的散列表(obj)；
+	    int count;
+	    switch(op){
+	        case OPERATION_retainCount:
+	        count = CFBasicHashGetCountOfKey(table,obj);
+	        return count;
+	
+	        case OPERATION_retain:
+	        CFBasicHashAddValue(table,obj);
+	        return obj;
+	
+	        case OPERATION_release:
+	        cont = CFBasicHashRemoveValue(table,obj);
+	        return count == 0;
+	    }
+	}
+</code></pre></div></div>
+<p>__CFDoExternRefOperation函数按retainCount/retain/release操作进行分发，调用不同的函数，我们可以推断，NSObject类的retainCount/retain/release实例方法也许就如下面所示：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(NSUInteger)retainCount
+	{
+	    return (NSUInteger) \_\_CFDoExternRefOperation(OPERATION_retainCount,self);
+	}
+	-(id)retain
+	{
+	    return (id) \_\_CFDoExternRefOperation(OPERATION_retain,self);
+	}
+	-(void)release
+	{
+	    return  \_\_CFDoExternRefOperation(OPERATION_release,self);
+	}
+
+</code></pre></div></div>
+<p>可以从__CFDoExternRefOperation函数实现来看，苹果的实现大概就是采用散列表来管理引用计数。
+<img src="http://ohg2bgicd.bkt.clouddn.com/1503473841.png" alt="通过散列表管理引用计数" />
+GNUstep将引用计数保存在对象占用内存块头部的变量中，而苹果则是保存在引用计数表中。
+通过内存块头部管理引用计数的好处：</p>
+<ul>
+  <li>写的代码少。</li>
+  <li>能统一管理引用计数和对象内存块。
+通过散列表管理引用计数的好处如下：</li>
+  <li>对象内存块的分配不需要考虑内存块头部。</li>
+  <li>引用计数表中存有内存块地址，可以从各个记录追溯到对象的内存块。
+追溯内存块在调试时有着很重要的作用，即使出现故障导致对象占用的内存块损坏，只要引用计数表没坏，就可以确定内存块的位置。另外，再利用工具检测内存泄漏时，引用计数表的各记录也有助于检测个对象的持有者是否存在。
+    <h3 id="autorelease">autorelease</h3>
+    <p>说到内存管理，就不得不提autorelease，autorelease看上去很像ARC，但实际上它更类似于C语言中自动变量的特性，当自动变量超过其作用域，该自动变量就会被自动废弃。autorelease会像C语言的自动变量那样来对待对象的实例。当超出其作用域时，对象实例的release方法被调用。另外，同C语言的自动变量不同的是，我们可以设定变量的作用域。
+autorelease的具体使用方法如下：</p>
+    <ol>
+      <li>生成并持有NSAutoreleasePool对象；</li>
+      <li>调用已分配对象的autorelease实例方法；</li>
+      <li>废弃NSAutoreleasePool对象；
+<img src="http://ohg2bgicd.bkt.clouddn.com/1504753622.png" alt="NSAutoreleasePool对象的生命周期" />
+NSAutoreleasePool对象的生存周期就相当于C语言变量的作用域，对于所有吊用过autorelease方法的对象，在废弃NSAutoreleasePool对象时，都将调用release方法。在Cocoa框架中，NSRunLoop对NSAutoreleasePool对象进行生成，持有和废弃处理。因此，我们不一定非得使用NSAutoreleasePool对象来进行开发工作。
+尽管如此，但是在大量产生autorelease对象时，只要不废弃NSAutoreleasePool对象，那么生成的对象就不会释放，因此有时会产生内存不足的现象。典型的例子就是读入大量图像的同时改变其尺寸。图像文件读入到NSData对象，并从中生成UIImage对象，改变对象尺寸后生成新的UIImage对象。这种情况下，就会大量产生autorelease的对象。
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for(int i = 0; i &lt; 图像数；i++){
+   //读入图像大量产生autorelease对象
+  }
+像上面这种情况，有必要在适当的地方生成，持有或废弃NSAutoreleasePool对象。
+  for(int i = 0;i &lt; 图像数；i++){
+   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc]init];
+   //读入图像
+   [pool drain];
+   通过drain，autorelease的对象被遗弃release。
+  }
+</code></pre></div>        </div>
+        <p>另外，Cocoa框架中有很多类方法用于返回autorelease对象，比如NSMutableArray类的arrayWithCapacity类方法。
+<code class="highlighter-rouge">id array = [NSMutableArray arrayWithCapacity:1];</code>
+上面的代码等同于一下的源代码。
+<code class="highlighter-rouge">id array = [[[NSMutableArray array]initWithCapacity:1]autorelease];</code></p>
+        <h3 id="autorelease实现">autorelease实现</h3>
+        <h4 id="gnustep实现">GNUstep实现</h4>
+        <p>我们先来看下GNUstep的实现:</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(id)autorelease
+  {
+   [NSAutoreleasePool addObject:self];
+  }
+</code></pre></div>        </div>
+        <p>autorelease方法本质就是调用NSAutoreleasePool的addObject类方法。下面我们来看下NSAutoreleasePool类的实现，由于NSAutoreleasePool类的源代码比较复杂，我们假象一个简化的源代码进行说明。</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+（void）addObject:（id）anObj
+  {
+   NSAutoreleasePool *pool = 取得正在使用的NSAutoreleasePool对象；
+   if（pool ！= nil）{
+       [pool addObject:anObj];
+   }else{
+       NSLog（@"NSAutoreleasePool对象非存在在状态下吊用autorelease"）;
+   }
+  }
+</code></pre></div>        </div>
+        <p>addObject类方法调用正在使用的NSAutoreleasePool对象的addObject实例方法。如果嵌套生成或持有NSAutoreleasePool对象，理所当然会使用最内侧的对象。下面来看下addObject实例方法的实现。</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-（void）addObject：（id）anObj
+  {
+   [array addObject:anObj];
+  }
+</code></pre></div>        </div>
+        <p>实际的GNUstep使用的是连接列表，同在NSMutableArray对象中添加对象是一样的。
+如果调用NSObject类的autorelease实例方法，该对象被追加到正在使用的NSAutoreleasePool对象中的数组里。
+下面我们看下drain方法废弃正在使用NSAutoreleasePool对象的过程。</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-（void）drain
+  {
+   [self dealloc];
+  }
+  -（void）dealloc
+  {
+   [self emptyPool];
+   [array release];
+  }
+  -（void）emptyPool
+  {
+   for(id obj in array){
+       [obj release];
+   }
+  }
+</code></pre></div>        </div>
+        <p>虽然调用了好几个方法，但可以确定对于数组中的所有对象都调用了release方法。</p>
+        <h4 id="苹果的实现-1">苹果的实现</h4>
+        <p>可以通过objc4的runtime/NSObject.mm来看苹果的autorelease实现。
+```
+class AutoreleasePoolPage
+  {
+   static inline void *push()
+   {
+       相当于生成或持有NSAutoreleasePool类对象；
+   }
+   static inline void pop(void *token) 
+   {
+       相当于废弃NSAutoreleasePool类对象；
+       releaseAll();
+   }
+   static inline id autorelease(id obj)
+   {
+       这个相当于NSAutoreleasePool类的addObject类方法
+       AutoreleasePoolPage *autoreleasePoolPage = 取得正在使用的AutoreleasePoolPage实例；
+       autoreleasePoolPage-&gt;add(obj)；
+   }
+   id *add(id obj)
+   {
+       将对象追加到内部数组中；
+   }
+   void releaseAll()
+   {
+       调用内部数组中对象的release方法；
+   }
+  };
+  void *
+  objc_autoreleasePoolPush(void)
+  {
+   return AutoreleasePoolPage::push();
+  }
+  void
+  objc_autoreleasePoolPop(void *ctxt)
+  {
+   AutoreleasePoolPage::pop(ctxt);
+  }</p>
+      </li>
+    </ol>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>我们可以看下我们再使用NSAutoreleasePool时对应代码的实现：
+</code></pre></div></div>
+<p>NSAutoreleasePool <em>pool = [[NSAutoreleasePool alloc]init];
+	/</em>等同于objc_autoreleasePoolPush()<em>/
+	id obj = [[NSObject alloc]init];
+	[obj autorelease];
+	/</em>等同于objc_autorelease()<em>/
+	[NSAutoreleasePool showPools];
+	//将NSAutoreleasePool的状况输出到控制台。
+	[pool drain];
+	/</em>等同于objc_autoreleasePoolPop(pool)*/</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>另外， 不能autorelease NSAutoreleasePool对象。
+### ARC
+实际上“引用计数式内存管理”的本质在ARC中并没有改变，ARC只是自动帮助我们处理了“引用计数”的相关部分。所以MRC的内存管理思考方式在ARC下也是可行的。只是在源代码的记述方法上稍有不同。想要了解这些变化就需要理解ARC中追加的所有权声明（其实就是所有权修饰符）。
+#### 所有权修饰符
+Objective-C中为了处理对象，可将变量类型定义为id类型或各种对象类型。所谓对象类型就是指向NSObject这样的Objective-C类的之神，例如“NSObject \*”。id类型用于隐藏对象类型的类名部分，相当于C语言中常用的void\*.
+ARC中，id类型和对象类型同C语言其他类型不同，其类型必须附加所有权修饰符，一共有四种：
+- \_\_strong
+- \_\_weak
+- \_\_unsafe\_\_unretained
+- \_\_autorelease
+下面分别来看下这四种修饰符。
+##### \_\_strong
+ARC中所有id类型和对象类型的默认修饰符是\_\_strong。下面通过代码来看下\_\_strong的应用：
+</code></pre></div></div>
+<p>id obj = [[NSObject alloc]init];
+	id __strong obj = [[NSObject alloc]init];
+	//这两种在ARC下是等效的。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>上面两种写法看不出\_\_strong有什么作用，我们通过下面的代码来看下。
+	
+```{
+	    //自己生成并持有对象
+	    id __strong obj = [[NSObject alloc]init];
+	}
+	    //超出作用域，强引用失效，自动释放自己持有的对象
+	//上面的代码和下面在MRC环境的代码等效
+	{
+	    id obj = [[NSObject alloc]init];
+	    [obj release];
+	}
+
+</code></pre></div></div>
+<p>如上面的代码所示，附有__strong修饰符的变量obj在超出其变量作用域时，强引用失效，释放其持有的对象。所以__strong的作用就是持有对象，持有的意思就是会导致对象的引用计数+1，当变量指向其他对象或超过作用域后，会释放其持有的对象，对象的引用计数-1。所以通过__strong修饰符，不必再次键入retain或者release，完美的满足了内存管理的思考方式。</p>
+<h5 id="__weak">__weak</h5>
+<p>看起来好像通过__strong就能完美的进行内存管理，但是遗憾的是，仅仅通过__strong是不能解决有些重大问题的，比如“循环引用”，什么时候会循环引用呢，我们举个例子：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">Test</span> <span class="p">:</span> <span class="nc">NSObject</span>
+	<span class="p">{</span>
+	    <span class="n">id</span> <span class="n">__strong</span> <span class="n">obj_</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setObject</span><span class="o">:</span><span class="p">(</span><span class="n">id</span> <span class="n">__strong</span><span class="p">)</span><span class="n">obj</span><span class="p">;</span>
+	<span class="k">@end</span>
+	<span class="k">@implementation</span> <span class="nc">Test</span>
+	<span class="k">-</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">init</span>
+	<span class="p">{</span>
+	    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+	    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setObject</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">obj</span>
+	<span class="p">{</span>
+	    <span class="n">obj_</span> <span class="o">=</span> <span class="n">obj</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">@end</span>
+<span class="err">以下的代码就会发生循环引用：</span>
+	<span class="p">{</span>
+	    <span class="n">id</span> <span class="n">test0</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Test</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span><span class="c1">//test0持有对象A
+</span>	   <span class="n">id</span> <span class="n">test1</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Test</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span><span class="c1">//test1持有对象B
+</span>	         <span class="p">[</span><span class="n">test0</span> <span class="nf">setObject</span><span class="p">:</span><span class="n">test1</span><span class="p">];</span><span class="c1">//对象B的实例变量持有对象A
+</span>	         <span class="p">[</span><span class="n">test1</span> <span class="nf">setObject</span><span class="p">:</span><span class="n">test0</span><span class="p">];</span><span class="c1">//对象A的实例变量持有对象B
+</span>	<span class="p">}</span>   
+	<span class="c1">//超出作用域test0释放对象A的引用，此时持有对象A的是对象B的实例变量
+</span>	<span class="c1">//test1释放对对象B的引用，此时持有对象B的是对象A的实例变量
+</span>	<span class="c1">//这样就发生了内存泄露（这里解释下内存泄露，内存泄露就是本该释放的对象没有释放，还占用着内存。记得刚开始学习的时候看到内存泄露这个名词不明白什么是内存泄露。）
+</span>	<span class="err">```</span>
+<span class="err">像上面这种是两个对象间的循环引用，也可能会出现自己对自己的循环引用如下面的代码：</span>
+</code></pre></div></div>
+<p>id test = [[Test alloc]init];
+[test setObject:test];</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>讲了这么多问题，那到底怎么才能避免循环引用呢，看到\_\_strong就会意识到还有\_\_weak，和strong相对应，\_\_weak不持有对象，也就是不会导致对象的引用计数+1。来看下面的代码：
+```id __weak obj = [[NSObject alloc]init];
+//使用weak修饰的变量不持有对象
+	//对象立即被释放。
+</code></pre></div></div>
+<p>我们可以通过__weak来改变上面的循环引用问题，就是用下面的这种方式来声明实例变量</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+	   id __weak obj_;
+}
+</code></pre></div></div>
+<p>__weak还有一个优点，就是持有的对象被废弃，变量自动会置为nil，像这样可以通过使用__weak来避免循环应用，还可以通过检查附有__weak修饰符变量是否为nil来判断对象是否被废弃。（PS: __weak只能在iOS4以上版本使用，在iOS4以下版本用__unsafe__unretain代替）。</p>
+<h5 id="__unsafe_unretained">__unsafe_unretained</h5>
+<p>__unsafe_unretained和__weak很类似，都不会导致对象的引用计数+1，下面我们看看他们两个有什么不同。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id __unsafe_unretained obj1;
+	        {
+	            id __strong ojb0 = [[NSObject alloc]init];//obj0持有对象
+	            obj1 = ojb0;//obj1既不持有对象强引用也不持有弱引用
+	            NSLog(@"A:%@",obj1);
+	        }
+	    //超出obj0作用域，强引用失效，对象无持有者，废弃对象
+	        NSLog(@"B:%@",obj1);
+	    //打印结果
+	    A:&lt;NSObject: 0x100203700&gt;
+	    B:&lt;NSObject: 0x100203700&gt;
+	    //obj1所指向的对象已经废弃，所以发生野指针。
+</code></pre></div></div>
+<p>所以使用__unsafe_unretained和__weak的区别就是某些情况下会发生野指针。那么在什么时候使用__unsafe_unretained呢，就上上面说的一样，在iOS4之前使用，不过这种情况已经很少啦。</p>
+<h5 id="__autoreleasing">__autoreleasing</h5>
+<p>我们知道在ARC有效时不能调用对象的autorelease实例方法，也不能使用NSAutoreleasePool类，这样一来，虽然autorelease无法直接使用，但实际上，ARC有效时autorelease功能是起作用的。下面通过代码来看下如何在ARC下使用autorelease。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@autoreleasepool {
+	            id __autoreleasing obj = [[NSObject alloc]init];
+	        }
+</code></pre></div></div>
+<p><img src="http://ohg2bgicd.bkt.clouddn.com/1504884931.png" alt="ARC和MRC比较" />
+从上图可以看到这两种是等价的，也就是我们可以在ARC中使用@ autoreleasepool和__autoreleasing来使用autorelease。
+但是显式的附加__autoreleasing和显示的附加__strong一样罕见。我们通过实例来看下为什么非显式的使用__autoreleasing修饰符也可以。</p>
+<ol>
+  <li>如果不是以alloc/new/copy/mutableCopy方法名开头的创建对象的方法，那么自动将返回值的对象注册到autoreleasepool。（ps：init方法返回值对象不注册到autoreleasepool）。比如下面代码取得的对象就是autoreleasepool中的对象。
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@autoreleasepool {       
+              id __strong obj = [NSMutableArray array];
+          }
+</code></pre></div>    </div>
+    <p>我们看下[NSMutableArray array]具体实现：</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+(id)array	
+     {
+         id obj = [[NSMutableArray alloc]init];
+     '' return obj;//由于return使得对象超出其作用域，但是作为函数返回值，编译器自动将其注册到autoreleasepool。
+     }
+</code></pre></div>    </div>
+  </li>
+  <li>访问__weak修饰符变量时，实际上必定要访问到autoreleasepool的对象
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id __weak obj = obj0;
+NSLog(@"class = %@",[obj class]);
+//上面代码和下面代码相同
+id __weak obj = obj0;
+id __autoreleasing tem = obj;
+NSLog(@"class = %@",[tem class]);
+</code></pre></div>    </div>
+    <p>为什么访问附有__weak修饰符变量时必须访问注册到autoreleasepool的对象呢，因为__weak修饰符只持有弱引用，而在访问引用对象过程中，该对象有可能被废弃。如果把要访问对象注册到autoreleasepool中，那么@autoreleasepool块结束前都能确保对象存在。</p>
+  </li>
+  <li>最后一个可非显示使用__autoreleasing修饰符的就是二级指针了。比如我们声明一个NSObject **obj,他的默认修饰符就是__autoreleasing。那么在什么时候使用呢，比如我们为了获取详细的错误信息，需要传入NSError对象的指针，而不是使用函数返回值。如以下代码：
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-(BOOL)performOperationWithError:(NSError \*\*)error;
+     -(BOOL)performOperationWithError:(NSError \* \_\_autoreleasing\*)error;
+ //上面两种写法等价，默认的修饰符为\_\_autoreleasing
+</code></pre></div>    </div>
+    <p>参数中持有NSError对象指针的方法，虽然为了响应结果，需要生成NSError类对象，但是也必须符合内存管理的思考方式，就是除了alloc/new/copy/mutableCopy外其他方法的返回值对象都会注册到autoreleasepool。
+另外通过以下代码看看我们在使用二级指针时应该注意什么：</p>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSError *error = nil;
+NSError **perror = &amp;error;
+//上面的代码会报错，因为所有权修饰符必须一致。所以应该改成下面这样的
+NSError *error = nil;
+NSError * __strong *perror = &amp;error;
+//再来看下函数参数的使用
+NSError __strong *error = nil;
+[obj performOperationWithError:&amp;error];
+//因为所有权修饰符必须一致，但是这个不会报错，是因为编译器自动将代码转换成下面的样子
+NSError __strong *error = nil;
+NSErro __autoreleasing *tmp = error;
+[obj performOperationWithError:&amp;tmp];
+//当然也可以显示的指定参数的所有权修饰符为__strong，但是为了在使用参数取得对象时符合内存管理的思考方式，不建议这样做。
+</code></pre></div>    </div>
+    <p>在显示指定__autoreleasing修饰符时，必须注意对象要为自动变量(包括局部变量，函数以及方法参数)，还有无论何时，我们都应该去使用@autoreleasepool块结构去代替NSAutoreleasepool，这样提高了程序的可读性，并且@ autoreleasepool在MRC环境下也有效。调试用的_objc_autoreleasePoolPrint()函数无论什么环境都可以调试注册到autoreleasepool上的对象。</p>
+    <h4 id="arc规则">ARC规则</h4>
+    <p>在ARC下，我们需要遵守一定的规则</p>
+    <ul>
+      <li>不能使用retain/release/retainCount/autorelease
+这个应该不用解释，因为是自动引用计数，所以这些手动的就不能写啦！</li>
+      <li>不能使用NSAllocateObject/NSDeallocateObject
+ ARC下一般通过调用alloc方法生成并持有对象，不能使用上面的两个函数生成和释放对象。</li>
+      <li>需要遵守内存管理的方法命名规则
+使用alloc/new/copy/mutableCopy开头方法返回对象时必须返回给调用方所应当持有的对象，并且以init开头的方法必须是实例方法，并且必须返回对象，init方法只是对alloc的对象做了一些初始化。</li>
+      <li>不能显示调用dealloc
+无论什么环境，只要对象的引用计数为0就是调用该对象的dealloc方法。但是在ARC环境下，我们在dealloc方法内不需要调用[super dealloc],因为ARC会自动处理。如果调用，编译器会报错。</li>
+      <li>使用@autoreleasepool代替NSAutoreleasePool
+在ARC环境下，使用NSAutoreleasePool会报错.</li>
+      <li>不能使用NSZone
+无论什么环境，Runtime已经单纯忽略了NSZone。</li>
+      <li>对象类型不能作为C语言的结构体成员
+因为C语言没有办法管理结构体成员的生命周期，要把对象类型变量加入到结构体中，可以通过转换为void*或者附加__unsafe_unretained。因为__unsafe_unretained修饰的变量不属于编译器内存管理对象。</li>
+      <li>显式转换id和void*
+在MRC下，像下面代码这样将id变量强制转换成void*变量并不会出问题。
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id obj = [[NSObject alloc]init];
+void *p = obj;
+//更近一步用void*变量赋值给id变量中，调用其实例方法，运行时也不会有问题。
+id o = p;
+[o release];
+</code></pre></div>        </div>
+        <p>但是在ARC环境下上面代码就会引起错误。因为id类型或对象类型赋值给void*或者逆向赋值时都需要进行特定的转换。如果只是想单纯地赋值，可以使用“__bridge”转换。如下面代码所示：</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> id obj = [[NSObject alloc]init];
+ void *p = (__bridge void *)(obj);
+ id o = (__bridge id)p;
+但是像上面这样转换为void\*类型，其安全性与赋值给\_\_unsafe\_unretained修饰符相近，甚至会更低。如果转换时不注意对象的所有者，会因为野指针导致程序崩溃。
+\_\_bridge转换中还有另外两种转换，分别是“\_\_bridge\_retained”和“\_\_bridge\_transfer”。\_\_bridge\_retained的作用如下面代码所示：
+//ARC
+id obj = [[NSObject alloc]init];
+void *p = (__bridge_retained  void *)(obj);
+//MRC
+id obj = [[NSObject alloc]init];
+void *p = (__bridge_retained  void *)(obj);
+[(id)p retain];
+通过\_\_bridge\_retained转换，obj和p同时持有对象。
+\_\_bridge\_transfer转换和\_\_bridge\_retained提供相反的动作。通过代码来看下：
+//ARC   
+id obj = (__bridge_transfer id)p;
+//MRC
+id obj = (id)p;
+[obj retain];
+[(id)p release];
+</code></pre></div>        </div>
+        <p>可以看到当p赋值给obj后立马就释放了对对象的引用。
+如果使用以上两种变换，那么不使用id或对象类型变量也可以生成，持有，以及释放对象，但是ARC中并不推荐使用这种方法，这些转化多数在Objective-C和Core Foundation对象之间的相互转换。（ps:Core Foundation对象主要使用在C语言编写的Core Foundation框架中，并使用引用计数的对象，Core Foundation框架中的release/retain分别是CFRelease/CFRetain，Core Foundation对象和Objective-C对象区别很小，不同的就是由哪个框架生成。无论由哪个框架生成，一旦生成后便能在不同框架中使用。Foundation框架对象可以由Core Foundation框架API释放，反之亦然。两种类型的对象互相转换不需要额外的CPU资源，因此也被称为“免费桥”（Toll-Free Bridge））。
+以下函数可用于Objective-C对象和Core Foundation对象之间的相互转换。</p>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CFTypeRef CFBridgingRetain(id X){
+           return (__bridge_retained CFTypeRef)X;
+       }
+id CFBridgingRelease(CFTypeRef X){
+           return (__bridge_transfer id)X;
+       }
+</code></pre></div>        </div>
+        <p>下面我们来看下具体使用：
+``` 
+CFMutableArrayRef cfObject = NULL;
+{
+ //变量obj持有对生成并持有对象的强引用
+ id obj = [[NSMutableArray alloc]init];
+ //通过CFBridgingRetain将对象CFRetain赋值给变量cfObject
+ cfObject = CFBridgingRetain(obj);
+ CFShow(cfObject);
+ printf(“retain count = %d\n”,CFGetRetainCount(cfObject));
+ //对象的引用计数为2
+}
+ //obj超过作用域，强引用失效引用计数为1
+ printf(“retain count after the scope = %d\n”,CFGetRetainCount(cfObject));
+ CFRelease(cfObject);
+ //因为将对象CFRelease，所以引用计数为0，将对象废弃。
+我们再看下使用__bridge转换代替CFBridgingRetain或__bridge_retained转换时，源代码会变成什么样呢？
+ CFMutableArrayRef cfObject = NULL;
+ {
+  //变量obj持有对生成并持有对象的强引用
+  id obj = [[NSMutableArray alloc]init];
+  //因为通过__bridge转换时不改变对象的持有状况，所以引用计数为1
+  cfObject = （__bridge CFMutableArrayRef)obj;
+  CFShow(cfObject);
+  printf(“retain count = %d\n”,CFGetRetainCount(cfObject));
+ //对象的引用计数为1
+ }
+ //obj超过作用域，强引用失效引用计数为0，将对象废弃，此后访问对象出错！野指针
+ printf(“retain count after the scope = %d\n”,CFGetRetainCount(cfObject));
+ CFRelease(cfObject);</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>由此可知，CFBridgingRetain或者\_\_bridge\_retained是不可或缺的。
+下面我们反过来看下，这次由Core Foundation的API生成并持有对象，将该对象作为NSMutableArray对象来处理。
+</code></pre></div></div>
+<p>{
+	//变量cfObject生成并持有对象。
+	CFMutableArrayRef cfObject = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);
+	//cfObject对象引用计数为1
+	 printf(“retain count = %d\n”,CFGetRetainCount(cfObject));
+	//通过CFBridgingRelease赋值，变量obj持有对象强引用的同时，对象通过CFRelease释放
+	id obj = CFBridgingRelease(cfObject);
+   printf(“retain count after the cast = %d\n”,CFGetRetainCount(cfObject));</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> //对象的引用计数为1 }
+//obj超过作用域，强引用失效引用计数为0，将对象废弃。 下面我们看看通过\_\_bridge代替会出现什么情况： {
+ //变量cfObject生成并持有对象。
+ CFMutableArrayRef cfObject = CFArrayCreateMutable(kCFAllocatorDefault, 0, NULL);
+ //cfObject对象引用计数为1
+ printf("retain count = %d\n",CFGetRetainCount(cfObject));
+//通过__bridge赋值，变量obj持有对象强引用
+id obj = (__bridge id)cfObject;
+ printf("retain count after the cast = %d\n",CFGetRetainCount(cfObject));
+
+//对象的引用计数为2 }
+//obj超过作用域，强引用失效引用计数为1，发生内存泄露。 由上面可以看出必须通过CFBridgingRetain/CFBridgingRelease或者\_\_bridge\_retained/\_\_bridge\_transfer转换。
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#### 属性
+ARC时，Objective-C的属性也会发生变化，需要我们加上属性修饰符来声明属性，我们看下属性修饰符和所有权修饰符的对应关系：
+![属性声明的属性与所有权修饰符对应的关系][image-11]
+以上各种属性赋值给指定的属性中就相当于赋值给附加各属性对应的所有权修饰符变量中。只有copy不是简单赋值，它赋值是通过NSCopying接口的copyWithZone：方法复制赋值源所生成的对象。
+#### 数组
+ARC所有权修饰符在修饰静态修饰符变量时和修饰对象类型变量是相同的。我们主要来看下修饰动态数组时的使用。将附有\_\_strong修饰符的变量作为动态数组使用时，根据不同的需要我们可以选择NSMutableArray，NSMutableDictionary，NSMutableSet等Foundation框架的容器。这些容器会恰当的持有追加的对象并帮助我们管理这些对象。但是在C语言的动态数组中也可以使用附有\_\_strong修饰符的变量，知识必须遵守一些事项，以下按顺序说明。
+1. 声明动态数组：
+</code></pre></div></div>
+<p>id __strong *array = nil;
+	//因为id *默认为__autoreleasing，所以这里显示指定__strong</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2. 使用calloc函数确保想分配的附有\_\_strong修饰符变量的容量占有块
+		
+</code></pre></div></div>
+<p>array = (id __strong *)calloc(entries, sizeof(id));
+		//这里分配了entries个所需的内存块。由于使用附有__strong修饰符的变量前必须先将其初始化为nil，所以这里使用使分配区域初始化为0的calloc函数来分配内存。不使用calloc函数，在用malloc函数分配内存后可用memset等函数将内存填充为0，但是，像下面的代码是非常危险的，以内malloc函数分配的内存区域没有被初始化为0，因此nil会被赋值给__strong修饰符并且被赋值了随机地址的变量中，从而释放一个不存在的对象，所以在分配内存是使用calloc函数。
+		array = (id __strong *)malloc(sizeof(id) * entries);
+		    for (NSUInteger i = 0; i &lt; entries; i++) {
+		        array[i] = nil;
+		    }</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>3. 通过calloc函数分配的动态数组就能想静态数组一样使用
+		`array[0] = [[NSObject alloc]init];`
+但是在动态数组中操作附有\_\_strong修饰符的变量和静态数组有很大区别，需要自己释放元素，不能只使用free函数释放数组，数组各元素也需要释放。因为在静态数组中，编译器能够根据变量的作用域自动插入释放赋值对象的代码，但是在动态数组中，编译器不能确定数组的声明周期所以无法处理。我们需要像下面代码所示去释放数组元素：
+</code></pre></div></div>
+<p>for NSUInteger i = 0; i &lt; entries; i++) {
+	  array[i] = nil;
+}
+free(array);</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>同初始化时注意事项相反，即使使用memset函数将内存填充为0也不会释放数组元素对象，只会引起内存泄露，必须赋值为nil。另外使用memcpy和realloc函数重新分配内存块也会有危险，由于数组元素赋值的对象有可能被保留在内存中或是重复被废弃，所以这两个函数也禁止使用。最好不要用\_\_autoreleasing修饰符去修饰动态数组。由于\_\_unsafe\_unretained修饰在编译器内存管理对象之外，所以它与void \*类型一样，只能作为C语言的指针类型来使用。
+#### ARC实现
+苹果官方说明中称，ARC是由编译器进行内存管理的，其实编译器是无法完全胜任的，还需要Runtime的协助。
+##### \_\_strong实现
+我们通过clang可以看到程序的汇编输出，通过汇编输出和objc4库的源代码就能够知道程序是怎么工作的，我们来看下下面代码是怎么工作的：
+</code></pre></div></div>
+<p>{
+ id __strong obj = [[NSObject alloc]init];
+}
+//编译器的模拟代码如下：
+id obj = objc_msgSend(NSObject,@selector(alloc));
+objc_msgSend(obj,@selector(init));
+objc_release(obj);
+通过上面代码可以看到编译器自动调用了release。下面再来看下不是通过alloc/new/copy/mutableCopy方法创建对象会是什么情况：
+{
+	id __strong obj = [NSMutableArray array];
+}
+	//编译器模拟代码
+id obj = objc_msgSend(NSMutableArray,@selector(array));
+objc_retainAutoreleasedReturnValue(obj);
+objc_release(obj);</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>这里稍有不同的是objc\_retainAutoreleasedReturnValue函数是什么呢，其实objc\_retainAutoreleasedReturnValue函数主要用于最优化程序运行。他的意思就是持有的对象是返回注册到autoreleasepool中对象的方法，或是函数的返回值。与objc\_retainAutoreleasedReturnValue函数相对的函数是objc\_autoreleaseReturnValue.下面我们来看下他的用法：
+</code></pre></div></div>
+<p>+(id)array
+{
+	 return [[NSMutableArray alloc] init];
+}
+//转换后的源代码使用了objc_autoreleaseReturnValue
++(id)array
+{
+	id obj = objc_msgSend(NSMutableArray.@selector(alloc));
+	objc_msgSend(obj,@selector(init));
+	return objc_autoreleaseReturnValue(obj);
+}</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc\_autoreleaseReturnValue函数会检查使用该函数的方法或函数调用方的执行命令列表，如果方法或函数的调用方在调用了方法或函数后紧接着调用了objc\_retainAutoreleasedReturnValue函数，那么就不将返回的对象注册到autoreleasepool中，而是直接传递到方法或函数的调用方。（ps:在objc4版本493.9中，只能在OS X64位中最优化）如下图所示:
+![省略了autoreleasepool注册][image-12]
+##### \_\_weak实现
+我们先来看下\_\_weak的功能：
+- 若附有\_\_weak修饰符的变量所引用的对象被废弃，自动置为nil。
+- 使用\_\_weak修饰符的变量，即是使用注册到autoreleasepool中的对象。
+</code></pre></div></div>
+<p>id __weak obj1 = obj;
+//转换后的源代码
+id obj1 ;
+objc_initWeak(&amp;obj1,obj);
+objc_destroyWeak(&amp;obj1);</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc\_initWeak函数初始化附有\_\_weak修饰符的变量，在变量作用域结束时通过objc\_destroyWeak函数释放变量。那么objc\_initWeak又是怎么初始化的呢？我们看下面代码：
+</code></pre></div></div>
+<p>obj1 = 0;
+objc_storeWeak(&amp;obj1,obj)；
+//objc_initWeak首先将obj1初始化为0，然后再通过objc_storeWeak函数赋值给obj1。
+//objc_destoryWeak函数将0作为参数调用objc_storeWeak函数，释放变量
+bjc_storeWeak(&amp;obj1,0)；</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objc\_storeWeak函数把第二个参数的赋值对象作为键值，将第一参数的附有\_\_weak修饰符的变量的地址注册到weak表中，如果第二个参数为0，则把变量的地址从weak表中移除。
+下面我么来看下对象废弃的动作：
+1. objc\_release
+2. 引用计数为0所以执行dealloc
+3. \_objc\_rootDealloc
+4. object\_dispose
+5. objc\_destructInstance
+6. objc\_clear\_deallocating
+对象被废弃是调用objc\_clear\_deallocating的动作如下：
+1. 从weak表中获取废弃对象的地址为键值的记录。
+2. 将包含在记录中的所有附有\_\_weak修饰符变量的地址，赋值为nil
+3. 从weak表中删除该记录。
+4. 从引用计数表中删除废弃对象的地址为键值的记录。
+根据上面的步骤，前面说的如果附有\_\_weak修饰符变量所引用的对象被废弃，则将nil赋值给该变量这一功能被实现，但是如果大量使用附有\_\_weak修饰符的变量，则会消耗响应的CPU资源。我们只在需要避免循环引用是使用\_\_weak修饰符。
+下面我么来验证第二个功能：使用\_\_weak修饰符的变量即是使用注册到autoreleasepool中的对象。
+</code></pre></div></div>
+<p>id __weak obj1 = obj;
+NSLog(@”%@”,obj1);
+//该源代码转换成如下形式
+id obj1;
+objc_initWeak(&amp;obj1,obj);
+id tmp = objc_loadWeakRetained(&amp;obj1);
+objc_autorelease(tmp);
+NSLog(@”%@”,tmp);
+objc_destroyWeak(&amp;obj1);</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>相比于前面的情形，增加了objc\_loadWeakRetained函数和objc\_autorelease函数，这些函数调用动作如下：
+1. objc\_loadWeakRetained函数取出附有\_\_weak修饰符变量所引用的对象，并且retain。
+2. objc\_autorelease函数将对象注册到autoreleasepool中。
+如果大量使用附有\_\_weak修饰符的变量，注册到autoreleasepool的对象也会大量增加，因此在使用附有\_\_weak修饰符的变量，最好先暂时赋值给\_\_strong修饰符的变量后再使用。
+##### \_\_autoreleasing实现
+</code></pre></div></div>
+<p>@autoreleasepool {
+    id __autoreleasing obj = [[NSObject alloc]init];
+}
+	//转换成如下形式
+id pool = objc_autoreleasePoolPush();
+id obj = objc_msgSend(NSObject,@selector(alloc));
+objc_msgSend(obj,@selector(init));
+objc_autorelease(obj);
+objc_autoreleasePoolPop(pool);</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>这与苹果的autorelease实现中的说明完全相同。我们再来看下在autoreleasepool块中使用注册到autoreleasepool中的对象会如何。
+</code></pre></div></div>
+<p>@autoreleasepool {         <br />
+	id __autoreleasing obj = [NSMutableArray array];
+}
+	//转换成如下形式
+	id pool = objc_autoreleasePoolPush();
+	id obj = objc_msgSend(NSMutableArray,@selector(array));
+	objc_retainAutoreleasedReturnValue(obj);
+	objc_autorelease(obj);
+	objc_autoreleasePoolPop(pool);
+```
+虽然持有对象的方法从alloc变为objc_retainAutoreleasedReturnValue函数，但注册autoreleasepool的方法没有改变，仍是objc_autorelease函数。</p>
+<h4 id="引用计数-1">引用计数</h4>
+<p>前面我们一直都在说的是引用计数管理的思考方式，没有过多的去关注引用计数的值，我们可以通过_objc_rootRetainCount(id obj)函数获取引用计数的值，但实际上并不能够完全信任该函数取得的值。对于已经释放的对象以及不正确的对象地址，有时也会返回1。另外在多线程中使用对象的引用计数数值，因为存有竞态条件的问题，所以取得的数值不一定完全可信。虽然在调试中_objc_rootRetainCount(id obj)很有用，但最好在了解其所具有的问题的基础上来使用。</p>
+<h3 id="感悟">感悟</h3>
+<p>平常我们写代码可能不会去想这些东西，但是我们一定需要了解这些东西，因为一旦出现问题，这些东西会让我们在分析问题，处理问题上更加得心应手。了解了一个东西，我们再去使用它。就像使用第三方库时，我们应该先了解再去使用，不应该只是看看他的API直接就用了，这样我们一点收获都没有。我们也没必要重复的去造轮子，了解了就可以拿来用。知其然，知其所以然，这一点是我们应该做到的。</p>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>UIKit Dynamic Tutorial</title>
+	  <link>//UIKit-Dynamic-Tutorial</link>
+	  <author>Freelf</author>
+	  <pubDate>2017-06-15T23:14:22+00:00</pubDate>
+	  <guid>//UIKit-Dynamic-Tutorial</guid>
+	  <description><![CDATA[
+	     <p>这是一篇翻译自Raywenderlich上的文章，<a href="https://www.raywenderlich.com/50197/uikit-dynamics-tutorial">原文</a>。
+<!-- more --></p>
+<h1 id="whats-uikit-dynamic">What’s UIKit Dynamic</h1>
+<p>  iOS7鼓励我们设计出一个物理动态的效果，这个听起来是一个很艰巨的任务。但是苹果爸爸已经为我们提供了一些非常好用的东西，就是UIKit Dynamics和Motion Effects。</p>
+<ul>
+  <li>UIKit Dynamics 是一个被整合的UIKit中的完整物理引擎。它允许你通过添加一些重力，附件(弹簧），力等行为来创建感觉真实的效果。你只管定义界面元素采用的物理特征，其他的就交给UIKit Dynamics。</li>
+  <li>Motion Effects 就是你创建的一些行为，比如上面提到的那些重力，附件等等的东西。
+当把这两个用在一起时，将会很自然的响应自己的行为。
+    <h1 id="getting-started">Getting started</h1>
+    <p>我们新建一个项目，然后在viewController里面加上下面的代码：</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UIView* square = [[UIView alloc]initWithFrame:CGRectMake(100, 100, 100, 100)];
+square.backgroundColor = [UIColor grayColor];
+[self.view addSubview:square];
+
+</code></pre></div></div>
+<p>上面的代码仅仅是往view上面加了一个灰色的方形view。如下图：<img src="http://ohg2bgicd.bkt.clouddn.com/1496933761.png" alt="" />。</p>
+<h1 id="adding-gravity">Adding Gravity</h1>
+<p>仍然在ViewController.m中，我们添加两个实例变量</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UIDynamicAnimator* _animator;
+UIGravityBehavior* _gravity;
+</code></pre></div></div>
+<p>然后在<code class="highlighter-rouge">viewDidLoad:</code>的最下面添加下面代码</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
+_gravity = [[UIGravityBehavior alloc] initWithItems:@[square]];
+[_animator addBehavior:_gravity];
+</code></pre></div></div>
+<p>等下再解释这两行代码，编译运行程序，你会发现灰色方块缓慢的开始加速下落。
+<img src="http://ohg2bgicd.bkt.clouddn.com/gravity.gif" alt="加重力" />
+在代码中，仅仅添加了两个东西，一个是<code class="highlighter-rouge">UIDynamicAnimator</code>，一个是<code class="highlighter-rouge">UIGravityBehavior</code></p>
+<ul>
+  <li>==UIDynamicAnimator== 是一个UIKit的物理引擎，该类跟踪你添加到这个引擎的不同行为，例如，重力，并且提供整个上下文。当你创建一个<code class="highlighter-rouge">UIDynamicAnimator</code>实例时，你传入一个view，<code class="highlighter-rouge">UIDynamicAnimator</code>实例把你传入的view定义为他的坐标系。说了这么多，其实就是创建一个坐标系来执行动画。</li>
+  <li>==UIGravityBehavior== 是一个重力行为的model，添加到相应的viwe上。他将影响和他关联的view。
+很多的行为都有很多属性，用到的时候我们可以看他们响应的头文件，这里就不再赘述了。
+    <h1 id="setting-boundaries">Setting boundaries</h1>
+    <p>虽然我们可以看到这个方形的灰色view，他一直再下落，为了让他在屏幕定义的边界内。我们还要在添加一个behavior。
+在<code class="highlighter-rouge">ViewController.m</code>中，添加一个变量：</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UICollisionBehavior* _collision;
+</code></pre></div></div>
+<p>然后在<code class="highlighter-rouge">viewDidLoad:</code>最下面添加下面代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_collision = [[UICollisionBehavior alloc]
+                                      initWithItems:@[square]];
+_collision.translatesReferenceBoundsIntoBoundary = YES;
+[_animator addBehavior:_collision];
+</code></pre></div></div>
+<p>上面的代码创建了一个碰撞的行为，它为和他相关联的items定义了边界。但是不是明确的边界，我们需要将他的<code class="highlighter-rouge">_collision.translatesReferenceBoundsIntoBoundary</code>这个属性设置为YES，这样边界就是animator的referenceview的bounds（<code class="highlighter-rouge">setTranslatesReferenceBoundsIntoBoundaryWithInsets:</code>这样的方法来设定某一个区域作为碰撞边界，更复杂的边界可以使用addBoundaryWithIdentifier:forPath:来添加UIBezierPath，或者addBoundaryWithIdentifier:fromPoint:toPoint:来添加一条线段为边界，详细地还请查阅文档）。
+运行代码，如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/collison.gif" alt="collision" /></p>
+
+<h1 id="handling-collision">Handling collision</h1>
+<p>下面你将要添加一个和方块view相互作用的栅栏。
+在<code class="highlighter-rouge">viewDidLoad</code>中，在添加完方块view后面插入下面代码：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UIView* barrier = [[UIView alloc] initWithFrame:CGRectMake(0, 300, 130, 20)];
+barrier.backgroundColor = [UIColor redColor];
+[self.view addSubview:barrier];
+</code></pre></div></div>
+<p>跑一下代码，如下图：
+<img src="http://ohg2bgicd.bkt.clouddn.com/barrier.gif" alt="barrier" />
+WTF，这不是我们想要的结果，但是它给我们提供了一个非常重要的信息：dynamics只作用于和行为相关联的view。关系如下图:
+<img src="http://ohg2bgicd.bkt.clouddn.com/1497453589.png" alt="" /></p>
+<h1 id="making-objects-respond-to-collisions">Making objects respond to collisions</h1>
+<p>为了让灰色方块和红色的栅栏碰撞，我们把初始化<code class="highlighter-rouge">_collision</code>的代码改成下面的这样：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_collision = [[UICollisionBehavior alloc] initWithItems:@[square, barrier]];
+</code></pre></div></div>
+<p>碰撞的对象需要知道交互的view，所以我们把barrier加入到数组中。运行一下会发现是下图这样的效果:
+<img src="http://ohg2bgicd.bkt.clouddn.com/collisonInteract.gif" alt="barrierInteract" />
+碰撞的行为会为它相关联的item形成边界，所以你会看到这样的情况，更新一下前面关系图表变成下面这张图:
+<img src="http://ohg2bgicd.bkt.clouddn.com/1497531917.png" alt="update" />
+然而，依然不是我们想要的结果，本来红色的栅栏应该是不动的，但是两个物体碰撞，栅栏被撞倒，开始向屏幕底部旋转。
+更奇怪的是，栅栏从底部反弹，并不想方块那么沉稳。这是因为重力行为和栅栏无关，这也解释了为什么栅栏在碰撞之前不会下落。
+看起来，需要另一个方法来解决问题。由于栅栏不能移动，所以动态引擎不需要知道它的存在。但是如何来检测碰撞呢？</p>
+<h1 id="invisible-boundaries-and-collisions">Invisible boundaries and collisions</h1>
+<p>还是把初始化<code class="highlighter-rouge">_collision</code>的函数改回原来那样。然后加入一个边界，代码如下:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CGPoint rightEdge = CGPointMake(barrier.frame.origin.x +
+                                barrier.frame.size.width, barrier.frame.origin.y);
+[_collision addBoundaryWithIdentifier:@"barrier"
+                            fromPoint:barrier.frame.origin
+                              toPoint:rightEdge];
+</code></pre></div></div>
+<p>上面的代码添加了一个隐形的边界，这个边界就是红色栅栏的上方。
+红色栅栏对于用户可见，但是对于动态引擎是不可见的。边界就恰恰相反了。随着灰色方块的下降，他似乎是和栅栏碰撞，实际上却是和边界碰撞，运行程序结果如下图:
+<img src="http://ohg2bgicd.bkt.clouddn.com/invisble.gif" alt="隐藏边界" />
+方块现在从边界反弹，然后继续下落的屏幕底部。
+到现在为止，UIKit Dynamics变得越来越清晰，只需要几行代码就可以完成相当多的功能。下面展示下动态引擎交互的细节。</p>
+<h1 id="behind-the-scenes-of-collisions">Behind the scenes of collisions</h1>
+<p>每一个动态行为都有一个<code class="highlighter-rouge">aciton</code>的属性，它是一个block，动画执行的每一步都会调用这个block，加入下面的代码:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>_collision.action =  ^{
+    NSLog(@"%@, %@", 
+          NSStringFromCGAffineTransform(square.transform), 
+          NSStringFromCGPoint(square.center));
+};
+</code></pre></div></div>
+<p>上面的代码打印了方块的transform和center。运行下程序，将会看到下面的打印信息:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2017-06-15 21:27:53.525 UIDynamicPlayground[883:29136] [1, 0, 0, 1, 0, 0], {150, 150}
+2017-06-15 21:27:53.534 UIDynamicPlayground[883:29136] [1, 0, 0, 1, 0, 0], {150, 150}
+2017-06-15 21:27:53.550 UIDynamicPlayground[883:29136] [1, 0, 0, 1, 0, 0], {150, 151}
+</code></pre></div></div>
+<p>这里你可以看到动态引擎是改变view的center，相当于改变它的frame。
+一旦方块和栅栏碰撞，会产生下面的信息:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2017-06-15 21:27:53.985 UIDynamicPlayground[883:29136] [0.99875026039496628, 0.049979169270678331, -0.049979169270678331, 0.99875026039496628, 0, 0], {152, 251}
+2017-06-15 21:27:54.001 UIDynamicPlayground[883:29136] [0.99470018796194981, 0.10281797541510752, -0.10281797541510752, 0.99470018796194981, 0, 0], {153, 250}
+</code></pre></div></div>
+<p>在这里，可以看到动态引擎正在使用放射变换和frmae的改变来改变方块的位置。
+虽然动态引擎对这些确切的值没什么兴趣，但是重要的是它们可以被使用。因此，如果在动态引擎正在运行的时候，我们不能改变这些属性。
+动态行为的方法使用在那些遵守<code class="highlighter-rouge">UIDynamicItem</code>协议的对象上，协议如下:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@protocol</span> <span class="nc">UIDynamicItem</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">)</span> <span class="n">CGPoint</span> <span class="n">center</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">)</span> <span class="n">CGRect</span> <span class="n">bounds</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readwrite</span><span class="p">)</span> <span class="n">CGAffineTransform</span> <span class="n">transform</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">UIDynamicItem</code>协议提供了center和transform的读写权限，允许它基于动态内部计算移动item。Dynamics还具有对bounds的读权限，它用于确定item的大小，这样可以在item周边创建碰撞边界，还可以计算当item被施加力时的质量。
+这个协议以为着Dynamics并不耦合于UIView。其实还有另外一个UIKit类遵守了这个协议–UICollectionViewLayoutAttributes。它允许Dynamics对collection view的item做动画。</p>
+<h1 id="collision-notifications">Collision notifications</h1>
+<p>前面你添加了一些view和behaviors，下一步你将看到如何接收item碰撞的信息。
+我们让<code class="highlighter-rouge">ViewController.m</code>遵守<code class="highlighter-rouge">UICollisionBehaviorDelegate</code>协议。
+然后把自己设置为<code class="highlighter-rouge">_collision</code>的代理。实现协议方法：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (void)collisionBehavior:(UICollisionBehavior *)behavior beganContactForItem:(id&lt;UIDynamicItem&gt;)item 
+            withBoundaryIdentifier:(id&lt;NSCopying&gt;)identifier atPoint:(CGPoint)p {
+    NSLog(@"Boundary contact occurred - %@", identifier);
+}
+</code></pre></div></div>
+<p>代理函数将会在碰撞出现的时候执行，在控制台打印一些信息。
+运行程序，方块和红色栅栏会交互，并且看到下面的打印:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2017-06-15 22:30:22.393 UIDynamicPlayground[1145:47436] Boundary contact occurred - barrier
+2017-06-15 22:30:22.843 UIDynamicPlayground[1145:47436] Boundary contact occurred - barrier
+2017-06-15 22:30:23.042 UIDynamicPlayground[1145:47436] Boundary contact occurred - barrier
+2017-06-15 22:30:23.842 UIDynamicPlayground[1145:47436] Boundary contact occurred - (null)
+2017-06-15 22:30:23.859 UIDynamicPlayground[1145:47436] Boundary contact occurred - (null)
+2017-06-15 22:30:24.143 UIDynamicPlayground[1145:47436] Boundary contact occurred - (null)
+
+</code></pre></div></div>
+<p>从打印的信息来看，barrier就是我们添加的不可见的碰撞边界，null就是和reference view边界碰撞。
+下面我们来添加一下碰撞时的指示，在代理打印代码下面加入下面的代码:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UIView* view = (UIView*)item;
+view.backgroundColor = [UIColor yellowColor];
+[UIView animateWithDuration:0.3 animations:^{
+    view.backgroundColor = [UIColor grayColor];
+}];
+</code></pre></div></div>
+<p>上面的代码在碰撞时改变了方块的颜色为黄色，然后再让它渐变成灰色。运行程序效果如下图:
+<img src="http://ohg2bgicd.bkt.clouddn.com/inditor.gif" alt="碰撞指示" />
+到目前为止，UIKit Dynamics通过根据你项目的边界来进行计算，自动设置item的物理属性(如质量或弹性).接下来，将会看到如何通过<code class="highlighter-rouge">UIDynamicItemBehavior</code>这个类来控制这些物理属性。</p>
+<h1 id="configuring-item-properties">Configuring item properties</h1>
+<p>在<code class="highlighter-rouge">viewDidLoad</code>中，在最下面添加下面的代码:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UIDynamicItemBehavior* itemBehaviour = [[UIDynamicItemBehavior alloc] initWithItems:@[square]];
+itemBehaviour.elasticity = 0.6;
+[_animator addBehavior:itemBehaviour];
+</code></pre></div></div>
+<p>上面的代码床架了一个item behavior，并且把它和方块相关联。然后把这个行为添加到animator中。elasticity属性控制item的柔软度；值为1.0表示完全弹性碰撞，也就是说，碰撞中没有动能损失，这里讲弹性设置为0.6，就意味着每次碰撞动能衰减0.6.
+上面的代码只是改变了item的弹性，然而，behavior有很多属性可以在代码中操作，它们如下:</p>
+<ul>
+  <li>elasticity - 决定弹性的碰撞。</li>
+  <li>friction - 摩擦，表示活动时的阻力。</li>
+  <li>density - 密度，当和size组合时，将会给出一个总体的质量，质量越大，惯性越大。</li>
+  <li>resistance - 阻力，决定任何线性运动的阻力，和摩擦的区别是，阻力仅仅作用于滑动。</li>
+  <li>angularResistance - 决定旋转运动的阻力</li>
+  <li>allowsRotation - 这是一个很有趣的属性，他不和任何物理属性映射，当它的值为NO时，对象不会旋转，不理会任何旋转的力。
+    <h1 id="adding-behaviors-dynamically">Adding behaviors dynamically</h1>
+    <p>下面我们来看下如何动态的添加和移除behaviors。
+我们在<code class="highlighter-rouge">ViewController.m</code>中添加下面的实例变量:</p>
+  </li>
+</ul>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOL _firstContact;
+</code></pre></div></div>
+<p>在碰撞的代理方法最后面添加下面的代码:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if (!_firstContact)
+{
+    _firstContact = YES;
+    
+    UIView* square = [[UIView alloc] initWithFrame:CGRectMake(30, 0, 100, 100)];
+    square.backgroundColor = [UIColor grayColor];
+    [self.view addSubview:square];
+    
+    [_collision addItem:square];
+    [_gravity addItem:square];
+    
+    UIAttachmentBehavior* attach = [[UIAttachmentBehavior alloc] initWithItem:view
+                                                               attachedToItem:square];
+    [_animator addBehavior:attach];
+}
+</code></pre></div></div>
+<p>上面的代码将会在第一次碰撞时创建另一个方块并且给方块添加重力和碰撞行为。另外，还设置了附件行为，创建了使用虚拟弹簧连接一对对象的效果。
+运行程序，当方块集中栅栏的时候，将会看到新的方块，并且两个方块之间还想有东西连接着他们，但是并不会显示出来。效果如下图:
+<img src="http://ohg2bgicd.bkt.clouddn.com/attachment.gif" alt="attachment" />。
+当然我们除了使用SDK预先定义好的行为外，还可以自定义自己想要的行为。这种定义可以发生在两个层面上，一个是打包官方的行为，另一种完全定义新的计算规则。具体可以参见<a href="https://onevcat.com/2013/06/uikit-dynamics-started/">喵神的博客</a>。</p>
+
+<h1 id="参考">参考</h1>
+<p><a href="https://www.raywenderlich.com/50197/uikit-dynamics-tutorial">Understand UIKit Dynamics</a>
+<a href="https://onevcat.com/2013/06/uikit-dynamics-started/">喵神的wwdc总结</a></p>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>学习动画系列---寄宿图</title>
+	  <link>//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE</link>
+	  <author>Freelf</author>
+	  <pubDate>2016-11-22T11:54:36+00:00</pubDate>
+	  <guid>//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE</guid>
+	  <description><![CDATA[
+	     <p>  上一篇学习了下<code class="highlighter-rouge">CALayer</code>的概念，者一篇学习下<code class="highlighter-rouge">CALayer</code>的内部属性，我们先来解释下什么是寄宿图。在上一篇中，我们通过<code class="highlighter-rouge">CALayer</code>类创建了一个蓝色的背景图层，如果他仅仅是展现一个单调的颜色，~~那我还学他干啥？~~其实它还可以包含一张图片，它里面包含的图我们就叫寄宿图。这个名字太奇怪了。估计是翻译的问题吧。
+<!-- more --></p>
+<h1 id="contents属性">contents属性</h1>
+<h2 id="contents">contents</h2>
+<p>  <code class="highlighter-rouge">CALayer</code>有个<code class="highlighter-rouge">contents</code>属性，这个属性被定义为id类型，但是可不要被定义为id类型迷惑，如果给<code class="highlighter-rouge">contents</code>属性赋的值不是CGImage，那么他就是一个空白的layer。</p>
+
+<p>  这个奇怪的表现实由于Mac OS的历史原因造成的，因为在Mac OS中，这个属性对CGImage和NSImage都有作用。如果在iOS平台上将UIImage的值赋给它，只能得到一个空白的layer。</p>
+
+<p>  事实上，我们真正要赋值的是一个CGImageRef的指针，UIImage有个CGImage的属性，返回一个CGImageRef，如果我们直接把这个值赋给<code class="highlighter-rouge">contents</code>，编译器会提醒我们需要加上(__bridge id)，这是为啥呢，因为CGImageRef是一个Core Foundation类型的。因为Core Foundation对象和Cocoa对象在运行时是toll-free bridging的，所以我们可以通过__bridge关键字转换的。所以我们用下面的代码就可以让一个view现实一个图片，是不是很神奇。算了，当我没说。还是看代码吧：</p>
+
+<pre><code class="language-objective-c">    UIImage *image = [UIImage imageNamed:@"Slice1.png"];
+    _backView.layer.contents = (__bridge id)image.CGImage;
+</code></pre>
+
+<p>  通过上面的代码，我们可以实现如下图所示的效果：</p>
+
+<p><span><img src="\images\寄宿图\1.png" /></span></p>
+
+<p>  用这些简单的代码做了一件非常有趣的事情，就是我们利用<code class="highlighter-rouge">CALayer</code>在一个普通的<code class="highlighter-rouge">UIView</code>中显示了一个图片，而不是用UIImageView。通过操作<code class="highlighter-rouge">CALayer</code>可以让<code class="highlighter-rouge">UIView</code>更加有趣啦。哈哈哈！</p>
+
+<h2 id="contentgravity">contentGravity</h2>
+
+<p>  这个属性对应的是<code class="highlighter-rouge">UIView</code>的contentMode属性。但是它是一个<code class="highlighter-rouge">NSString</code>类型，contentGravity可选的常量值有一下这些：</p>
+
+<ul>
+  <li>kCAGravityCenter</li>
+  <li>kCAGravityTop</li>
+  <li>kCAGravityBottom</li>
+  <li>kCAGravityLeft</li>
+  <li>kCAGravityRight</li>
+  <li>kCAGravityTopLeft</li>
+  <li>kCAGravityTopRight</li>
+  <li>kCAGravityBottomLeft</li>
+  <li>kCAGravityBottomRight</li>
+  <li>kCAGravityResize</li>
+  <li>kCAGravityResizeAspect</li>
+  <li>kCAGravityResizeAspectFill</li>
+</ul>
+
+<p>和<code class="highlighter-rouge">UIView</code>的那些属性是对应的。</p>
+
+<h2 id="contentsscale">contentsScale</h2>
+
+<p>  contentsScale属性定义了寄宿图的像素尺寸和视图大小的比例，默认情况下它是1.0。contentsScale属性其实是适配Retina屏幕的，如果他的值为1.0，那么一个点绘制一个像素，如果为2.0，那么一个点绘制2个像素。所以当用代码手动处理寄宿图的时候，一定要记住手动设置图层的contentsScale属性，否则，你的图片在Retina屏幕上面就显示的不对啦！</p>
+
+<h2 id="masktobounds">maskToBounds</h2>
+
+<p>  这个属性对应<code class="highlighter-rouge">UIView</code>的clipsToBounds的属性，它可以用来决定是否显示超出边界的内容，把它设置为YES，图片就不会超出边界绘制了。</p>
+
+<h2 id="contentsrect">contentsRect</h2>
+
+<p>  <code class="highlighter-rouge">CALayer</code>的contentsRect属性允许我们再图层边框里显示寄宿图的一个子区域。这涉及到图片是如何显示和拉伸的，所以比contentsGravity灵活多了，和<code class="highlighter-rouge">bounds</code>、<code class="highlighter-rouge">frame</code>不同，这个属性不是按点来计算的，它使用了单位坐标。单位坐标是指定在0~1之间的。是一个相对的值。讲到这个，就有必要介绍下iOS使用的坐标系统了。</p>
+
+<ul>
+  <li>点–在iOS和Mac OS中最常见的坐标体系。点就像是虚拟的像素，也被称作逻辑像素。在标准设备上，一个点就是一个像素，但是在Retina设备上，一个点等于2*2个像素。iOS用电作为屏幕的坐标测算体系就是为了在Retina设备和普通设备能有一致的视觉效果。</li>
+  <li>像素–物理像素坐标不会用来屏幕布局，但是仍然与图片有相对关系。UIImage是一个屏幕分辨率解决方案，所以指定点来度量大小。但是一些底层的图片表示如CGImage就会使用像素，所以你要清楚再Retina设备和普通设备上，他们表现出来了不同的大小。</li>
+  <li>单位–对于与图片大小或是图层边界相关的显示，单位坐标是一个方便的度量方式，当大小改变的时候，也不需要再次调整。单位坐标在OpenGL这种纹理坐标系统中用得很多，Core Animation中也用到了单位坐标。</li>
+</ul>
+
+<p>默认的contentsRect是{0,0,1,1}，这意味着整个寄宿图都默认都是可见的，如果我们指定一个小一点的矩形，图片就会裁剪，这个我们可以自己去代码试验下。</p>
+
+<p>  事实上给contentsRect设置一个负数的原点或者是大于{1,1}的尺寸也是可以的。这种情况下，最外面的像素会被拉伸以填充剩下的区域。</p>
+
+<p>  利用contentsRect可以把一大张图切成小图显示，下面我们用代码来显示下，首先我们需要载入一张大图：</p>
+
+<p><span><img src="\images\寄宿图\Slice1.png" /></span></p>
+
+<p>我们怎么把这个大图分别裁成四个小图在app中显示呢，其实利用这个属性很简单。我们把这张大图赋值给四个独立的图层contents，然后设置每个layer的contentsRect来去掉我们不想要的部分。我们在StoryBoard上再拖四个view上来，然后看我们下面的代码：</p>
+
+<pre><code class="language-objective-c">- (void)viewDidLoad {
+    [super viewDidLoad];
+    UIImage *image = [UIImage imageNamed:@"Slice1.png"];
+    _backView.layer.contents = (__bridge id)image.CGImage;
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0, 0, 0.5, 0.5) toLayer:_gaoyuanyuan.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0.5, 0, 0.5, 0.5) toLayer:_jiangshuying.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0, 0.5, 0.5, 0.5) toLayer:_sijiali.layer];
+    
+    [self addSpriteImage:image withContentRect:CGRectMake(0.5, 0.5, 0.5, 0.5) toLayer:_anji.layer];
+}
+
+
+- (void)addSpriteImage:(UIImage *)image withContentRect:(CGRect)rect toLayer:(CALayer *)layer //set image
+{
+    layer.contents = (__bridge id)image.CGImage;
+   
+    layer.contentsGravity = kCAGravityResizeAspect;
+
+    layer.contentsRect = rect;
+}
+
+</code></pre>
+
+<p>这样就实现了我们的效果：</p>
+
+<p><span><img src="\images\寄宿图\2.png" /></span></p>
+
+<h2 id="contentscenter">contentsCenter</h2>
+
+<p>  现在我们介绍的最后一个和内容有关的属性是contentsCenter，看这个名字可能会以为跟图片的中心点位置有关。不过这个名字误导了我们。contentsCenter其实是一个CGRect，它定义了一个固定的边框和一个在图层上可以拉伸的区域。改变了contentsCenter的值并不会影响到寄宿图的显示，除非这个图层的位置改变了你才看得到效果。怎么理解contentsCenter呢，看下面这个图就懂啦！</p>
+
+<p><span><img src="\images\寄宿图\3.png" /></span></p>
+
+<p>  其实在IB中也可以设置这个就是:</p>
+
+<p><span><img src="\images\寄宿图\4.png" /></span></p>
+
+<h1 id="custom-drawing">Custom Drawing</h1>
+
+<p>  给contents设置CGImage不是唯一设置寄宿图的方法。我们还可以直接用Core Graphics直接绘制寄宿图。能够通过继承<code class="highlighter-rouge">UIView</code>并实现<code class="highlighter-rouge">-drawRect:</code>方法来绘制。</p>
+
+<p>  <code class="highlighter-rouge">-drawRect:</code>方法没有默认的实现，因为<code class="highlighter-rouge">UIView</code>并不在意寄宿图到底是单调的颜色还是图片，寄宿图并不是必须的。如果<code class="highlighter-rouge">UIView</code>检测到<code class="highlighter-rouge">-drawRect:</code>方法调用了，它就会给视图分配一个寄宿图，寄宿图的像素尺寸是视图大小乘以<code class="highlighter-rouge">contentsScale</code>的值。</p>
+
+<p>  如果我们不需要寄宿图，那就不要复写这个方法了，这回造成CUP资源和内存的浪费，这也是苹果为什么建议我们，如果没有自定义的绘制就不要在子类中写一个空的<code class="highlighter-rouge">-drawRect:</code>方法啦。</p>
+
+<p>  当视图在屏幕上出现的时候<code class="highlighter-rouge">-drawRect:</code>方法自动会调用。<code class="highlighter-rouge">-drawRect:</code>方法里面的代码利用了Core Graphics去绘制一个寄宿图，然后内容就会被缓存起来知道它需要被更新（通常是我们调用了<code class="highlighter-rouge">-setNeedsDisplay</code>方法，尽管影响到表现效果的属性值被更改时，一些试图类型会被自动重绘，如<code class="highlighter-rouge">bounds</code>属性）。虽然<code class="highlighter-rouge">-drawRect:</code>方法是一个UIView方法，事实上都是底层的CALayer安排了重绘工作和保存了因此产生的图片。</p>
+
+<p>  CALayer有一个可选的<code class="highlighter-rouge">delegate</code>属性，实现了<code class="highlighter-rouge">CALayerDelegate</code>协议，当CALayer需要一个内容特定的信息时，就会从协议中请求。CALayerDelegate是一个非正式协议，其实就是说没有CALayerDelegate @protocol可以让你在类里面饮用啦。你只需要调用你想调用的方法，CALayer会帮你做剩下的。</p>
+
+<p>  当需要被重绘时，CALayer会请求它的代理给它一个寄宿图来显示。它通过调用下面这个方法做到的：</p>
+
+<pre><code class="language-objective-c">-(void)displayLayer:(CALayerCALayer *)layer;
+</code></pre>
+
+<p>  趁这个机会，如果代理想直接设置contents属性的话，他就可以这么做，不然没有别的方法可以调用了。如果代理不实现<code class="highlighter-rouge">-displayLayer:</code>方法，CALayer就会转而尝试调用下面这个方法：</p>
+
+<pre><code class="language-objective-c">- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx;
+</code></pre>
+
+<p>  在调用这个方法之前，CALayer创建了一个合适尺寸的空寄宿图（尺寸有bounds和contentsScale决定）和一个Core Graphics的绘制上下文环境，为绘制寄宿图做准备，他作为ctx参数传入。</p>
+
+<p>  让我们用代码来看一下他的作用：</p>
+
+<pre><code class="language-objective-c">- (void)viewDidLoad {
+    [super viewDidLoad];
+   CALayer *backLayer = _backView.layer;
+    
+    CALayer *blueLayer = [CALayer layer];
+    
+    blueLayer.backgroundColor = [UIColor blueColor].CGColor;
+    
+    blueLayer.frame = CGRectMake(0, 0, 100, 100);
+    
+    blueLayer.contentsScale = [UIScreen mainScreen].scale;
+    
+    blueLayer.delegate = self;
+    
+    [backLayer addSublayer:blueLayer];
+    
+    [blueLayer display];
+}
+    -(void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx
+{
+    
+    CGContextSetLineWidth(ctx, 10.0f);
+    CGContextSetStrokeColorWithColor(ctx, [UIColor redColor].CGColor);
+    CGContextStrokeEllipseInRect(ctx, layer.bounds);
+}
+
+</code></pre>
+
+<p>通过上述代码就可以实现下图的效果：</p>
+
+<p><span><img src="\images\寄宿图\5.png" /></span></p>
+
+<p>注意一些东西：</p>
+
+<ul>
+  <li>我们再blueLayer上显示的调用了<code class="highlighter-rouge">-display</code>。不同于UIView，当图层显示在屏幕上时，CALayer不会自动重绘它的内容。它把重绘的决定权交给了开发者。</li>
+  <li>尽管我们没有用<code class="highlighter-rouge">masksToBounds</code>属性，绘制的那个圆依然沿边界被剪裁了，这是因为你当你使用CALayerDelegate绘制寄宿图的时候，并没有对超出边界外的内容提供绘制支持。</li>
+</ul>
+
+<p>  现在我们理解了CALayerDelegate，并知道怎么使用它。但是除非我们自己创建了一个单独的图层，几乎没有机会用到CALayerDelegate。因为当UIView创建了它的宿主图层时，它就自动把图层的delegate设置成自己了，并切提供了一个<code class="highlighter-rouge">-displayLayer:</code>的实现，那所有问题都没有了。</p>
+
+<p>  当使用寄宿了视图的图层的时候，我们也不必实现<code class="highlighter-rouge">-displayLayer:</code>和<code class="highlighter-rouge">-drawLayer:inContext:</code>方法来绘制我们的寄宿图。通常做法是实现UIView的<code class="highlighter-rouge">-drawRect:</code>方法，UIView会帮我们做完剩下的工作，包括在需要重绘时执行<code class="highlighter-rouge">-display</code>方法。</p>
+
+<p>  好啦，终于又看完了一章，坚持！！</p>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>学习动画系列---理解CALayer</title>
+	  <link>//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer</link>
+	  <author>Freelf</author>
+	  <pubDate>2016-11-21T15:42:49+00:00</pubDate>
+	  <guid>//%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer</guid>
+	  <description><![CDATA[
+	     <p>  好长时间没写东西了，由于刚换了工作，一直在忙于熟悉业务，和一些新业务的开发，没有时间对自己的技术进行修行。这段时间终于闲下来了，可以找些自己感兴趣的东西来好好学习下了。最近在学习些高级动画，在gitbook上面看到一个<a href="https://www.gitbook.com/book/zsisme/ios-/details">iOS核心动画高级技巧</a>，阅读了下，写的是一些动画的基础。毕竟学东西，我们要从基础学起嘛。你连1+1都不会算，怎么学习数学，这是一个道理。好吧，我有些跑题了😀。我们平常用的UIView可以实现一些基础的动画，但是有时产品🐶要做一个非常牛逼的动画时，我们就有些傻眼了。这里就需要用到一个高级东西了，在我们iOS里面叫Core Animation，下面我们就来系列学下这个牛逼的东西。先来学习下比UIView高级些的东西，这个东西就叫CALayer。
+<!-- more --></p>
+<h1 id="calayer和uiview">CALayer和UIView</h1>
+<p>  iOS中所有的view都是<code class="highlighter-rouge">UIView</code>派生来的。<code class="highlighter-rouge">UIView</code>可以处理触摸事件，可以支持绘图，可以做仿射变换（其实就是旋转和缩放），<code class="highlighter-rouge">UIView</code>还可以做简单的类似于滑动，或者渐变动画。</p>
+
+<p>  <code class="highlighter-rouge">CALayer</code>和<code class="highlighter-rouge">UIView</code>类似，同样可以包含一些内容，管理layer的位置，它也有一些方法和属性用来做动画和变幻，和<code class="highlighter-rouge">UIView</code>最大的不同就是<code class="highlighter-rouge">CALayer</code>不能处理用户交互。</p>
+
+<p>  每一个<code class="highlighter-rouge">UIView</code>都有一个<code class="highlighter-rouge">CALayer</code>的实例的图层属性，<code class="highlighter-rouge">UIView</code>的职责就是负责管理创建这个layer，以确保党姿势图在层级关系中添加或者移除时，他们关联的图层也同样对应在层级关系树当中有同样的操作。</p>
+
+<p>  实际上这些背后关联的图层才是真正用来在屏幕上显示和做动画的，<code class="highlighter-rouge">UIView</code>仅仅是对它的一个封装。提供了一些iOS类似于处理触摸的具体功能，以及Core Animation底层方法的高级接口。至于为什么iOS要基于<code class="highlighter-rouge">UIView</code>和<code class="highlighter-rouge">CALayer</code>提供两个平行的层级关系呢？~~这不是多此一举么？~~这样做的原因在于职责分离，也能避免很多的重复代码。在iOS和Mac OS两个平台上，时间和用户交互有很多不同，这个大家都能理解，一个是多点触控，一个是鼠标键盘。把这种共能逻辑分开并应用的独立的Core Animation框架，苹果就能再iOS和Mac OS之间共享代码。反正底层都一样，只是封装成一个iOS用，一个Mac OS用。这就是iOS有UIKit，Mac OS有AppKit。</p>
+
+<p>  实际上，这里并不是两个层级关系，而是四个，处理视图层级和图层树，还存在呈现树和渲染树。我还没有看到这里，后面看到了在写后两个层级。😁</p>
+
+<h1 id="calayer的能力">CALayer的能力</h1>
+
+<p>  其实呢，对于一些简单的需求来说，我们没必要处理<code class="highlighter-rouge">CALayer</code>。因为<code class="highlighter-rouge">UIView</code>的动画API可以让动画变得简单。但是简单的代价就是不灵活。对于我这种完美主义➕强迫症患者来说，你这么不听话，让我怎么玩啊。于是我们就需要求Core Animation来帮忙了。我们始终要相信我们可以做出很牛逼的效果。请原谅我又吹牛逼了😄。</p>
+
+<p>  我们已经说了<code class="highlighter-rouge">CALayer</code>不能处理触摸时间，那么<code class="highlighter-rouge">CALayer</code>有哪些<code class="highlighter-rouge">UIView</code>没有的功能呢，上帝是公平的。既然<code class="highlighter-rouge">CALayer</code>不能处理触摸事件，那么它肯定有一些强大的功能。下面我们来列举下：</p>
+
+<ul>
+  <li>阴影，圆角，带颜色的边框。</li>
+  <li>3D变换。</li>
+  <li>非矩形范围。ps：这个还不知是个什么东东。</li>
+  <li>透明遮罩。</li>
+  <li>多级非线性动画。ps：这个也不知道是什么东西。</li>
+</ul>
+
+<p>  虽然我不懂有些东西，但是当我读玩这本书并且写完这个系列时，~~我必将很吊~~。</p>
+
+<h1 id="使用calayer">使用CALayer</h1>
+
+<p>  废了这么多话，下面来具体使用下CALayer下吧，毕竟光说不用嘴上功夫。下面打开你的<code class="highlighter-rouge">Xcode</code>然后cmd+shift+n，然后想一个酷炫的名字开始我们使用<code class="highlighter-rouge">CALayer</code>吧。（ps：每次新建工程我想名字都要想好久哦。语文不好真的不行。）</p>
+
+<p>  我们要怎么使用<code class="highlighter-rouge">CALayer</code>呢，我们要做到的就是在一个橘色的view上面加一个蓝色块，不用通过<code class="highlighter-rouge">addSubView</code>。好吧，在屏幕中间线添加那个橘色的view。这个我想小学生都会把。对不起，我又看不起小学生了。不扯别的了。不管你通过IB还是代码，反正我们很快就可以把橘色的view添加上来，下面我们通过下面的代码就可以把蓝色的小块加上来。</p>
+
+<pre><code class="language-objective-c">  //取到橘色view的backing layer
+  CALayer *backLayer  = self.backView.layer;
+  //新建一个蓝色layer
+  CALayer *blueLayer = [CALayer layer];
+  blueLayer.backgroundColor = [UIColor blueColor].CGColor;
+  blueLayer.frame = CGRectMake(0, 0, 50, 50);
+  //添加到橘色view的backing layer
+  [backLayer addSublayer:blueLayer];
+</code></pre>
+
+<p>  通过上面的代码我们就可以实现了，有图有真相。请看下图：
+<span><img src="\images\CALayer使用\1.png" /></span></p>
+
+<p>  一个view只有一个相关联的图层（自动创建），同事它也可以支持添加无数个图层，我们可以显示的创建一个单独的图层，并且把它直接添加到视图关联图层的自图层。尽管可以这样添加图层，但往往我们只是简单的处理视图，他们关联的图层并不需要额外的手动添加字图层。</p>
+
+<p>  使用关联的视图而不是<code class="highlighter-rouge">CALayer</code>的好处在于，你能使用所有<code class="highlighter-rouge">CALayer</code>底层特性的同时，也可以使用<code class="highlighter-rouge">UIView</code>的高级API。（比如自动排版，布局和事件处理）。</p>
+
+<p>  然而，在下面这些条件的时候，我们可能更需要<code class="highlighter-rouge">CALayer</code>而不是<code class="highlighter-rouge">UIView</code>：</p>
+
+<ul>
+  <li>开发同事可以在Mac OS上运行的跨平台应用。</li>
+  <li>使用多种CALayer子类，并且不想创建额外的<code class="highlighter-rouge">UIView</code>去封装他们的所有。</li>
+  <li>做一些对性能特别挑剔的工作。对于我们来说，我们都希望做一些好的产品，这是我们的追求嘛，所以基于这一点，我们就需要好好学习下这本书。</li>
+</ul>
+
+<p>  当然了，这些例子都很少见。总得来说，处理<code class="highlighter-rouge">UIView</code>比单独处理<code class="highlighter-rouge">CALayer</code>更加方便。</p>
+
+<h1 id="总结">总结</h1>
+
+<p>  这里我只是简单的了解了下<code class="highlighter-rouge">CALayer</code>，后面我会继续学下这个类的一些其他东西，再来分享。</p>
+
+
+	  ]]></description>
+	</item>
+
+	<item>
+	  <title>iOS9的适配</title>
+	  <link>//iOS9%E7%9A%84%E9%80%82%E9%85%8D</link>
+	  <author>Freelf</author>
+	  <pubDate>2016-01-18T13:46:30+00:00</pubDate>
+	  <guid>//iOS9%E7%9A%84%E9%80%82%E9%85%8D</guid>
+	  <description><![CDATA[
+	     <p>iOS9升级后相信很多人都是项目报错，因为项目要升级iOS9，从网上看了很多教程，就这篇教程还是比较全的，分享给大家，顺便自己记录下。网址是<a href="http://www.cocoachina.com/ios/20151016/13715.html">整理 iOS 9 适配中出现的坑（图文）</a>。</p>
+
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>
