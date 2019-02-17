@@ -1979,8 +1979,40 @@ body.page-template .post-title {
     width: 45%;
     float: left;
 }
-
-
+.back-button {
+    border-color: rgba(0,0,0,0.01);
+    color: #9EABB3;
+    float: left;
+}
+.back-button:before {
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 6px;
+    position: relative;
+    top: 1px;
+}
+.back-button:focus {
+    outline: 0;
+}
+.back-button:hover {
+  border-color: #BFC8CD;
+  color: #555;
+}
+.back-button {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 38px;
+    padding: 0 15px;
+    border: transparent 1px solid;
+    opacity: 1;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    line-height: 35px;
+    white-space: nowrap;
+    border-radius: 3px;
+    transition: all 0.5s ease;
+}
 /* ==========================================================================
    12. Media Queries - Smaller than 900px
    ========================================================================== */
@@ -2091,7 +2123,9 @@ body.page-template .post-title {
     .post-head.main-header {
         height: 45vh;
     }
-
+    .icon-arrow-left:before {
+        content: "\f605";
+    }
     .tag-head.main-header,
     .author-head.main-header {
         height: 30vh;
