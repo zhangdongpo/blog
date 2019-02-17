@@ -11,6 +11,7 @@ name: "面向自由编程"
 description: "Freelf's Blog"
 
 short_url: "freelf.me"
+author: "Freelf"
 disqus: username
 # edit baseurl to simply '/' if using as your personal page (instead of a project page)
 baseurl: "/"

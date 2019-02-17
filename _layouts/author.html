@@ -26,7 +26,7 @@ current: author
 
     <section class="author-profile inner">
         {% for author in site.data.authors %}
-            {% if author[1].username == page.author %}
+            {% if author[1].username == site.author %}
                 {% if author[1].assets %}
                 <figure class="author-image">
                     <div class="img" style="background-image: url({{ site.baseurl }}{{ author[1].assets }})"><span class="hidden">{{ author[1].name }}'s Picture</span></div>

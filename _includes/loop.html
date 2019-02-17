@@ -24,7 +24,7 @@
     </section>
     <footer class="post-meta">
         {% for author in site.data.authors %}
-        {% if author[1].username == post.author %}
+        {% if author[1].username == site.author %}
 
         {% if author[1].assets %}<img class="author-thumb" src="{{ site.baseurl }}{{ author[1].assets }}" alt="Author image"
             nopin="nopin" />{% endif %}

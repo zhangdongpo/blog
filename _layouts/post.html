@@ -18,7 +18,7 @@ class: 'post-template'
 
 <main class="content" role="main">
 
-    <article class="{{ page.subclass }}">
+    <article class="post">
 
         <header class="post-header">
             <h1 class="post-title">{{ page.title }}</h1>
@@ -26,8 +26,8 @@ class: 'post-template'
                 <!-- <a href='{{ site.baseurl }}{{ page.about }}'>{{ site.author }}</a> -->
 
                 {% for author in site.data.authors %}
-                {% if author[1].username == page.author %}
-                <!-- <a href='{{ site.baseurl }}author/{{ page.author }}'>{{ author[1].name }}</a> -->
+                {% if author[1].username == site.author %}
+                <!-- <a href='{{ site.baseurl }}author/{{ site.author }}'>{{ author[1].name }}</a> -->
                 {% endif %}
                 {% endfor %}
                 <time class="post-date" datetime="{{ page.date | date:'%Y-%m-%d' }}">{{ page.date | date_to_string }}</time>
@@ -56,21 +56,21 @@ class: 'post-template'
             <!-- Everything inside the #author tags pulls data from the author -->
             <!-- #author-->
             {% for author in site.data.authors %}
-            {% if author[1].username == page.author %}
+            {% if author[1].username == site.author %}
             {% if author[1].assets %}
             <figure class="author-image">
                 <a class="img" href="https://github.com/zhangdongpo" style="background-image: url({{ site.baseurl }}{{ author[1].assets }})"><span
-                        class="hidden">{{ page.author }}'s Picture</span></a>
+                        class="hidden">{{ site.author }}'s Picture</span></a>
             </figure>
             {% endif %}
 
             <section class="author">
-                <h4><a href="{{ site.baseurl }}author/{{ page.author }}">{{ author[1].name }}</a></h4>
+                <h4><a href="{{ site.baseurl }}author/{{ site.author }}">{{ author[1].name }}</a></h4>
 
                 {% if author[1].bio %}
                 <p> {{ author[1].bio }}</p>
                 {% else %}
-                <p>Read <a href="{{ site.baseurl }}author/{{ page.author }}">more posts</a> by this author.</p>
+                <p>Read <a href="{{ site.baseurl }}author/{{ site.author }}">more posts</a> by this author.</p>
                 {% endif %}
                 <div class="author-meta">
                     {% if author[1].location %}<span class="author-location icon-location"> {{ author[1].location }}</span>{%
