@@ -2,7 +2,6 @@
 layout: default
 disqus: false
 class: 'post-template'
-
 ---
 <!-- default -->
 <!-- The comment above "< default" means - insert everything in this file into -->
@@ -12,11 +11,8 @@ class: 'post-template'
 <!-- #post -->
 <header class="main-header post-head {% if page.cover %}" style="background-image: url({{ site.baseurl }}{{ page.cover }}) {% else %}no-cover{% endif %}">
     <nav class="main-nav {% if page.cover %} overlay {% endif %} clearfix">
-        {% if page.logo %}<a class="blog-logo" href="{{ site.baseurl }}"><img src="{{ site.baseurl }}{{ page.logo }}"
-                alt="Blog Logo" /></a>{% endif %}
-        {% if page.navigation %}
+        <a class="back-button icon-arrow-left" href="/">Home</a>
         <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
-        {% endif %}
     </nav>
 </header>
 
@@ -63,7 +59,7 @@ class: 'post-template'
             {% if author[1].username == page.author %}
             {% if author[1].assets %}
             <figure class="author-image">
-                <a class="img" href="{{ site.baseurl }}author/{{ page.author }}" style="background-image: url({{ site.baseurl }}{{ author[1].assets }})"><span
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url({{ site.baseurl }}{{ author[1].assets }})"><span
                         class="hidden">{{ page.author }}'s Picture</span></a>
             </figure>
             {% endif %}
