@@ -7,8 +7,8 @@ date: 2014-08-12 10:18:00
 tags: fables
 subclass: "post tag-test tag-content"
 logo: "assets/images/ghost.png"
-author: casper
-categories: casper
+author: Freelf
+categories: Freelf
 ---
 
 My first blog in jekyll~~~
