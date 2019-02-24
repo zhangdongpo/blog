@@ -715,7 +715,7 @@ imp = 0x0000000100001d10 (debug-objc`-[TestObject sayHello] at TestObject.m:11)
             <!-- Add Disqus Comments -->
             
             <div id="gitalk-container"></div>
-
+<script src="/assets/js/md5.min.js"></script>
 <script>
     const gitalk = new Gitalk({
         clientID: 'b62d799fc3a6b1dd7de9',
@@ -723,10 +723,9 @@ imp = 0x0000000100001d10 (debug-objc`-[TestObject sayHello] at TestObject.m:11)
         repo: 'blog',
         owner: 'zhangdongpo',
         admin: 'zhangdongpo',
-        id: location.pathname, // Ensure uniqueness and length less than 50
+        id: md5(location.pathname), // Ensure uniqueness and length less than 50
         distractionFreeMode: false // Facebook-like distraction free mode
     })
-
     gitalk.render('gitalk-container')
 </script>
             

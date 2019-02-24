@@ -268,7 +268,7 @@ Apple 的框架通常使用 <code class="highlighter-rouge">DataSource</code> �
             <!-- Add Disqus Comments -->
             
             <div id="gitalk-container"></div>
-
+<script src="/assets/js/md5.min.js"></script>
 <script>
     const gitalk = new Gitalk({
         clientID: 'b62d799fc3a6b1dd7de9',
@@ -276,10 +276,9 @@ Apple 的框架通常使用 <code class="highlighter-rouge">DataSource</code> �
         repo: 'blog',
         owner: 'zhangdongpo',
         admin: 'zhangdongpo',
-        id: location.pathname, // Ensure uniqueness and length less than 50
+        id: md5(location.pathname), // Ensure uniqueness and length less than 50
         distractionFreeMode: false // Facebook-like distraction free mode
     })
-
     gitalk.render('gitalk-container')
 </script>
             
