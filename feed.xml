@@ -26,7 +26,7 @@
         <title>读《Design-Patterns-by-Tutorials》笔记——Builder Pattern</title>
         
           <description>&lt;p&gt;构造器模式允许一步一步的创建一个复杂的对象而不是一次创建完成。这个模式包括三个主要类型，UML 图如下：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1538746972.png&quot; alt=&quot;构造器模式&quot; /&gt;&lt;/p&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/1538746972.png&quot; alt=&quot;构造器模式&quot; /&gt;&lt;/p&gt;
 
 </description>
         
@@ -67,7 +67,7 @@
   &lt;li&gt;&lt;strong&gt; Caretaker&lt;/strong&gt;: 从 originator 请求保存，并且接收一个 memento 作为响应。caretaker 负责保管这些 memento，并在稍后向 originator 提供这些 memento来恢复 originator 的状态。
 虽然不是严格要求，iOS通常使用&lt;code class=&quot;highlighter-rouge&quot;&gt;Encoder&lt;/code&gt;来讲 originator 的状态保存到 memento，并且使用&lt;code class=&quot;highlighter-rouge&quot;&gt;Decoder&lt;/code&gt;把 memento 恢复到 originator。这使编码和解码的逻辑可以通用。比如：&lt;code class=&quot;highlighter-rouge&quot;&gt;JSONEncoder&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;JSONDecoder&lt;/code&gt;允许一个对象可以编码为 &lt;code class=&quot;highlighter-rouge&quot;&gt;JSON&lt;/code&gt; 数据，也可以从&lt;code class=&quot;highlighter-rouge&quot;&gt;JSON&lt;/code&gt;数据中解码。
 UML 图如下：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1538272701.png&quot; alt=&quot;&quot; /&gt;&lt;/li&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/1538272701.png&quot; alt=&quot;&quot; /&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 </description>
@@ -85,7 +85,7 @@ UML 图如下：
         
           <description>&lt;p&gt;单例模式限制一个类仅仅有一个实例。每个这个类的引用都指向同一个实例。在 iOS 开发中非常常见这种模式，因为 Apple 广泛使用单例模式。
 UML 图如下：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1538101105.png&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/1538101105.png&quot; alt=&quot;&quot; /&gt;
 “singleton plus”模式也很常用，这个模式提供了一个共享单例，但是也允许其他实例被创建。&lt;/p&gt;
 
 </description>
@@ -122,7 +122,7 @@ UML 图如下：
         <title>读《Design Patterns by Tutorials》笔记——Delegation Pattern</title>
         
           <description>&lt;p&gt;委托模式使一个对象能够使用另一个对象来提供数据或者执行一些任务，这个模式有三个部分，UML 图如下：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15344108237603.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15344108237603.jpg&quot; alt=&quot;&quot; /&gt;
 &lt;!-- more --&gt;&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;一个&lt;strong&gt;对象需要委托&lt;/strong&gt;：也就是委托对象。通常这个对象有一个&lt;code class=&quot;highlighter-rouge&quot;&gt;weak&lt;/code&gt; 属性 &lt;code class=&quot;highlighter-rouge&quot;&gt;delegate&lt;/code&gt;，防止循环引用。&lt;/li&gt;
@@ -145,7 +145,7 @@ UML 图如下：
         
           <description>&lt;p&gt;MVC 设计模式把对象分为三个不同的类型： Models，Views和 Controllers。
 UML 图表示如下：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15341242390937.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15341242390937.jpg&quot; alt=&quot;&quot; /&gt;
 &lt;!-- more --&gt;
 MVC 是在 iOS 编程中是非常常见的，因为 Apple 在 UIKit 中大量选用了这种设计模式。&lt;/p&gt;
 &lt;ul&gt;
@@ -172,25 +172,25 @@ MVC 是在 iOS 编程中是非常常见的，因为 Apple 在 UIKit 中大量选
 &lt;h2 id=&quot;什么是-uml-图&quot;&gt;什么是 UML 图&lt;/h2&gt;
 &lt;p&gt;UML 图包含类、协议、属性、方法和关系。
 一个方块表示一个类。下面有一个非常简单的类 Dog：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1534068645.png&quot; alt=&quot;Dog&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/1534068645.png&quot; alt=&quot;Dog&quot; /&gt;
 为了表示一个类继承另外一个类，使用一个空心箭头：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1534068758.png&quot; alt=&quot;继承&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/1534068758.png&quot; alt=&quot;继承&quot; /&gt;
 但是我们通常不把空心箭头叫做“inherits from”，而是叫成“is a”，例如：可以用下面的图表示 SheepDog 继承自 Dog 。
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340697063981.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15340697063981.jpg&quot; alt=&quot;&quot; /&gt;
 我们可以这样来理解这个图“SheepDog 是一个 Dog”。
 在 UML 中使用一个简单的箭头表示属性，在 UML 中叫做“关联”。
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340698551173.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15340698551173.jpg&quot; alt=&quot;&quot; /&gt;
 通常把属性这个箭头叫做“has a”，比如下图：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340699550757.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15340699550757.jpg&quot; alt=&quot;&quot; /&gt;
 也可以通过在箭头下面描述一个区间来表示一对多的关系，如下图表示一个 Farmer 有好多 Dog：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340700470394.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15340700470394.jpg&quot; alt=&quot;&quot; /&gt;
 可以在一个 UML 图中使用多个箭头和方块，下面这个图表示一个 Farmer 有一个 SheepDog，这个  SheepDog 是一个 Dog。
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340702450982.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15340702450982.jpg&quot; alt=&quot;&quot; /&gt;
 在 UML 图中，也可以使用方块表示一个协议，为了区别类，需要在协议名前面加上«protocol»。
 下图表示一个 PetOwning 协议：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340703702062.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15340703702062.jpg&quot; alt=&quot;&quot; /&gt;
 使用一个空心箭头和虚线来表示一个类遵守了一个协议：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/15340704239696.jpg&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/15340704239696.jpg&quot; alt=&quot;&quot; /&gt;
 你可以把它理解成“实现”或者“符合”。
 使用一个普通箭头和虚线来表示依赖。ULM 有意模糊依赖的概念。因此，无论什么时候使用依赖的关系都应该注释上使用的目的。比如，可以使用依赖箭头表示以下情况：&lt;/p&gt;
 &lt;ul&gt;
@@ -326,69 +326,12 @@ Reveal Server was loaded successfully.
         <title>读Objective-C高级编程笔记一——引用计数</title>
         
           <description>&lt;p&gt;最近读了《Objective-C高级编程》这本进阶书：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1503026660.png&quot; alt=&quot;Objective-C高级编程&quot; /&gt;。
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/1503026660.png&quot; alt=&quot;Objective-C高级编程&quot; /&gt;。
 这本书有三章，我们先来介绍第一章。可以从下图看下第一章的整体结构。
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1503025584.png&quot; alt=&quot;内存管理&quot; /&gt;。
+&lt;img src=&quot;https://nightwish.oss-cn-beijing.aliyuncs.com/1503025584.png&quot; alt=&quot;内存管理&quot; /&gt;。
 &lt;!-- more --&gt;
 本篇是第一篇，来写下iOS的内存管理，其实iOS的内存管理无论是ARC还是MRC都是通过引用计数来管理的。每个对象都有一个&lt;code class=&quot;highlighter-rouge&quot;&gt;retainCount &lt;/code&gt;的属性。当一个对象的&lt;code class=&quot;highlighter-rouge&quot;&gt;retainCount &lt;/code&gt;为0，就说明没有地方使用该对象了，可以释放了。
 我们先看MRC，再看ARC，因为ARC其实是建立在MRC之上的，只是是编译器在合适的地方代替我们插入了内存管理的代码。&lt;/p&gt;
-&lt;h3 id=&quot;引用计数&quot;&gt;引用计数&lt;/h3&gt;
-&lt;p&gt;前面我们一直在说引用计数，到底什么是引用计数呢？下图可以表达这个概念。
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1503068536.png&quot; alt=&quot;照明管理&quot; /&gt;
-在Objective-C中，对象就相当于上图中的灯。使用计数功能计算需要照明的人数，办公室的灯得到了很好的管理。同样，使用引用计数功能，对象也能够得到很好的管理，这就是Objective-C的内存管理，如下图所示：
-&lt;img src=&quot;http://ohg2bgicd.bkt.clouddn.com/1503071113.png&quot; alt=&quot;引用计数的内存管理&quot; /&gt;&lt;/p&gt;
-&lt;h3 id=&quot;内存管理思考方式&quot;&gt;内存管理思考方式&lt;/h3&gt;
-&lt;p&gt;下面我们来了解下引用计数式的内存管理思考方式。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;自己生成的对象，自己持有。&lt;/li&gt;
-  &lt;li&gt;非自己生成的对象，自己也能持有。&lt;/li&gt;
-  &lt;li&gt;不再需要自己持有的对象时释放。&lt;/li&gt;
-  &lt;li&gt;非自己持有的对象不能释放。
-其实引用计数式的内存管理思考方式仅此而已。除了上文提到的“生成”，“持有”，“释放”三种对对象的操作方式，还有一种“废弃”方式，各个词表示的Objective-C方法如下表：
-| 对象操作                     | Objective-C方法
-| 生成并持有对象         | alloc/new/copy/mutableCopy方法
-| 持有对象                     | retain方法
-| 释放对象                     | release方法
-| 废弃对象                     | dealloc方法
-这些有关Objective-C内存管理的方法，实际上不包括在该语言中，而是包含在Cocoa框架中用于iOS，OS X应用开发。Cocoa中Foundation框架库的&lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;类负责内存管理的职责。Objective-C内存管理的alloc/retain/release/dealloc方法分别指代NSObject累的alloc方法，retain方法，release方法和dealloc方法。
-下面我们来详细了解下上面提到的内存管理思考方式。
-    &lt;h4 id=&quot;自己生成的对象自己持有&quot;&gt;自己生成的对象自己持有&lt;/h4&gt;
-    &lt;p&gt;使用以下名称开头的方法名意味着自己生成并持有对象：&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;alloc&lt;/li&gt;
-  &lt;li&gt;new&lt;/li&gt;
-  &lt;li&gt;copy&lt;/li&gt;
-  &lt;li&gt;mutableCopy
-例如：
-  id obj = [[NSObject alloc]init]
-这句话就自己生成并持有了对象，另外使用NSObject的new类也能自己生成并持有对象。&lt;code class=&quot;highlighter-rouge&quot;&gt;[NSObject new]&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;[[NSObject alloc]init]&lt;/code&gt;是完全一样的。
-同样的copy和mutableCopy方法也可以自己生成并持有对象。两者的差异就是copy生成的是不可变对象，而mutableCopy生成的是可变对象。
-另外，下列名称也意味着自己生成并持有对象：&lt;/li&gt;
-  &lt;li&gt;allocMyObject&lt;/li&gt;
-  &lt;li&gt;newThisObject&lt;/li&gt;
-  &lt;li&gt;copyThis&lt;/li&gt;
-  &lt;li&gt;mutableCopyYourObject
-但是对象一下名称，即使使用alloc/new/copy/mutableCopy名称开头，也并不属于同一类方法。&lt;/li&gt;
-  &lt;li&gt;allocate&lt;/li&gt;
-  &lt;li&gt;newer&lt;/li&gt;
-  &lt;li&gt;copying&lt;/li&gt;
-  &lt;li&gt;mutableCopyed
-反正只要记得上面说的几个方法是自己生成并持有对象就好。
-    &lt;h4 id=&quot;非自己生成的对象自己也能持有&quot;&gt;非自己生成的对象自己也能持有&lt;/h4&gt;
-    &lt;p&gt;因为是非自己生成并持有，所以该对象不是自己生成的，所以我们来使用上面说的几个方法外的方法试试。非常可以说明问题的就是NSMutableArray的array类方法：
-  id obj = [NSMutableArray array];
-上面代码中，其实obj是不持有生成的这个对象的，记得以前我还傻傻的以为这个和上面的一样会持有对象，结果一运行程序，直接崩溃了。我们可以使用retain方法来持有这个对象。&lt;/p&gt;
-    &lt;h4 id=&quot;不再需要自己持有的对象时释放&quot;&gt;不再需要自己持有的对象时释放&lt;/h4&gt;
-    &lt;p&gt;自己持有的对象，一旦不再需要，持有者有义务释放，使用release方法释放。无论是自己生成并持有的对象，还是通过retain方法持有的对象，在不需要时都需要通过release方法释放。下面我们来看下通过某个方法生成对象并将其return给调用方和调用&lt;code class=&quot;highlighter-rouge&quot;&gt;[NSMutableArray array] &lt;/code&gt;方法取得对象的区别：&lt;/p&gt;
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-(id)allocObject
-  {
-     id obj = [[NSObject alloc]init];
-     return obj;
-  }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;p&gt;像上面这样，原封不动的返回生成并持有的对象，就能让调用方也持有该对象。和前面说的自己生成并持有没区别，为什么&lt;code class=&quot;highlighter-rouge&quot;&gt;[NSMutableArray array] &lt;/code&gt;不行呢，下面我们来看下具体实现：&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
 
 </description>
         
@@ -405,13 +348,13 @@ Reveal Server was loaded successfully.
         
           <description>&lt;p&gt;这是一篇翻译自Raywenderlich上的文章，&lt;a href=&quot;https://www.raywenderlich.com/50197/uikit-dynamics-tutorial&quot;&gt;原文&lt;/a&gt;。
 &lt;!-- more --&gt;&lt;/p&gt;
-&lt;h1 id=&quot;whats-uikit-dynamic&quot;&gt;What’s UIKit Dynamic&lt;/h1&gt;
+&lt;h2 id=&quot;whats-uikit-dynamic&quot;&gt;What’s UIKit Dynamic&lt;/h2&gt;
 &lt;p&gt;  iOS7鼓励我们设计出一个物理动态的效果，这个听起来是一个很艰巨的任务。但是苹果爸爸已经为我们提供了一些非常好用的东西，就是UIKit Dynamics和Motion Effects。&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;UIKit Dynamics 是一个被整合的UIKit中的完整物理引擎。它允许你通过添加一些重力，附件(弹簧），力等行为来创建感觉真实的效果。你只管定义界面元素采用的物理特征，其他的就交给UIKit Dynamics。&lt;/li&gt;
   &lt;li&gt;Motion Effects 就是你创建的一些行为，比如上面提到的那些重力，附件等等的东西。
 当把这两个用在一起时，将会很自然的响应自己的行为。
-    &lt;h1 id=&quot;getting-started&quot;&gt;Getting started&lt;/h1&gt;
+    &lt;h2 id=&quot;getting-started&quot;&gt;Getting started&lt;/h2&gt;
     &lt;p&gt;我们新建一个项目，然后在viewController里面加上下面的代码：&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;

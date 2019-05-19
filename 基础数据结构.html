@@ -245,7 +245,7 @@ typedef struct objc_object *id;
     };
 </code></pre></div></div>
 <p>可以看出isa_t是一个union类型结构体，也就是说isa_t，cls，bits和结构体共用一块内存结构。isa总共占64为内存结构(取决于结构体)。好了，把上面的源码转换成类图就是下面这样子了。
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526375149.png" alt="图片来自冰霜的blog" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526375149.png" alt="图片来自冰霜的blog" /></p>
 <blockquote>
   <p>图片来自冰霜的blog</p>
 </blockquote>
@@ -264,7 +264,7 @@ typedef struct objc_object *id;
 </ul>
 
 <p>类和元类的关系如下图：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526378403.png" alt="类和元类" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526378403.png" alt="类和元类" /></p>
 <blockquote>
   <p>图片来自<a href="http://www.sealiesoftware.com/blog/archive/2009/04/14/objc_explain_Classes_and_metaclasses.html">Classes and metaclasses</a></p>
 </blockquote>
@@ -318,13 +318,13 @@ objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor)
 </blockquote>
 
 <p>我们看下isa_t内存布局：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526463593.png" alt="" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526463593.png" alt="" /></p>
 <blockquote>
   <p>图片来自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
 </blockquote>
 
 <p>ISA_MAGIC_VALUE = 0x000001a000000001ULL，转换成二进制是11010000000000000000000000000000000000001，所以把ISA_MAGIC_VALUE赋值给bits，isa_t的结构如下图：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526464002.png" alt="" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526464002.png" alt="" /></p>
 <blockquote>
   <p>图片来自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
 </blockquote>
@@ -338,7 +338,7 @@ objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor)
 
 <h4 id="has_cxx_dtor">has_cxx_dtor</h4>
 <p>经过<code class="highlighter-rouge">newisa.has_cxx_dtor = hasCxxDtor;</code>这段代码，会设置isa_t的has_cxx_dtor，这一位表示当前对象有 C++ 或者 ObjC 的析构器(destructor)，如果没有析构器就会快速释放内存。设置完后结构如下：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526465717.png" alt="" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526465717.png" alt="" /></p>
 <blockquote>
   <p>图片修改自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
 </blockquote>
@@ -358,7 +358,7 @@ objc_object::initIsa(Class cls, bool nonpointer, bool hasCxxDtor)
 </blockquote>
 
 <p>Objective-C中类的指针后三位也是0，在<code class="highlighter-rouge">_class_createInstanceFromZone</code>中打印类的地址可以看到最后一位不是0就是8，所以类的指针后三位是0。
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526483409.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526483409.png" alt="" />
 所以上面cls»3没有问题。我们尝试运行下面代码来形象说明下，理解的可以更加深刻。</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NSString *binaryWithInteger(NSUInteger decInt) {
@@ -384,7 +384,7 @@ class  100000000011101000000000100111000
 
 </code></pre></div></div>
 <p>打印出来object的isa的内容如下图所示：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526539598.png" alt="" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526539598.png" alt="" /></p>
 <blockquote>
   <p>图片修改自<a href="https://www.jianshu.com/p/9d649ce6d0b8">霜神blog</a></p>
 </blockquote>
@@ -450,7 +450,7 @@ private:
 </blockquote>
 
 <p>因为class_rw_t *指针只存于[3,47]，所以后面三位可以存储当前类的的其他信息。
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526550108.png" alt="" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526550108.png" alt="" /></p>
 <blockquote>
   <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
 </blockquote>
@@ -508,7 +508,7 @@ private:
 };
 </code></pre></div></div>
 <p>下面我们说下class_rw_t和class_ro_t的关系，然后再来验证。在编译期间，类结构中的class_data_bits_t *data指向的是class_ro_t *指针，用类图来表示一下：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526613551.png" alt="" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526613551.png" alt="" /></p>
 <blockquote>
   <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
 </blockquote>
@@ -522,7 +522,7 @@ rw-&gt;flags = RW_REALIZED|RW_REALIZING; //设置flag
 cls-&gt;setData(rw); // 把class_rw_t设置为class_data_bits_t旳data
 </code></pre></div></div>
 <p>经过上面的方法类图会变为下面这样的：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526607686.png" alt="" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526607686.png" alt="" /></p>
 <blockquote>
   <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
 </blockquote>
@@ -563,11 +563,11 @@ cls-&gt;setData(rw); // 把class_rw_t设置为class_data_bits_t旳data
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x100002750
 </code></pre></div></div>
 <p>接下来在_objc_init方法打一个断点，这个方法是运行时初始化之前调用的。
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526611021.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526611021.png" alt="" />
 然后在lldb中输入下面的命令：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526611896.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526611896.png" alt="" />
 通过上面的图我们可以看到，在class_ro_t中，只有baseMethodList和name有值，其他的都没值。因为类里面只有一个方法，没有属性，协议什么的。下面我们看下baseMethodList里面的内容：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526612249.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526612249.png" alt="" />
 我们通过$5-&gt;get(0)可以获取到一个method_t结构体，可以看到就是我们在类中的sayHello方法。</p>
 <h4 id="验证realizeclass">验证realizeClass</h4>
 <p>下面我们来验证下realizeClass的作用，该方法的主要作用就是对类进行第一次初始化，包括：</p>
@@ -579,23 +579,23 @@ cls-&gt;setData(rw); // 把class_rw_t设置为class_data_bits_t旳data
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>static Class realizeClass(Class cls)
 </code></pre></div></div>
 <p>我们需要在这个方法打一个条件断点：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526612802.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526612802.png" alt="" />
 这里使用指针相等的方式，来确定当前类是TestObject，之所以不用<code class="highlighter-rouge">[NSStringFromClass(cls) isEqualToString:@"TestObject"]</code>，是因为在这个时间点上这些方法还不能用。
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526613287.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526613287.png" alt="" />
 这个断点设置在这里，因为TestObject是一个正常类，所以会走else方法。运行代码时，因为每个类都会走这个方法，只有类是TestObject时才会进断点，所以可能会等会才进断点。
 在这时打印类结构，其中布局依然会是下图这样：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526613551.png" alt="" /></p>
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526613551.png" alt="" /></p>
 <blockquote>
   <p>图片来自<a href="https://github.com/Draveness/analyze/blob/master/contents/objc/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90%20ObjC%20%E4%B8%AD%E6%96%B9%E6%B3%95%E7%9A%84%E7%BB%93%E6%9E%84.md">深入解析 ObjC 中方法的结构</a></p>
 </blockquote>
 
 <p>当运行完else中代码，我们再来打印下结构：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526614493.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526614493.png" alt="" />
 通过打印可以看出来，当运行完else中代码，类的class_ro_t和class_rw_t都被正确设置了，但是class_rw_t中的methods，properties和protocols均未设置，这些将在<code class="highlighter-rouge">methodizeClass</code>中设置。
 下面我们就去验证下：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526615057.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526615057.png" alt="" />
 当代码运行到这一行，我们再执行下面的命令：
-<img src="http://ohg2bgicd.bkt.clouddn.com/1526615225.png" alt="" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/1526615225.png" alt="" />
 在这里调用了<code class="highlighter-rouge">method_array_t</code>的<code class="highlighter-rouge">attachLists</code>方法，将<code class="highlighter-rouge">baseMethods</code>中的方法添加到<code class="highlighter-rouge">methods</code>数组之后。我们访问<code class="highlighter-rouge">methods</code>才会获取当前类的实例方法。</p>
 <h4 id="list_array_tt和method_t">list_array_tt和method_t</h4>
 <h5 id="list_array_tt">list_array_tt</h5>
