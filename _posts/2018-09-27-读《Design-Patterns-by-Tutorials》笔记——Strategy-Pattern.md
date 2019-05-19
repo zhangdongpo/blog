@@ -12,7 +12,7 @@ category: DesignPatterns
 * **策略对象**：遵守策略协议的对象。
 
 UML 图如下：
-![](http://ohg2bgicd.bkt.clouddn.com/1538047244.png)
+![](https://nightwish.oss-cn-beijing.aliyuncs.com/1538047244.png)
 
 <!-- more -->
 
@@ -124,7 +124,7 @@ public class MoviewRatingViewController: UIViewController {
 ## Tutorial project
 
 我们接着委托模式继续做那个 app。我们添加一个可以随机顺序回答问题的机制。这样我们就可以不按顺序回答问题了。但是，有些人可能想要顺序回答问题。这里我们用策略模式来实现。实现效果：
-![](http://ohg2bgicd.bkt.clouddn.com/2018-09-27%2019.02.31.gif?imageMogr2/auto-orient/thumbnail/350x/blur/1x0/quality/100%7Cimageslim)
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2018-09-28%2012.06.40.gif" width="375px" />
 [Demo](https://github.com/zhangdongpo/LearnDesignPattern/tree/Strategy)
 ## 预告
 下节将介绍单例模式。
