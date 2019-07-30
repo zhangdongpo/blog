@@ -128,6 +128,38 @@
 
 <article class="post">
     <header class="post-header">
+        <h2 class="post-title"><a href="/%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7">理解属性</a></h2>
+    </header>
+    <section class="post-excerpt">
+        <p>属性是Objective-C的一项特性，用于封装对象内的数据。OC对象常会把需要的数据保存为实例变量，实例变量一般通过存取方法（这里的存取方法指的就是setter/getter方法）来访问实例变量。其中setter方法用于写入变量的值，getter方法用于读取变量的值。大家也许已经使用过属性这一概念了，不过大家未必会知道其中所有的细节，而且还有很多与属性有关的麻烦事。这里将会告诉大家有哪些问题可以用属性解决，并指出其中所体现出的关键特性。 ​ 在一个描述个人信息的类中，我们可能会存放人名，生日，地址等内容，我们可以在类的.h文件中声明一些实例变量，如下图所示： 以前写过java或者C++的人应该比较熟悉这种写法，可以定义实例变量的作用域，然而编写OC却很少这样做。这种写法的问题是：对象布局在编译器就已经固定了，只要碰到_firstName变量的代码，编译器就把其替换为“偏移量”，这个偏移量是“硬编码”，表示该变量距离存放对象的内存区域的起始地址有多远。这样做目前看来没有什么问题，但是如果又增加了一个实例变量，如下图所示：... <a class="read-more" href="/%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7">&raquo;</a></p>
+    </section>
+    <footer class="post-meta">
+        
+        
+
+        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
+            nopin="nopin" />
+        <!-- author -->
+        <!-- <a href='/author/'>Freelf</a> -->
+
+        
+        
+
+        <!-- [[tags prefix=" on "]] -->
+        
+        <!-- on -->
+        
+        
+        <a href='/tag/读书笔记'>读书笔记</a>
+        
+        
+        
+        <time class="post-date index-post-date" datetime="2016-02-29">29 Feb 2016</time>
+    </footer>
+</article>
+
+<article class="post">
+    <header class="post-header">
         <h2 class="post-title"><a href="/iOS9%E7%9A%84%E9%80%82%E9%85%8D">iOS9的适配</a></h2>
     </header>
     <section class="post-excerpt">
@@ -251,38 +283,6 @@
         
         
         <time class="post-date index-post-date" datetime="2015-09-24">24 Sep 2015</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7">理解对象等同性</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>​ 根据“等同性”来比较对象是一个非常有用的功能。不过，按照==操作符比较，未必是我们想要的结果，因为该操作比较的是两个指针的本身，而不是其所指的对象。我们应该使用NSObject协议声明的isEqual方法来判断两个对象的等同性。一般来说，两个类型不同的对象总是不相等的。某些对象提供了特殊的等同性判断方法，如果知道了两个对象都属于同一个类，那么久可以使用这种方法了。我们用下面的代码做例子： NSString *string1... <a class="read-more" href="/%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/读书笔记'>读书笔记</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2015-09-17">17 Sep 2015</time>
     </footer>
 </article>
 
