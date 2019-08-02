@@ -231,32 +231,6 @@
 
 </main>
 
-<aside class="read-next">
-
-    <!-- [[! next_post ]] -->
-    
-    <a class="read-next-story no-cover"
-        href="/UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0">
-        <section class="post">
-            <h2>iOS UI开发捷径读书笔记一——基础概念理解</h2>
-            <p>最近读了《iOS UI开发捷径--利用Interface Builder高效、优雅地开发UI》这本书。感觉受益匪浅，记录下自己在书里面学到的东西。这里只写自己学到的新知识，并不介绍一些简单的IB知识，想要具体学习，请买书自己学习。 ## 和Interface Builder有关的几个重要概念 下面介绍几个和IB有关的概念，学习下平常经常用，但是不了解的概念。 ### Bundle 这个我们在平常工作中应该经常用，比如创建IB的时候，还有获取资源路径的时候： ``` let bundle = Bundle.main...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /next_post ]] -->
-    <!-- [[! prev_post ]] -->
-    
-    <a class="read-next-story prev no-cover"
-        href="/%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0">
-        <section class="post">
-            <h2>读Objective-C高级编程笔记一——引用计数</h2>
-            <p>最近读了《Objective-C高级编程》这本进阶书： 。 这本书有三章，我们先来介绍第一章。可以从下图看下第一章的整体结构。 。 本篇是第一篇，来写下iOS的内存管理，其实iOS的内存管理无论是ARC还是MRC都是通过引用计数来管理的。每个对象都有一个retainCount 的属性。当一个对象的retainCount 为0，就说明没有地方使用该对象了，可以释放了。 我们先看MRC，再看ARC，因为ARC其实是建立在MRC之上的，只是是编译器在合适的地方代替我们插入了内存管理的代码。 引用计数 前面我们一直在说引用计数，到底什么是引用计数呢？下图可以表达这个概念。 在Objective-C中，对象就相当于上图中的灯。使用计数功能计算需要照明的人数，办公室的灯得到了很好的管理。同样，使用引用计数功能，对象也能够得到很好的管理，这就是Objective-C的内存管理，如下图所示： 内存管理思考方式 下面我们来了解下引用计数式的内存管理思考方式。 自己生成的对象，自己持有。 非自己生成的对象，自己也能持有。 不再需要自己持有的对象时释放。 非自己持有的对象不能释放。...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /prev_post ]] -->
-</aside>
-
 <!-- /post -->
 
         <!-- The tiny footer at the very bottom -->

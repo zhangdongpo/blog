@@ -411,32 +411,6 @@ itemBehaviour.elasticity = 0.6;
 
 </main>
 
-<aside class="read-next">
-
-    <!-- [[! next_post ]] -->
-    
-    <a class="read-next-story no-cover"
-        href="/%E8%AF%BBObjective-C%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B%E7%AC%94%E8%AE%B0%E4%B8%80-%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0">
-        <section class="post">
-            <h2>读Objective-C高级编程笔记一——引用计数</h2>
-            <p>最近读了《Objective-C高级编程》这本进阶书： ![Objective-C高级编程](https://nightwish.oss-cn-beijing.aliyuncs.com/1503026660.png)。 这本书有三章，我们先来介绍第一章。可以从下图看下第一章的整体结构。 ![内存管理](https://nightwish.oss-cn-beijing.aliyuncs.com/1503025584.png)。 本篇是第一篇，来写下iOS的内存管理，其实iOS的内存管理无论是ARC还是MRC都是通过引用计数来管理的。每个对象都有一个`retainCount `的属性。当一个对象的`retainCount `为0，就说明没有地方使用该对象了，可以释放了。 我们先看MRC，再看ARC，因为ARC其实是建立在MRC之上的，只是是编译器在合适的地方代替我们插入了内存管理的代码。 ### 引用计数 前面我们一直在说引用计数，到底什么是引用计数呢？下图可以表达这个概念。 ![照明管理](https://nightwish.oss-cn-beijing.aliyuncs.com/1503068536.png) 在Objective-C中，对象就相当于上图中的灯。使用计数功能计算需要照明的人数，办公室的灯得到了很好的管理。同样，使用引用计数功能，对象也能够得到很好的管理，这就是Objective-C的内存管理，如下图所示： ![引用计数的内存管理](https://nightwish.oss-cn-beijing.aliyuncs.com/1503071113.png) ### 内存管理思考方式 下面我们来了解下引用计数式的内存管理思考方式。...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /next_post ]] -->
-    <!-- [[! prev_post ]] -->
-    
-    <a class="read-next-story prev no-cover"
-        href="/%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E5%AF%84%E5%AE%BF%E5%9B%BE">
-        <section class="post">
-            <h2>学习动画系列---寄宿图</h2>
-            <p>  上一篇学习了下CALayer的概念，者一篇学习下CALayer的内部属性，我们先来解释下什么是寄宿图。在上一篇中，我们通过CALayer类创建了一个蓝色的背景图层，如果他仅仅是展现一个单调的颜色，~~那我还学他干啥？~~其实它还可以包含一张图片，它里面包含的图我们就叫寄宿图。这个名字太奇怪了。估计是翻译的问题吧。 contents属性 contents   CALayer有个contents属性，这个属性被定义为id类型，但是可不要被定义为id类型迷惑，如果给contents属性赋的值不是CGImage，那么他就是一个空白的layer。   这个奇怪的表现实由于Mac OS的历史原因造成的，因为在Mac OS中，这个属性对CGImage和NSImage都有作用。如果在iOS平台上将UIImage的值赋给它，只能得到一个空白的layer。   事实上，我们真正要赋值的是一个CGImageRef的指针，UIImage有个CGImage的属性，返回一个CGImageRef，如果我们直接把这个值赋给contents，编译器会提醒我们需要加上(__bridge id)，这是为啥呢，因为CGImageRef是一个Core Foundation类型的。因为Core Foundation对象和Cocoa对象在运行时是toll-free bridging的，所以我们可以通过__bridge关键字转换的。所以我们用下面的代码就可以让一个view现实一个图片，是不是很神奇。算了，当我没说。还是看代码吧： UIImage *image =...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /prev_post ]] -->
-</aside>
-
 <!-- /post -->
 
         <!-- The tiny footer at the very bottom -->

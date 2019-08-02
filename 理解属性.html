@@ -229,34 +229,6 @@
 
 </main>
 
-<aside class="read-next">
-
-    <!-- [[! next_post ]] -->
-    
-    <a class="read-next-story no-cover"
-        href="/%E5%AD%A6%E4%B9%A0%E5%8A%A8%E7%94%BB%E7%B3%BB%E5%88%97-%E7%90%86%E8%A7%A3CALayer">
-        <section class="post">
-            <h2>学习动画系列---理解CALayer</h2>
-            <p>&emsp;&emsp;好长时间没写东西了，由于刚换了工作，一直在忙于熟悉业务，和一些新业务的开发，没有时间对自己的技术进行修行。这段时间终于闲下来了，可以找些自己感兴趣的东西来好好学习下了。最近在学习些高级动画，在gitbook上面看到一个[iOS核心动画高级技巧][1]，阅读了下，写的是一些动画的基础。毕竟学东西，我们要从基础学起嘛。你连1+1都不会算，怎么学习数学，这是一个道理。好吧，我有些跑题了😀。我们平常用的UIView可以实现一些基础的动画，但是有时产品🐶要做一个非常牛逼的动画时，我们就有些傻眼了。这里就需要用到一个高级东西了，在我们iOS里面叫Core Animation，下面我们就来系列学下这个牛逼的东西。先来学习下比UIView高级些的东西，这个东西就叫CALayer。 # CALayer和UIView &emsp;&emsp;iOS中所有的view都是`UIView`派生来的。`UIView`可以处理触摸事件，可以支持绘图，可以做仿射变换（其实就是旋转和缩放），`UIView`还可以做简单的类似于滑动，或者渐变动画。 &emsp;&emsp;`CALayer`和`UIView`类似，同样可以包含一些内容，管理layer的位置，它也有一些方法和属性用来做动画和变幻，和`UIView`最大的不同就是`CALayer`不能处理用户交互。 &emsp;&emsp;每一个`UIView`都有一个`CALayer`的实例的图层属性，`UIView`的职责就是负责管理创建这个layer，以确保党姿势图在层级关系中添加或者移除时，他们关联的图层也同样对应在层级关系树当中有同样的操作。 &emsp;&emsp;实际上这些背后关联的图层才是真正用来在屏幕上显示和做动画的，`UIView`仅仅是对它的一个封装。提供了一些iOS类似于处理触摸的具体功能，以及Core Animation底层方法的高级接口。至于为什么iOS要基于`UIView`和`CALayer`提供两个平行的层级关系呢？\~\~这不是多此一举么？\~\~这样做的原因在于职责分离，也能避免很多的重复代码。在iOS和Mac OS两个平台上，时间和用户交互有很多不同，这个大家都能理解，一个是多点触控，一个是鼠标键盘。把这种共能逻辑分开并应用的独立的Core Animation框架，苹果就能再iOS和Mac OS之间共享代码。反正底层都一样，只是封装成一个iOS用，一个Mac OS用。这就是iOS有UIKit，Mac OS有AppKit。 &emsp;&emsp;实际上，这里并不是两个层级关系，而是四个，处理视图层级和图层树，还存在呈现树和渲染树。我还没有看到这里，后面看到了在写后两个层级。😁...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /next_post ]] -->
-    <!-- [[! prev_post ]] -->
-    
-    <a class="read-next-story prev no-cover"
-        href="/iOS9%E7%9A%84%E9%80%82%E9%85%8D">
-        <section class="post">
-            <h2>iOS9的适配</h2>
-            <p>iOS9升级后相信很多人都是项目报错，因为项目要升级iOS9，从网上看了很多教程，就这篇教程还是比较全的，分享给大家，顺便自己记录下。网址是整理 iOS 9 适配中出现的坑（图文）。
-
-</p>
-        </section>
-    </a>
-    
-    <!-- [[! /prev_post ]] -->
-</aside>
-
 <!-- /post -->
 
         <!-- The tiny footer at the very bottom -->

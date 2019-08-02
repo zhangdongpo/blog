@@ -736,32 +736,6 @@ imp = 0x0000000100001d10 (debug-objc`-[TestObject sayHello] at TestObject.m:11)
 
 </main>
 
-<aside class="read-next">
-
-    <!-- [[! next_post ]] -->
-    
-    <a class="read-next-story no-cover"
-        href="/Objective-C-Runtime-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81">
-        <section class="post">
-            <h2>Objective-C Runtime --- 消息发送</h2>
-            <p>上篇文章分析了对象的数据结构，这篇我们就结合源码来分析下Objective-C最核心的东西——消息发送。在Objective-C中，我们调用方法，其实都是发送消息。发送消息为Objective-C增加了动态特性，下面我们就来看一下Objective-C的消息发送过程。 # objc_msgSend简介 其实我们看大部分runtime文章，都是从这个函数看起的。在Objective-C中，我们调用方法的语法是这样的`[receiver message]`。编译期会把这个方法调用转换成下面这个函数： ``` objc_msgSend(receiver, selector, arg1, arg2, ...) ``` 其中第一个函数就是我们调用方法的recevier，第二个是个方法选择器，类型是`SEL`，我们看下`SEL`的定义： ``` ///...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /next_post ]] -->
-    <!-- [[! prev_post ]] -->
-    
-    <a class="read-next-story prev no-cover"
-        href="/UI%E5%BC%80%E5%8F%91%E6%8D%B7%E5%BE%84%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0">
-        <section class="post">
-            <h2>iOS UI开发捷径读书笔记一——基础概念理解</h2>
-            <p>最近读了《iOS UI开发捷径–利用Interface Builder高效、优雅地开发UI》这本书。感觉受益匪浅，记录下自己在书里面学到的东西。这里只写自己学到的新知识，并不介绍一些简单的IB知识，想要具体学习，请买书自己学习。 和Interface Builder有关的几个重要概念 下面介绍几个和IB有关的概念，学习下平常经常用，但是不了解的概念。 Bundle 这个我们在平常工作中应该经常用，比如创建IB的时候，还有获取资源路径的时候： let bundle = Bundle.main Bundle有两种表现形式： 保存可执行代码，比如我们整个App就是一个Bundle，也就是我们经常用的main bundle。...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /prev_post ]] -->
-</aside>
-
 <!-- /post -->
 
         <!-- The tiny footer at the very bottom -->

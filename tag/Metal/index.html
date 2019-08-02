@@ -28,7 +28,7 @@
     <style>.hljs { background: none; }</style>
 
     <!-- Ghost outputs important style and meta data with this tag -->
-        <link rel="canonical" href="//" />
+        <link rel="canonical" href="//tag/Metal/" />
     <meta name="referrer" content="origin" />
     <link rel="next" href="/page2/" />
 
@@ -36,14 +36,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="面向自由编程" />
     <meta property="og:description" content="Freelf's Blog" />
-    <meta property="og:url" content="//" />
-    <meta property="og:image" content="/assets/images/cover1.jpg" />
+    <meta property="og:url" content="//tag/Metal/" />
+    <meta property="og:image" content="/assets/images/cover4.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="面向自由编程" />
     <meta name="twitter:description" content="Freelf's Blog" />
-    <meta name="twitter:url" content="//" />
-    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+    <meta name="twitter:url" content="//tag/Metal/" />
+    <meta name="twitter:image:src" content="/assets/images/cover4.jpg" />
 
     <script type="application/ld+json">
 {
@@ -51,8 +51,8 @@
     "@type": "Website",
     "publisher": "面向自由编程",
     "name": "面向自由编程",
-    "url": "//",
-    "image": "/assets/images/cover1.jpg",
+    "url": "//tag/Metal/",
+    "image": "/assets/images/cover4.jpg",
     "description": "Freelf's Blog"
 }
     </script>
@@ -62,7 +62,7 @@
 
 
 </head>
-<body class="home-template nav-closed">
+<body class="tag-template nav-closed">
 
     <!-- The blog navigation links -->
     <div class="nav">
@@ -71,7 +71,7 @@
         <span class="hidden">Close</span>
     </a>
     <ul>
-        <li class="nav-home  nav-current" role="presentation"><a href="/">Home</a></li>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
         <li class="nav-about " role="presentation"><a href="/about">About</a></li>
     </ul>
     <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
@@ -82,11 +82,14 @@
     <div class="site-wrapper">
 
         <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
-        <!-- < default -->
+        <!-- dynamically overriding backgrounds for tags as well as descriptions -->
+
+
+<!-- default -->
 <!-- The tag above means - insert everything in this file into the [body] of the default.hbs template -->
 
-<!-- The big featured header  -->
-<header class="main-header " style="background-image: url(/assets/images/cover1.jpg) ">
+<!-- If we have a tag cover, display that - else blog cover - else nothing -->
+<header class="main-header tag-head " style="background-image: url(/assets/images/cover4.jpg) ">
     <nav class="main-nav overlay clearfix">
         <a class="blog-logo" href="/"><img src="/assets/images/ghost.png"
                 alt="Blog Logo" /></a>
@@ -96,11 +99,14 @@
     </nav>
     <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">面向自由编程</h1>
-            <h2 class="page-description">Freelf's Blog</h2>
+            <h1 class="page-title">Metal</h1>
+            <h2 class="page-description">
+                
+                A 1-post collection
+                
+            </h2>
         </div>
     </div>
-    <a class="scroll-down icon-arrow-left" href="#content" data-offset="-45"><span class="hidden">Scroll Down</span></a>
 </header>
 
 <!-- The main content area on the homepage -->
@@ -112,9 +118,7 @@
     
     <nav class="pagination" role="pagination">
     
-    <span class="page-number"> Page 1 of 6 </span>
-     
-        <a class="older-posts" href="/page2/" title="Next Page">Older Posts &raquo;</a>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
     
@@ -154,146 +158,12 @@
     </footer>
 </article>
 
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F">工厂模式</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>最近重新学习设计模式，以前一直看的是Raywenderlich的书籍，总感觉不够深入。最近重新找了一本书来学习，所以以前的系列就不再继续写了，重新开始记录。这是第一篇，来学习一下工厂模式。 设计模式名字中带工厂的有三个。简单工厂，工厂方法，抽象工厂。本文就看一下这三种工厂的区别，以及从简单工厂到抽象工厂的演进。 简单工厂 严格来讲简单工厂并不是一个标准的设计模式，但是它太常用了，所以需要我们好好掌握它。... <a class="read-more" href="/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/设计'>设计</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2019-07-29">29 Jul 2019</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E7%99%BD%E9%A9%B9%E8%BF%87%E9%9A%99-2018%E6%80%BB%E7%BB%93">白驹过隙--2018总结</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>2018 不知不觉就过去了，在 2018 年的尾巴公司决定实行... <a class="read-more" href="/%E7%99%BD%E9%A9%B9%E8%BF%87%E9%9A%99-2018%E6%80%BB%E7%BB%93">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/年终总结'>年终总结</a>
-        
-        
-        
-        <a href='/tag/生活'>生活</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2019-02-04">04 Feb 2019</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern">读《Design-Patterns-by-Tutorials》笔记——Builder Pattern</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>构造器模式允许一步一步的创建一个复杂的对象而不是一次创建完成。这个模式包括三个主要类型，UML 图如下： Director接收输入并且和 builder... <a class="read-more" href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Builder-Pattern">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/读书笔记'>读书笔记</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2018-10-09">09 Oct 2018</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern">读《Design-Patterns-by-Tutorials》笔记——Observer Pattern</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>观察者模式让一个对象观察另一个对象的改变。在本章节，你将学习两种实现观察者模式的方法： 使用 KVO 使用一个Observable包装。... <a class="read-more" href="/%E8%AF%BB-Design-Patterns-by-Tutorials-%E7%AC%94%E8%AE%B0-Observer-Pattern">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/读书笔记'>读书笔记</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2018-10-04">04 Oct 2018</time>
-    </footer>
-</article>
-
 
 <!-- Previous/next page links - displayed on every page -->
 
 <nav class="pagination" role="pagination">
     
-    <span class="page-number"> Page 1 of 6 </span>
-     
-        <a class="older-posts" href="/page2/" title="Next Page">Older Posts &raquo;</a>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
 

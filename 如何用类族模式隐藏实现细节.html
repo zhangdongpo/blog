@@ -340,32 +340,6 @@ if ([maybeAnArray class] == [NSArray class]) {
 
 </main>
 
-<aside class="read-next">
-
-    <!-- [[! next_post ]] -->
-    
-    <a class="read-next-story no-cover"
-        href="/iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6">
-        <section class="post">
-            <h2>iOS事件响应机制</h2>
-            <p>​ 本文着重讲解iOS事件的传递机制，如有错误或者有意见不同者，欢迎指出讨论。 ​ iOS的事件有好几种：Touch Events(触摸事件)、Motion Events(运动事件，比如重力感应和摇一摇等)、Remote Event(远程事件，比如用耳机上的按键来控制手机)，其中我们最常用的就是触摸事件了，基于存在于APP的每个地方，我们就主要讲讲他。 ​ 我们从三个方面来介绍iOS的事件机制：1.响应链是什么时候构建的？2.事件的第一响应者怎么确定的，3.事件第一响应者确定后，系统是怎么传递事件的。 ##响应链的构建 无论是哪种事件，其传递和响应都与响应链息息相关，那么响应链到底是一个什么样的东西呢？ 在UIKit中有一个类：UIResponder，我们可以看看头文件的几个属性和方法： ```objective-c NS_CLASS_AVAILABLE_IOS(2_0) @interface...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /next_post ]] -->
-    <!-- [[! prev_post ]] -->
-    
-    <a class="read-next-story prev no-cover"
-        href="/%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7">
-        <section class="post">
-            <h2>理解对象等同性</h2>
-            <p>​ 根据“等同性”来比较对象是一个非常有用的功能。不过，按照==操作符比较，未必是我们想要的结果，因为该操作比较的是两个指针的本身，而不是其所指的对象。我们应该使用NSObject协议声明的isEqual方法来判断两个对象的等同性。一般来说，两个类型不同的对象总是不相等的。某些对象提供了特殊的等同性判断方法，如果知道了两个对象都属于同一个类，那么久可以使用这种方法了。我们用下面的代码做例子： NSString *string1 = @"hehe123"; NSString *string2 = [NSString stringWithFormat:@"hehe%d",123]; BOOL equalA = (string1...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /prev_post ]] -->
-</aside>
-
 <!-- /post -->
 
         <!-- The tiny footer at the very bottom -->

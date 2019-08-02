@@ -365,32 +365,6 @@
 
 </main>
 
-<aside class="read-next">
-
-    <!-- [[! next_post ]] -->
-    
-    <a class="read-next-story no-cover"
-        href="/%E5%A6%82%E4%BD%95%E7%94%A8%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F%E9%9A%90%E8%97%8F%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82">
-        <section class="post">
-            <h2>如何用类族模式隐藏实现细节</h2>
-            <p>​ 类族是一种很有用的模式，可以隐藏“抽象基类”中的实现细节。这里的抽象基类是指在这个类中只提供接口，并没有提供实现细节，通常是子类重写这个接口，来实现其中的细节。OC中的系统框架普遍应用这个模式。下面我们来举个例子，iOS中有个UIButton的类，想要创建一个按钮，需要调用下面这个方法： ```objective-c + (instancetype)buttonWithType:(UIButtonType)buttonType; ``` ​ 该方法返回的对象，其类型取决于传入的按钮类型。然而不管返回什么类型的对象，他们都继承自同意基类，就是UIButton。这么做的意义在于，UIButton类的使用者无需关心创建出来的按钮具体属于哪个子类，也不用考虑按钮的绘制方式等实现细节。使用者只需知道如何创建按钮，怎么设置title这样的属性，怎么增加监听动作的目标对象等问题就好。 ​ 回到开头说的问题，我们可以把各种按钮的绘制逻辑都放在一个类里面，并根据类型来切换： ```objective-c -(void)drawRect:(CGRect)rect{ if (_type =...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /next_post ]] -->
-    <!-- [[! prev_post ]] -->
-    
-    <a class="read-next-story prev no-cover"
-        href="/%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F">
-        <section class="post">
-            <h2>对象内部应该如何访问实例变量</h2>
-            <p>​ 在上一篇中，我们讲解了一些属性的特质，接下来我们讲下访问实例变量的问题，在对象之外访问实例变量时，总是应该通过属性来做，那么在对象内部访问实例变量又该如何呢？OC的开发者一直在激烈的讨论这些问题。有的人认为，无论什么情况都应该使用属性访问实例变量，也有人说通过属性访问和直接访问应该搭配着使用。除了集中特殊情况外，在这里建议大家在读取实例变量时采用直接访问，在设置实例变量时通过属性来做。 ​ 请看下面这个类: @interface Person : NSObject @property(nonatomic, copy) NSString *firstName; @property(nonatomic, copy) NSString...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /prev_post ]] -->
-</aside>
-
 <!-- /post -->
 
         <!-- The tiny footer at the very bottom -->

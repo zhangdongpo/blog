@@ -288,32 +288,6 @@
 
 </main>
 
-<aside class="read-next">
-
-    <!-- [[! next_post ]] -->
-    
-    <a class="read-next-story no-cover"
-        href="/%E7%90%86%E8%A7%A3-%E5%AF%B9%E8%B1%A1%E7%AD%89%E5%90%8C%E6%80%A7">
-        <section class="post">
-            <h2>理解对象等同性</h2>
-            <p>​ 根据“等同性”来比较对象是一个非常有用的功能。不过，按照==操作符比较，未必是我们想要的结果，因为该操作比较的是两个指针的本身，而不是其所指的对象。我们应该使用NSObject协议声明的`isEqual`方法来判断两个对象的等同性。一般来说，两个类型不同的对象总是不相等的。某些对象提供了特殊的等同性判断方法，如果知道了两个对象都属于同一个类，那么久可以使用这种方法了。我们用下面的代码做例子： ```objective-c NSString *string1 = @"hehe123"; NSString *string2 = [NSString stringWithFormat:@"hehe%d",123]; BOOL equalA =...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /next_post ]] -->
-    <!-- [[! prev_post ]] -->
-    
-    <a class="read-next-story prev no-cover"
-        href="/%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8">
-        <section class="post">
-            <h2>属性的特质</h2>
-            <p>​ 最近读了Effective Objective-C。开篇就当做一篇笔记吧。在使用属性的时候，我们需要注意一个问题，就是属性的各种特质（attribute）设定也会影响编译器所生成的存取方法，下面这行代码，相必大家都很熟悉了。这行代码就指定了三项特质。 @property (nonatomic,readwrite,copy) NSString *firstName; ​ 属性可以拥有的特质分为四类，下面为大家逐一讲解： 原子性 在默认情况下，右边一起所合成的方法会通过锁定机制确保其原子性（atomic）。如果属性具备nonatomic特质，就不使用同步锁。请注意，如果没有声明nonatomic，这个属性就是atomic。若是自己定义存取方法，那么就应该遵从与属性特质相符的原子性。 读/写权限 1.具备readwrite特质的属性拥有setter方法和getter方法，若是属性有@syntehsize实现，则编译器会自动生成这两个方法。 2.具备readonly特质的属性仅仅拥有getter方法，只有当该属性有@synthesize实现时，编译器才会为其合成getter方法。你可以用此特质把某个属性对外公开为只读属性，然后在“class-continuation分类”中将其重新定义为读写属性。后面将详细叙述这种做法 内存管理语句...</p>
-        </section>
-    </a>
-    
-    <!-- [[! /prev_post ]] -->
-</aside>
-
 <!-- /post -->
 
         <!-- The tiny footer at the very bottom -->
