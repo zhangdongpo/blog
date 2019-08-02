@@ -38,7 +38,7 @@ if let title = readLine(strippingNewline: true), title != "" {
     print("请输入category")
     let category = readLine(strippingNewline: true)
     let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    formatter.dateFormat = "yyyy-MM-dd"
     let dateString = formatter.string(from: Date())
     let string = """
     ---
@@ -49,7 +49,7 @@ if let title = readLine(strippingNewline: true), title != "" {
     category: \(category ?? "")
     ---
     """
-    writeToFile(text:string, filename:"\((dateString.split(separator: " ").first)!)-\(title)")
+    writeToFile(text:string, filename:"\(dateString)-\(title)")
 } else {
     print("title不能为空")
 }
