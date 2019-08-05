@@ -12,6 +12,275 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>Builder模式</title>
+	  <link>//Builder%E6%A8%A1%E5%BC%8F</link>
+	  <author>Freelf</author>
+	  <pubDate>2019-08-05T00:00:00+00:00</pubDate>
+	  <guid>//Builder%E6%A8%A1%E5%BC%8F</guid>
+	  <description><![CDATA[
+	     <p>前面讨论了工厂模式，这里接着探索创建类型的设计模式。在讨论工厂模式的时候提出了一个导出数据的应用框架。这里接着对这个框架做一些补充，这些补充的地方会用到Builder模式。</p>
+<h2 id="场景问题">场景问题</h2>
+<p>对于导出数据的框架，在导出的文件上会有一些约定的方式，比如导出成文本格式、数据库模式、xml格式等等。在工厂模式中，使用工厂模式解决了如何选择具体的导出方式，并没有涉及每种导出方式的实现。也就是说，在工厂模式里面，并没有讨论如何实现导出文本、数据库、PDF等具体的格式，这里就来讨论这个问题。
+对于导出数据的应用框架，通常对于导出数据的导出内容和格式是有要求的，比如现在有如下要求：</p>
+<ol>
+  <li>导出的文件，不管什么格式，必须有文件头、文件体和文件尾，文件头、文件体和文件尾之间要换行。</li>
+  <li>文件头需要以下描述信息：导出数据的日期和编号。</li>
+  <li>文件体表示文件的内容。</li>
+  <li>文件尾需要有导出人的信息。</li>
+</ol>
+
+<p>接下来看一下平常情况下如何实现，下面先把文件的各个部分的数据对象定义出来：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 文件头
+</span><span class="k">@interface</span> <span class="nc">ExportHeaderModel</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="cm">/**
+ 导出日期
+ */</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">exportDateString</span><span class="p">;</span>
+<span class="cm">/**
+ 导出文件ID
+ */</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">exportId</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="c1">// 文件内容
+</span><span class="k">@interface</span> <span class="nc">ExportDataModel</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="cm">/**
+ 导出文件内容
+ */</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">content</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="c1">// 文件尾
+</span><span class="k">@interface</span> <span class="nc">ExportFooterModel</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="cm">/**
+ 导出文件用户
+ */</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">exportUser</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>接下来看一下导出数据的实现，先看一下导出文本数据实现：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">ExportToTxt</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">exportToTxtWithHeader</span><span class="p">:(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">header</span> <span class="nf">content</span><span class="p">:(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span> <span class="nf">footer</span><span class="p">:(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">footer</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">ExportToTxt</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">exportToTxtWithHeader</span><span class="p">:(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">header</span> <span class="nf">content</span><span class="p">:(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span> <span class="nf">footer</span><span class="p">:(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">footer</span> <span class="p">{</span>
+	<span class="n">NSMutableString</span> <span class="o">*</span><span class="n">stringBuffer</span> <span class="o">=</span> <span class="p">[</span><span class="s">@""</span> <span class="nf">mutableCopy</span><span class="p">];</span>
+	<span class="n">NSString</span> <span class="o">*</span><span class="n">headerString</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%zd,%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">header</span><span class="p">.</span><span class="n">exportId</span><span class="p">,</span> <span class="n">header</span><span class="p">.</span><span class="n">exportDateString</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">stringBuffer</span> <span class="nf">appendString</span><span class="p">:</span><span class="n">headerString</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">stringBuffer</span> <span class="nf">appendFormat</span><span class="p">:</span><span class="s">@"%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">content</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">stringBuffer</span> <span class="nf">appendFormat</span><span class="p">:</span><span class="s">@"%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">footer</span><span class="p">.</span><span class="n">exportUser</span><span class="p">];</span>
+	
+	<span class="n">NSLog</span><span class="p">(</span><span class="s">@"export txt: </span><span class="se">\n</span><span class="s">%@"</span><span class="p">,</span> <span class="n">stringBuffer</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>接下来看一下导出xml数据的实现：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">ExportToXml</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">exportToXmlWithHeader</span><span class="p">:(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">header</span> <span class="nf">content</span><span class="p">:(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span> <span class="nf">footer</span><span class="p">:(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">footer</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">ExportToXml</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">exportToXmlWithHeader</span><span class="p">:(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">header</span> <span class="nf">content</span><span class="p">:(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">data</span> <span class="nf">footer</span><span class="p">:(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">footer</span> <span class="p">{</span>
+	  <span class="n">NSMutableString</span> <span class="o">*</span><span class="n">stringBuffer</span> <span class="o">=</span> <span class="p">[</span><span class="s">@"&lt;?xml version='1.0' encoding='gb2312'?&gt;</span><span class="se">\n</span><span class="s">"</span> <span class="nf">mutableCopy</span><span class="p">];</span>
+	
+	<span class="n">NSString</span> <span class="o">*</span><span class="n">headerString</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%zd,%@ </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">header</span><span class="p">.</span><span class="n">exportId</span><span class="p">,</span> <span class="n">header</span><span class="p">.</span><span class="n">exportDateString</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">stringBuffer</span> <span class="nf">appendString</span><span class="p">:</span><span class="n">headerString</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">stringBuffer</span> <span class="nf">appendFormat</span><span class="p">:</span><span class="s">@"%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">content</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">stringBuffer</span> <span class="nf">appendFormat</span><span class="p">:</span><span class="s">@"%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">footer</span><span class="p">.</span><span class="n">exportUser</span><span class="p">];</span>
+	
+	<span class="n">NSLog</span><span class="p">(</span><span class="s">@"export xml: </span><span class="se">\n</span><span class="s">%@"</span><span class="p">,</span> <span class="n">stringBuffer</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>接下来看一下客户端如何使用这些对象：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+	<span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExportHeaderModel</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">header</span><span class="p">.</span><span class="n">exportId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="n">header</span><span class="p">.</span><span class="n">exportDateString</span> <span class="o">=</span> <span class="s">@"2019-08-04"</span><span class="p">;</span>
+	
+	<span class="n">ExportDataModel</span> <span class="o">*</span><span class="n">content</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExportDataModel</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">content</span><span class="p">.</span><span class="n">content</span> <span class="o">=</span> <span class="s">@"导出的数据"</span><span class="p">;</span>
+	
+	<span class="n">ExportFooterModel</span> <span class="o">*</span><span class="n">footer</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExportFooterModel</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">footer</span><span class="p">.</span><span class="n">exportUser</span> <span class="o">=</span> <span class="s">@"Freelf"</span><span class="p">;</span>
+	
+   <span class="p">[[</span><span class="n">ExportToTxt</span> <span class="nf">new</span><span class="p">]</span> <span class="nf">exportToTxtWithHeader</span><span class="p">:</span><span class="n">header</span> <span class="nf">content</span><span class="p">:</span><span class="n">content</span> <span class="n">footer</span><span class="o">:</span><span class="n">footer</span><span class="p">];</span>
+
+	<span class="p">[[</span><span class="n">ExportToXml</span> <span class="nf">new</span><span class="p">]</span> <span class="nf">exportToTxtWithHeader</span><span class="p">:</span><span class="n">header</span> <span class="nf">content</span><span class="p">:</span><span class="n">content</span> <span class="n">footer</span><span class="o">:</span><span class="n">footer</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>仔细观察上面的代码，会发现，不管输出成文本文件还是xml文件，基本步骤都是一样的：</p>
+<ol>
+  <li>先拼接文件头内容</li>
+  <li>拼接文件体内容</li>
+  <li>拼接文件尾内容</li>
+  <li>最后把拼接好的文件输出称为文件</li>
+</ol>
+
+<p>也就是说对于不同的输出格式，处理步骤是一样的，但是每部步骤的具体实现是不一样的，所以可以把构建每种格式文件的处理过程和具体实现分开，这样可以复用构建过程，而且也很容易切换不同的输出格式。</p>
+
+<h2 id="使用builder模式解决">使用Builder模式解决</h2>
+
+<blockquote>
+  <p>将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。</p>
+</blockquote>
+
+<p>构建没中格式数据文件的处理过程，这不就是构建过程么，每种格式的具体步骤表现，不就相当于不同的表示么。因为不同的步骤实现，决定了最终的表现就不同。在Builder模式中，把构建过程称为指导者，由它来指导装配的过程，但是不负责每步的实现。当然光有指导者是不够的，必须要有具体实现每步的对象，在Builder模式中，称这些实现对象为生成器。结构类图如下：
+<img src="http://nightwish.oss-cn-beijing.aliyuncs.com/2019-08-05-025506.png" alt="" />
+要特别注意，Builder模式分成两个很重要的部分：</p>
+<ol>
+  <li>一部分是Builder接口，这里是定义了如何构建各个部件，也就是知道每个部件功能如何实现，以及如何装配这些部件到产品中去。</li>
+  <li>另一部分是Director，Director知道如何组合来构建产品。</li>
+</ol>
+
+<p>接下来，使用Builder模式来重写上面的例子：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// builder接口
+</span><span class="k">@protocol</span> <span class="nc">Builder</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">buildHeader</span><span class="o">:</span><span class="p">(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="n">header</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">buildContent</span><span class="p">:(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">content</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">buildFooter</span><span class="p">:(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">footer</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="c1">// builder具体实现
+</span>
+<span class="c1">// 导出txt
+</span><span class="k">@interface</span> <span class="nc">ExportToTxt</span> <span class="p">:</span> <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">Builder</span><span class="o">&gt;</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">getResult</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@interface</span> <span class="nc">ExportToTxt</span> <span class="p">()</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSMutableString</span> <span class="o">*</span><span class="n">stringBuffer</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">ExportToTxt</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span>
+<span class="p">{</span>
+	<span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span>  <span class="o">=</span> <span class="s">@""</span><span class="p">.</span><span class="n">mutableCopy</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">buildHeader</span><span class="o">:</span><span class="p">(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="n">header</span> <span class="p">{</span>
+	<span class="n">NSString</span> <span class="o">*</span><span class="n">headerString</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%zd,%@ </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">header</span><span class="p">.</span><span class="n">exportId</span><span class="p">,</span> <span class="n">header</span><span class="p">.</span><span class="n">exportDateString</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span> <span class="nf">appendString</span><span class="p">:</span><span class="n">headerString</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">buildContent</span><span class="o">:</span><span class="p">(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="n">content</span> <span class="p">{</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span> <span class="nf">appendFormat</span><span class="p">:</span><span class="s">@"%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">content</span><span class="p">.</span><span class="n">content</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">buildFooter</span><span class="o">:</span><span class="p">(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="n">footer</span> <span class="p">{</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span> <span class="nf">appendFormat</span><span class="p">:</span><span class="s">@"%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">footer</span><span class="p">.</span><span class="n">exportUser</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">getResult</span> <span class="p">{</span>
+	<span class="k">return</span>  <span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+<span class="c1">// 导出xml
+</span><span class="k">@interface</span> <span class="nc">ExportToXml</span> <span class="p">:</span> <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">Builder</span><span class="o">&gt;</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">getResult</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@interface</span> <span class="nc">ExportToXml</span> <span class="p">()</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">NSMutableString</span> <span class="o">*</span><span class="n">stringBuffer</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">ExportToXml</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span>
+<span class="p">{</span>
+	<span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span>  <span class="o">=</span> <span class="s">@"&lt;?xml version='1.0' encoding='gb2312'?&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">.</span><span class="n">mutableCopy</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">buildHeader</span><span class="o">:</span><span class="p">(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="n">header</span> <span class="p">{</span>
+	<span class="n">NSString</span> <span class="o">*</span><span class="n">headerString</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%zd,%@ </span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">header</span><span class="p">.</span><span class="n">exportId</span><span class="p">,</span> <span class="n">header</span><span class="p">.</span><span class="n">exportDateString</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span> <span class="nf">appendString</span><span class="p">:</span><span class="n">headerString</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">buildContent</span><span class="o">:</span><span class="p">(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="n">content</span> <span class="p">{</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span> <span class="nf">appendFormat</span><span class="p">:</span><span class="s">@"%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">content</span><span class="p">.</span><span class="n">content</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">buildFooter</span><span class="o">:</span><span class="p">(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="n">footer</span> <span class="p">{</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span> <span class="nf">appendFormat</span><span class="p">:</span><span class="s">@"%@</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">footer</span><span class="p">.</span><span class="n">exportUser</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">getResult</span> <span class="p">{</span>
+	<span class="k">return</span>  <span class="n">self</span><span class="p">.</span><span class="n">stringBuffer</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+
+<span class="c1">// director
+</span><span class="k">@interface</span> <span class="nc">Director</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">Builder</span><span class="o">&gt;</span> <span class="n">builder</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">constructWithHeader</span><span class="p">:(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">header</span> <span class="nf">content</span><span class="p">:(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">content</span> <span class="nf">footer</span><span class="p">:(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">footer</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">Director</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">constructWithHeader</span><span class="p">:(</span><span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">header</span> <span class="nf">content</span><span class="p">:(</span><span class="n">ExportDataModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">content</span> <span class="nf">footer</span><span class="p">:(</span><span class="n">ExportFooterModel</span> <span class="o">*</span><span class="p">)</span><span class="nv">footer</span> <span class="p">{</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">builder</span> <span class="nf">buildHeader</span><span class="p">:</span><span class="n">header</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">builder</span> <span class="nf">buildContent</span><span class="p">:</span><span class="n">content</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">builder</span> <span class="nf">buildFooter</span><span class="p">:</span><span class="n">footer</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>接下来来看客户端如何使用：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+	<span class="n">ExportHeaderModel</span> <span class="o">*</span><span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExportHeaderModel</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">header</span><span class="p">.</span><span class="n">exportId</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="n">header</span><span class="p">.</span><span class="n">exportDateString</span> <span class="o">=</span> <span class="s">@"2019-08-04"</span><span class="p">;</span>
+	
+	<span class="n">ExportDataModel</span> <span class="o">*</span><span class="n">content</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExportDataModel</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">content</span><span class="p">.</span><span class="n">content</span> <span class="o">=</span> <span class="s">@"导出的数据"</span><span class="p">;</span>
+	
+	<span class="n">ExportFooterModel</span> <span class="o">*</span><span class="n">footer</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExportFooterModel</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">footer</span><span class="p">.</span><span class="n">exportUser</span> <span class="o">=</span> <span class="s">@"Freelf"</span><span class="p">;</span>
+	
+	<span class="n">ExportToTxt</span> <span class="o">*</span><span class="n">exportTxt</span> <span class="o">=</span> <span class="p">[</span><span class="n">ExportToTxt</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">Director</span> <span class="o">*</span><span class="n">director</span> <span class="o">=</span> <span class="p">[</span><span class="n">Director</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">director</span><span class="p">.</span><span class="n">builder</span> <span class="o">=</span> <span class="n">exportTxt</span><span class="p">;</span>
+	<span class="p">[</span><span class="n">director</span> <span class="nf">constructWithHeader</span><span class="p">:</span><span class="n">header</span> <span class="nf">content</span><span class="p">:</span><span class="n">content</span> <span class="n">footer</span><span class="o">:</span><span class="n">footer</span><span class="p">];</span>
+	<span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@"</span><span class="p">,</span> <span class="n">exportTxt</span><span class="p">.</span><span class="n">getResult</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Builder模式的优势就是，对于同一个构建过程，只要配置不同的生成器实现，就会生成不同表现的对象。</p>
+
+<h2 id="builder模式的实现">Builder模式的实现</h2>
+<p>使用Builder模式的时候，可以让客户端去创造Director，在Director里面封装整体构造算法，然后让Director调用Builder，让Builder封装具体部件的构建过程。还有一种退化的情况，就是让客户端和Director融合起来，让客户端直接去操作Builder，让客户端充当Director。</p>
+
+<h3 id="builder的实现">Builder的实现</h3>
+<p>实际上在Builder接口的实现中，每个部件构建的方法里面，除了部件装配外，也可以实现如何具体的创建各个部件的对象。也就是说每个方法可以有两个部分，一部分创建部件对象，一部分组装部件。在构建部件的方法里面可以选择并创建具体的部件对象，然后再把这个部件对象组装到产品中去。这样一来Builder就可以和工厂方法配合使用了。再进一步，如果生成器只有创建对象对象的功能，没有组装的功能，那么这个时候就和抽象工厂类似了。</p>
+
+<h3 id="director的实现">Director的实现</h3>
+<p>在Builder模式里面，Director承担的是整体构建算法部分，是相对不变的部分，因此在实现Director时，把变化的部分分离出去很重要。其实知道这分离出去变化的部分就到了生成器那里了，Director指导整体的构建算法，却不知道如何具体地创建和装配部件对象。因此真正Director的实现并不仅仅像示例代码那样，简单的按照一定的顺序调用生成器的方法来生成对象，应该是有较为复杂的算法和运算过程，在运算过程中根据需要，才会调用生成器的方法来生成部件对象。</p>
+
+<h3 id="director和builder的交互">Director和Builder的交互</h3>
+<p>在前面示例代码中，Director和生成器之间的交互是Director调用生成器的方法来完成的，在实际开发过程中这远远不够。Director通常会实现比较复杂的算法或者是运算过程，在实际中很可能会有一下情形：</p>
+<ol>
+  <li>在Director执行的时候，会按照整体的构建算法步骤进行运行，可能先运行前几步运算，到了某一个步骤，需要具体创建某个部件对象了，然后调用生成器中创建相应部件的方法来创建具体部件。同时把前面运算得到的数据传递给生成器，因为生成器在内部创建和组装部件的时候可能会用到这些数据。</li>
+  <li>生成器创建完具体部件对象后，会把创建好的部件对象返回给Director，Director继续后续的算法，可能会用到已经创建好的对象。</li>
+  <li>如此反复下去，知道整个构建算法完成，那么最终的产品也就创建好了。</li>
+</ol>
+
+<h3 id="返回装配好的产品的方法">返回装配好的产品的方法</h3>
+<p>通过上面描述可以看出，Director和生成器交互的方式是通过生成器的参数和返回值来回的传递数据。事实上，Director是通过委托的方式把功能交给生成器去完成。</p>
+
+<p>标准的Builder模式，生成器实现里面会提供一个返回装配好产品的方法，在Builder接口里面是没有的。这是因为最终的对象一定要通过部件构建和装配，才算真正的创建了，而具体干活的就是生成器实现，虽然Director参数了，但是Director不负责具体的创建和组装，所以客户端是从Builder的实现里面获取最终装配好的产品。当然也可以把这个方法添加到Builder接口里面。</p>
+
+<h3 id="关于被构建产品的抽象接口">关于被构建产品的抽象接口</h3>
+<p>在使用Builder模式时，大多数情况不知道创建出来的产品是什么样子的，所以一般不提供产品的抽象接口。</p>
+
+<h2 id="思考builder模式">思考Builder模式</h2>
+<p>Builder模式的本质就是<strong>分离整体构建算法和部件构造</strong>。构建一个复杂对象，本来就有构建过程以及构建过程中具体的实现。Builder模式就是分离这两部分，从而使得程序结构更松散，扩展更容易，复用性更好。同时也使得代码更加清晰，意图更加明确。</p>
+
+<p>虽然Builder模式的整体构建算法会一步步引导生成器构建对象，但这并不是说Builder模式主要就是用来实现分步构建对象的。Builder模式的中心还是在于分离整体构建算法和部件构造，而分步骤构建对象不过时整体构建算法中的一个表现。就像做菜一样，其实菜就是最后的产品，菜谱就是Director，厨师就是Builder，当然菜谱不能指挥厨师，但是厨师已经把菜谱记住了，所以相当于厨师记住的菜谱指挥厨师。哈哈有点牵强。</p>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>工厂模式</title>
 	  <link>//%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F</link>
 	  <author>Freelf</author>

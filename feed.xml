@@ -8,6 +8,30 @@
     
       
       <item>
+        <title>Builder模式</title>
+        
+          <description>&lt;p&gt;前面讨论了工厂模式，这里接着探索创建类型的设计模式。在讨论工厂模式的时候提出了一个导出数据的应用框架。这里接着对这个框架做一些补充，这些补充的地方会用到Builder模式。&lt;/p&gt;
+&lt;h2 id=&quot;场景问题&quot;&gt;场景问题&lt;/h2&gt;
+&lt;p&gt;对于导出数据的框架，在导出的文件上会有一些约定的方式，比如导出成文本格式、数据库模式、xml格式等等。在工厂模式中，使用工厂模式解决了如何选择具体的导出方式，并没有涉及每种导出方式的实现。也就是说，在工厂模式里面，并没有讨论如何实现导出文本、数据库、PDF等具体的格式，这里就来讨论这个问题。
+对于导出数据的应用框架，通常对于导出数据的导出内容和格式是有要求的，比如现在有如下要求：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;导出的文件，不管什么格式，必须有文件头、文件体和文件尾，文件头、文件体和文件尾之间要换行。&lt;/li&gt;
+  &lt;li&gt;文件头需要以下描述信息：导出数据的日期和编号。&lt;/li&gt;
+  &lt;li&gt;文件体表示文件的内容。&lt;/li&gt;
+  &lt;li&gt;文件尾需要有导出人的信息。&lt;/li&gt;
+&lt;/ol&gt;
+
+</description>
+        
+        <pubDate>Mon, 05 Aug 2019 00:00:00 +0000</pubDate>
+        <link>
+        /Builder%E6%A8%A1%E5%BC%8F</link>
+        <guid isPermaLink="true">/Builder%E6%A8%A1%E5%BC%8F</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>Metal基础概念——利用GPU高效计算</title>
         
           <description>&lt;p&gt;Metal是Apple提供的一个可以让我们开发者直接和GPU对话的API。Metal在图像处理，并行计算方面通过发挥GPU的特性，极大提升了性能。&lt;/p&gt;
