@@ -12,6 +12,200 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>原型模式</title>
+	  <link>//%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F</link>
+	  <author>Freelf</author>
+	  <pubDate>2019-08-13T00:00:00+00:00</pubDate>
+	  <guid>//%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F</guid>
+	  <description><![CDATA[
+	     <p>前面讨论了工厂模式，这里接着探索创建型模式。在这里考虑一个订单系统，里面有一个保存订单的功能。要求是如果订单预定的产品数量超过1000，就需要把订单拆分成两份订单来保存。如果拆成两份后还是超过1000，那就继续拆分。知道每份订单数量不超过1000。至于为什么要拆分，是为了方便后续处理，后续是有人工来处理，每个人处理能力是1000。根据业务，目前订单类型有两种，企业订单和个人订单。</p>
+
+<h2 id="场景问题">场景问题</h2>
+<p>分析上面的业务需求，有人可能会想，很简单嘛，一共就一个功能，没什么困难的，下面尝试实现一下。</p>
+
+<p>首先，如果想要实现通用的订单处理，而不关心订单类型，订单处理对象应该面向一个订单的接口而不是具体对象。这里先定义订单接口：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@protocol</span> <span class="nc">OrderApi</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+<span class="c1">// 订单数量
+</span><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">NSUInteger</span> <span class="n">productNumber</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>个人订单实现：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">PersonalOrder</span> <span class="p">:</span> <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">productId</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">customerName</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">PersonalOrder</span>
+<span class="p">{</span>
+	<span class="n">NSUInteger</span> <span class="n">_productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setProductNumber</span><span class="o">:</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="n">productNumber</span> <span class="p">{</span>
+	<span class="n">_productNumber</span> <span class="o">=</span> <span class="n">productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="n">productNumber</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">_productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"本个人订单的订购人是%@，订购产品是%@，订购数量是%zd"</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">customerName</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">productId</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">productNumber</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>企业订单实现：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">EnterpriseOrder</span> <span class="p">:</span> <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">productId</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">enterpriseName</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">EnterpriseOrder</span>
+<span class="p">{</span>
+	<span class="n">NSUInteger</span> <span class="n">_productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setProductNumber</span><span class="o">:</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="n">productNumber</span> <span class="p">{</span>
+	<span class="n">_productNumber</span> <span class="o">=</span> <span class="n">productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="n">productNumber</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">_productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"本个人订单的订购人是%@，订购产品是%@，订购数量是%zd"</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">enterpriseName</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">productId</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">productNumber</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>实现好了订单对象，接下来看看如何实现通用订单处理：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">OrderBusiness</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">saveOrder</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">order</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">OrderBusiness</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">saveOrder</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">order</span> <span class="p">{</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">productNumber</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// 在这里需要创建新的订单
+</span>	<span class="p">}</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<p>写到这里有个问题，在订单商品数量超过1000的时候需要创建新的订单，但是这里只知道订单的接口，不知道具体是个人订单还是企业订单。有同学可能说在这里判断一下类型不就行了，但是这样就关心订单的类型和具体实现了。</p>
+
+<p>现在这里有个问题：<strong>已经有了某种对象，如何能够快速简单的创建出更多的这种对象？</strong></p>
+
+<h2 id="使用原型模式解决">使用原型模式解决</h2>
+
+<blockquote>
+  <p>用原型实例指定创建对象的种类，并通过拷贝这些原型创建新的对象。</p>
+</blockquote>
+
+<p>分析上面的问题，已经有了订单接口类型的对象实例，是从外部传入的，但是这里并不知道对象的具体实现。但是现在需要创建一个相同类型的对象，看起来就像是通过接口来创建对象一样。</p>
+
+<p>原型模式就是解决这样的问题，原型模式要求对象实现一个拷贝自身的接口，这样就可以通过拷贝方法来克隆一个实例对象本身来创建一个新的实例。如果把这个方法定义在接口上，看起来就像是通过接口来创建了新的对象。这样以来，通过原型实例创建新的对象实例，就不需要考虑对象的具体类型了，原型模式类图如下：
+<img src="http://nightwish.oss-cn-beijing.aliyuncs.com/2019-08-13-095258.png" alt="" />
+接下来用原型模式继续前面的例子：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@protocol</span> <span class="nc">OrderApi</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">NSUInteger</span> <span class="n">productNumber</span><span class="p">;</span>
+<span class="c1">// 接口加了这样一个方法
+</span><span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span><span class="p">)</span><span class="n">copyOrder</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="c1">// 个人订单
+</span><span class="k">@interface</span> <span class="nc">PersonalOrder</span> <span class="p">:</span> <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">productId</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">customerName</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">PersonalOrder</span>
+<span class="p">{</span>
+	<span class="n">NSUInteger</span> <span class="n">_productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setProductNumber</span><span class="o">:</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="n">productNumber</span> <span class="p">{</span>
+	<span class="n">_productNumber</span> <span class="o">=</span> <span class="n">productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="n">productNumber</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">_productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"本个人订单的订购人是%@，订购产品是%@，订购数量是%zd"</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">customerName</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">productId</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">productNumber</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="c1">// 实现拷贝方法
+</span><span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span><span class="p">)</span><span class="n">copyOrder</span> <span class="p">{</span>
+	<span class="n">PersonalOrder</span> <span class="o">*</span><span class="n">order</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">productId</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">productId</span><span class="p">;</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">productNumber</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">productNumber</span><span class="p">;</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">customerName</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">customerName</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">order</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+<span class="c1">//企业订单
+</span><span class="k">@interface</span> <span class="nc">EnterpriseOrder</span> <span class="p">:</span> <span class="nc">NSObject</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">productId</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">NSString</span> <span class="o">*</span><span class="n">enterpriseName</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">EnterpriseOrder</span>
+<span class="p">{</span>
+	<span class="n">NSUInteger</span> <span class="n">_productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setProductNumber</span><span class="o">:</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="n">productNumber</span> <span class="p">{</span>
+	<span class="n">_productNumber</span> <span class="o">=</span> <span class="n">productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="n">productNumber</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="n">_productNumber</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">description</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"本个人订单的订购人是%@，订购产品是%@，订购数量是%zd"</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">enterpriseName</span><span class="p">,</span><span class="n">self</span><span class="p">.</span><span class="n">productId</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">productNumber</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="c1">// 实现拷贝方法
+</span><span class="o">-</span> <span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span><span class="p">)</span><span class="n">copyOrder</span> <span class="p">{</span>
+	<span class="n">EnterpriseOrder</span> <span class="o">*</span><span class="n">order</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">productId</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">productId</span><span class="p">;</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">productNumber</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">productNumber</span><span class="p">;</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">enterpriseName</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">enterpriseName</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">order</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 处理订单业务
+</span><span class="k">@interface</span> <span class="nc">OrderBusiness</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">saveOrder</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">order</span><span class="p">;</span>
+<span class="k">@end</span>
+<span class="k">@implementation</span> <span class="nc">OrderBusiness</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">saveOrder</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">order</span> <span class="p">{</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">productNumber</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// 在这里直接拷贝
+</span>		<span class="n">id</span><span class="o">&lt;</span><span class="n">OrderApi</span><span class="o">&gt;</span> <span class="n">newOrder</span> <span class="o">=</span> <span class="p">[</span><span class="n">order</span> <span class="nf">copyOrder</span><span class="p">];</span>
+		<span class="n">newOrder</span><span class="p">.</span><span class="n">productNumber</span>  <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+		<span class="n">order</span><span class="p">.</span><span class="n">productNumber</span>  <span class="o">-=</span> <span class="mi">1000</span><span class="p">;</span>
+		<span class="n">NSLog</span><span class="p">(</span><span class="s">@"拆分生成订单--%@"</span><span class="p">,</span> <span class="n">newOrder</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">NSLog</span><span class="p">(</span><span class="s">@"订单--%@"</span><span class="p">,</span><span class="n">order</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+<span class="c1">// 客户端实现
+</span><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+	<span class="n">PersonalOrder</span> <span class="o">*</span><span class="n">order</span> <span class="o">=</span> <span class="p">[</span><span class="n">PersonalOrder</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">customerName</span> <span class="o">=</span> <span class="s">@"张三"</span><span class="p">;</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">productId</span> <span class="o">=</span> <span class="s">@"1"</span><span class="p">;</span>
+	<span class="n">order</span><span class="p">.</span><span class="n">productNumber</span> <span class="o">=</span> <span class="mi">2005</span><span class="p">;</span>
+	
+	<span class="n">OrderBusiness</span> <span class="o">*</span><span class="n">business</span> <span class="o">=</span> <span class="p">[</span><span class="n">OrderBusiness</span> <span class="nf">new</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">business</span> <span class="nf">saveOrder</span><span class="p">:</span><span class="n">order</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="c1">// 打印出来：
+</span><span class="err">拆分生成订单</span><span class="o">--</span><span class="err">本个人订单的订购人是张三，订购产品是</span><span class="mi">1</span><span class="err">，订购数量是</span><span class="mi">1000</span>
+<span class="err">拆分生成订单</span><span class="o">--</span><span class="err">本个人订单的订购人是张三，订购产品是</span><span class="mi">1</span><span class="err">，订购数量是</span><span class="mi">1000</span>
+<span class="err">订单</span><span class="o">--</span><span class="err">本个人订单的订购人是张三，订购产品是</span><span class="mi">1</span><span class="err">，订购数量是</span><span class="mi">5</span>
+</code></pre></div></div>
+
+<h2 id="深拷贝和浅拷贝">深拷贝和浅拷贝</h2>
+<p>说到原型模式，不可避免的需要谈一下深拷贝和浅拷贝。其实这两种很好区分。深拷贝是指对一个对象的内存进行一份拷贝，拷贝对象的内存和原对象的内存是不一样的，如果对象内部有引用类型，引用类型的内存也需要就行拷贝，一值拷贝下去。除了深拷贝，其他的都是浅拷贝，也就是说只拷贝一层引用也是浅拷贝。原型模式一般都是深拷贝。</p>
+<h2 id="思考原型模式">思考原型模式</h2>
+<p>原型模式的本质是：<strong>拷贝生成对象</strong>。拷贝是手段，目标是生成新的对象实例。原型模式可以用来解决只知道接口而不知实现创建对象的问题。原型模式的重心是创建新的对象实例，至于创建出来的对象，其属性值和原型对象可以一样也可以不一样。目前大多数实现中是一样的，可以有选择性的拷贝。</p>
+
+<p>原型是一个很容易理解的设计模式，在iOS中有NSCopy协议来让对象具有拷贝功能。</p>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>Builder模式</title>
 	  <link>//Builder%E6%A8%A1%E5%BC%8F</link>
 	  <author>Freelf</author>
