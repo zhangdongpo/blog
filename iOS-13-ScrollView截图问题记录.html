@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>iOS 13 ScrollView截图问题记录</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="iOS 13 ScrollView截图问题记录" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="iOS 13 ScrollView截图问题记录" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "iOS 13 ScrollView截图问题记录",
+    "url": "//iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">iOS 13 ScrollView截图问题记录</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2019-09-24">24 Sep 2019</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/iOS'>Ios</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>最近有个需求，需要给TabelView截图。当时做的比较着急，从stackoverflow上面抄了如下一段代码，并且可以正常运行。代码如下：</p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UIImage</span><span class="o">*</span> <span class="n">image</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="n">UIGraphicsBeginImageContext</span><span class="p">(</span><span class="n">_scrollView</span><span class="p">.</span><span class="n">contentSize</span><span class="p">);</span>
+<span class="p">{</span>
+	<span class="n">CGPoint</span> <span class="n">savedContentOffset</span> <span class="o">=</span> <span class="n">_scrollView</span><span class="p">.</span><span class="n">contentOffset</span><span class="p">;</span>
+	<span class="n">CGRect</span> <span class="n">savedFrame</span> <span class="o">=</span> <span class="n">_scrollView</span><span class="p">.</span><span class="n">frame</span><span class="p">;</span>
+
+	<span class="n">_scrollView</span><span class="p">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="n">CGPointZero</span><span class="p">;</span>
+	<span class="n">_scrollView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">_scrollView</span><span class="p">.</span><span class="n">contentSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="n">_scrollView</span><span class="p">.</span><span class="n">contentSize</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+
+	<span class="p">[</span><span class="n">_scrollView</span><span class="p">.</span><span class="n">layer</span> <span class="nf">renderInContext</span><span class="p">:</span> <span class="n">UIGraphicsGetCurrentContext</span><span class="p">()];</span>     
+	<span class="n">image</span> <span class="o">=</span> <span class="n">UIGraphicsGetImageFromCurrentImageContext</span><span class="p">();</span>
+
+	<span class="n">_scrollView</span><span class="p">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="n">savedContentOffset</span><span class="p">;</span>
+	<span class="n">_scrollView</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">savedFrame</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">UIGraphicsEndImageContext</span><span class="p">();</span>
+</code></pre></div></div>
+<p>最近发版，QA同学在iOS13的手机上面测试，发现这个方法截图只能截到TableView高度的图，没有截到TableView全部的图。于是仔细看了一下截图的代码，发现原理是把TableView的frame改为和TableView的containerSize相同后，再去截图，但是在iOS13上面不好用。经过各种尝试，发现可以通过创建一个和TableView大小相同的临时view，然后把TableView添加到这个临时view，然后再对这个临时view进行截图，就可以再iOS13上面截到完整的图了。代码如下：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- (UIImage *)getTableViewImageWithTabelview:(UITableView *)tableview{
+    UIImage* viewImage = nil;
+    UITableView *scrollView = tableview;
+    UIGraphicsBeginImageContextWithOptions(scrollView.contentSize, NO, 0.0);
+    {
+		// 保存原来的偏移量
+        CGPoint savedContentOffset = scrollView.contentOffset;
+        // CGPoint savedFrame = scrollView.frame;
+
+		// 设置截图需要的偏移量和frame
+        scrollView.contentOffset = CGPointZero;
+        scrollView.frame = CGRectMake(0, 0, scrollView.contentSize.width, scrollView.contentSize.height);
+        
+		// 创建临时view，并且把要截图的view添加到临时view上面
+        UIView *tempView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, scrollView.contentSize.width, scrollView.contentSize.height)];
+        [scrollView removeFromSuperview];
+        [tempView addSubview:scrollView];
+        
+		// 对临时view进行截图
+        [tempView.layer renderInContext:UIGraphicsGetCurrentContext()];
+        viewImage = UIGraphicsGetImageFromCurrentImageContext();
+        
+		// 恢复截图view原来的状态
+        [scrollView removeFromSuperview];
+        [self addSubview:scrollView];
+        scrollView.contentOffset = savedContentOffset;
+
+		// 如果原来是frame布局，需要设置frame，如果是Auto layout需要再次进行Auto layout布局。
+		// scrollView.frame = savedFrame;
+        [scrollView mas_makeConstraints:^(MASConstraintMaker *make) 	{
+            make.edges.equalTo(self);
+        }];
+    }
+    UIGraphicsEndImageContext();
+    
+    return viewImage;
+}
+</code></pre></div></div>
+<p>这里需要注意，如果原来TableView用的是Auto layout进行的布局，那么后面需要对TableView再次进行布局。不然的话，截图之后会发现TableView不见了。</p>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=iOS 13 ScrollView截图问题记录&amp;url=iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+<script src="/assets/js/md5.min.js"></script>
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: md5(location.pathname), // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2019</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>

@@ -28,7 +28,7 @@
     <style>.hljs { background: none; }</style>
 
     <!-- Ghost outputs important style and meta data with this tag -->
-        <link rel="canonical" href="//page7/" />
+        <link rel="canonical" href="//tag/iOS/" />
     <meta name="referrer" content="origin" />
     <link rel="next" href="/page2/" />
 
@@ -36,14 +36,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="面向自由编程" />
     <meta property="og:description" content="Freelf's Blog" />
-    <meta property="og:url" content="//page7/" />
-    <meta property="og:image" content="/assets/images/cover1.jpg" />
+    <meta property="og:url" content="//tag/iOS/" />
+    <meta property="og:image" content="/assets/images/cover4.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="面向自由编程" />
     <meta name="twitter:description" content="Freelf's Blog" />
-    <meta name="twitter:url" content="//page7/" />
-    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+    <meta name="twitter:url" content="//tag/iOS/" />
+    <meta name="twitter:image:src" content="/assets/images/cover4.jpg" />
 
     <script type="application/ld+json">
 {
@@ -51,8 +51,8 @@
     "@type": "Website",
     "publisher": "面向自由编程",
     "name": "面向自由编程",
-    "url": "//page7/",
-    "image": "/assets/images/cover1.jpg",
+    "url": "//tag/iOS/",
+    "image": "/assets/images/cover4.jpg",
     "description": "Freelf's Blog"
 }
     </script>
@@ -62,7 +62,7 @@
 
 
 </head>
-<body class="paged archive-template nav-closed">
+<body class="tag-template nav-closed">
 
     <!-- The blog navigation links -->
     <div class="nav">
@@ -71,7 +71,7 @@
         <span class="hidden">Close</span>
     </a>
     <ul>
-        <li class="nav-home  nav-current" role="presentation"><a href="/">Home</a></li>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
         <li class="nav-about " role="presentation"><a href="/about">About</a></li>
     </ul>
     <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
@@ -82,11 +82,14 @@
     <div class="site-wrapper">
 
         <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
-        <!-- < default -->
+        <!-- dynamically overriding backgrounds for tags as well as descriptions -->
+
+
+<!-- default -->
 <!-- The tag above means - insert everything in this file into the [body] of the default.hbs template -->
 
-<!-- The big featured header  -->
-<header class="main-header " style="background-image: url(/assets/images/cover1.jpg) ">
+<!-- If we have a tag cover, display that - else blog cover - else nothing -->
+<header class="main-header tag-head " style="background-image: url(/assets/images/cover4.jpg) ">
     <nav class="main-nav overlay clearfix">
         <a class="blog-logo" href="/"><img src="/assets/images/ghost.png"
                 alt="Blog Logo" /></a>
@@ -96,11 +99,14 @@
     </nav>
     <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">面向自由编程</h1>
-            <h2 class="page-description">Freelf's Blog</h2>
+            <h1 class="page-title">Ios</h1>
+            <h2 class="page-description">
+                
+                A 1-post collection
+                
+            </h2>
         </div>
     </div>
-    <a class="scroll-down icon-arrow-left" href="#content" data-offset="-45"><span class="hidden">Scroll Down</span></a>
 </header>
 
 <!-- The main content area on the homepage -->
@@ -112,11 +118,7 @@
     
     <nav class="pagination" role="pagination">
     
-        
-            <a class="newer-posts" href="/page6/" title="Previous Page">&laquo; Newer Posts</a>
-      
-    
-    <span class="page-number"> Page 7 of 7 </span>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
     
@@ -126,10 +128,10 @@
 
 <article class="post">
     <header class="post-header">
-        <h2 class="post-title"><a href="/%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F">对象内部应该如何访问实例变量</a></h2>
+        <h2 class="post-title"><a href="/iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95">iOS 13 ScrollView截图问题记录</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>​ 在上一篇中，我们讲解了一些属性的特质，接下来我们讲下访问实例变量的问题，在对象之外访问实例变量时，总是应该通过属性来做，那么在对象内部访问实例变量又该如何呢？OC的开发者一直在激烈的讨论这些问题。有的人认为，无论什么情况都应该使用属性访问实例变量，也有人说通过属性访问和直接访问应该搭配着使用。除了集中特殊情况外，在这里建议大家在读取实例变量时采用直接访问，在设置实例变量时通过属性来做。 ​ 请看下面这个类:... <a class="read-more" href="/%E5%AF%B9%E8%B1%A1%E5%86%85%E9%83%A8%E5%BA%94%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AE%E5%AE%9E%E4%BE%8B%E5%8F%98%E9%87%8F">&raquo;</a></p>
+        <p>最近有个需求，需要给TabelView截图。当时做的比较着急，从stackoverflow上面抄了如下一段代码，并且可以正常运行。代码如下： UIImage* image =... <a class="read-more" href="/iOS-13-ScrollView%E6%88%AA%E5%9B%BE%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
@@ -148,43 +150,11 @@
         <!-- on -->
         
         
-        <a href='/tag/读书笔记'>读书笔记</a>
+        <a href='/tag/iOS'>Ios</a>
         
         
         
-        <time class="post-date index-post-date" datetime="2015-09-10">10 Sep 2015</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8">属性的特质</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>​ 最近读了Effective Objective-C。开篇就当做一篇笔记吧。在使用属性的时候，我们需要注意一个问题，就是属性的各种特质（attribute）设定也会影响编译器所生成的存取方法，下面这行代码，相必大家都很熟悉了。这行代码就指定了三项特质。 @property... <a class="read-more" href="/%E5%B1%9E%E6%80%A7%E7%9A%84%E7%89%B9%E8%B4%A8">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/读书笔记'>读书笔记</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2015-09-03">03 Sep 2015</time>
+        <time class="post-date index-post-date" datetime="2019-09-24">24 Sep 2019</time>
     </footer>
 </article>
 
@@ -193,11 +163,7 @@
 
 <nav class="pagination" role="pagination">
     
-        
-            <a class="newer-posts" href="/page6/" title="Previous Page">&laquo; Newer Posts</a>
-      
-    
-    <span class="page-number"> Page 7 of 7 </span>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
 
