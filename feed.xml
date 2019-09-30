@@ -8,6 +8,20 @@
     
       
       <item>
+        <title>Meta(一):Hello Metal,第一个Metal应用</title>
+        
+          <description>&lt;p&gt;因为和几个志同道合的同学开了个小专栏，本文发在小专栏上，这里仅做记录。有兴趣的同学，欢迎订阅小专栏，小专栏还有其他好看的文章。&lt;a href=&quot;https://xiaozhuanlan.com/topic/7324865901&quot;&gt;地址&lt;/a&gt;。&lt;/p&gt;
+</description>
+        
+        <pubDate>Mon, 30 Sep 2019 00:00:00 +0000</pubDate>
+        <link>
+        /Meta(%E4%B8%80)-Hello-Metal,%E7%AC%AC%E4%B8%80%E4%B8%AAMetal%E5%BA%94%E7%94%A8</link>
+        <guid isPermaLink="true">/Meta(%E4%B8%80)-Hello-Metal,%E7%AC%AC%E4%B8%80%E4%B8%AAMetal%E5%BA%94%E7%94%A8</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>iOS 13 ScrollView截图问题记录</title>
         
           <description>&lt;p&gt;最近有个需求，需要给TabelView截图。当时做的比较着急，从stackoverflow上面抄了如下一段代码，并且可以正常运行。代码如下：
