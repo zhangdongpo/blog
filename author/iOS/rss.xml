@@ -12,6 +12,26 @@
    <atom:link href="rss" rel="self" type="application/rss+xml" />
    
 	<item>
+	  <title>解决Xcode插件突然失效问题</title>
+	  <link>//%E8%A7%A3%E5%86%B3Xcode%E6%8F%92%E4%BB%B6%E7%AA%81%E7%84%B6%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98</link>
+	  <author>Freelf</author>
+	  <pubDate>2019-11-20T00:00:00+00:00</pubDate>
+	  <guid>//%E8%A7%A3%E5%86%B3Xcode%E6%8F%92%E4%BB%B6%E7%AA%81%E7%84%B6%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98</guid>
+	  <description><![CDATA[
+	     <p>今天工作，突然发现自己的Xcode插件不能用了，原本以为进偏好设置-&gt;扩展-&gt;Xcode Source Editor里面把插件钩上就行呢。但是到了里面突然发现扩展里面的Xcode Source Editor选项都不见了。重新打开插件也不行，重启也不行，反正就是扩展里面没有Xcode Source Editor这个选项。通过Google搜索了一番，找到了一个简单的解决办法：</p>
+<ol>
+  <li>退出Xcode</li>
+  <li>在应用程序里面给Xcode重命名，名字随便起</li>
+  <li>打开重命名的Xcode</li>
+  <li>退出Xcode</li>
+  <li>把Xcode重新命名为Xcode
+通过上面一系列操作，扩展里面终于可以看到Xcode Source Editor了。折腾了半个小时！终于又可以愉快的码代码了～</li>
+</ol>
+
+	  ]]></description>
+	</item>
+
+	<item>
 	  <title>记录一次Reveal连接不上的问题</title>
 	  <link>//%E8%AE%B0%E5%BD%95%E4%B8%80%E6%AC%A1Reveal%E8%BF%9E%E6%8E%A5%E4%B8%8D%E4%B8%8A%E7%9A%84%E9%97%AE%E9%A2%98</link>
 	  <author>Freelf</author>
@@ -2637,19 +2657,6 @@ itemBehaviour.elasticity = 0.6;
 <h1 id="总结">总结</h1>
 
 <p>  这里我只是简单的了解了下<code class="highlighter-rouge">CALayer</code>，后面我会继续学下这个类的一些其他东西，再来分享。</p>
-
-
-	  ]]></description>
-	</item>
-
-	<item>
-	  <title>iOS9的适配</title>
-	  <link>//iOS9%E7%9A%84%E9%80%82%E9%85%8D</link>
-	  <author>Freelf</author>
-	  <pubDate>2016-01-18T13:46:30+00:00</pubDate>
-	  <guid>//iOS9%E7%9A%84%E9%80%82%E9%85%8D</guid>
-	  <description><![CDATA[
-	     <p>iOS9升级后相信很多人都是项目报错，因为项目要升级iOS9，从网上看了很多教程，就这篇教程还是比较全的，分享给大家，顺便自己记录下。网址是<a href="http://www.cocoachina.com/ios/20151016/13715.html">整理 iOS 9 适配中出现的坑（图文）</a>。</p>
 
 
 	  ]]></description>

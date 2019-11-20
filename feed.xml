@@ -8,6 +8,28 @@
     
       
       <item>
+        <title>解决Xcode插件突然失效问题</title>
+        
+          <description>&lt;p&gt;今天工作，突然发现自己的Xcode插件不能用了，原本以为进偏好设置-&amp;gt;扩展-&amp;gt;Xcode Source Editor里面把插件钩上就行呢。但是到了里面突然发现扩展里面的Xcode Source Editor选项都不见了。重新打开插件也不行，重启也不行，反正就是扩展里面没有Xcode Source Editor这个选项。通过Google搜索了一番，找到了一个简单的解决办法：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;退出Xcode&lt;/li&gt;
+  &lt;li&gt;在应用程序里面给Xcode重命名，名字随便起&lt;/li&gt;
+  &lt;li&gt;打开重命名的Xcode&lt;/li&gt;
+  &lt;li&gt;退出Xcode&lt;/li&gt;
+  &lt;li&gt;把Xcode重新命名为Xcode
+通过上面一系列操作，扩展里面终于可以看到Xcode Source Editor了。折腾了半个小时！终于又可以愉快的码代码了～&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        
+        <pubDate>Wed, 20 Nov 2019 00:00:00 +0000</pubDate>
+        <link>
+        /%E8%A7%A3%E5%86%B3Xcode%E6%8F%92%E4%BB%B6%E7%AA%81%E7%84%B6%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98</link>
+        <guid isPermaLink="true">/%E8%A7%A3%E5%86%B3Xcode%E6%8F%92%E4%BB%B6%E7%AA%81%E7%84%B6%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>Meta(一):Hello Metal,第一个Metal应用</title>
         
           <description>&lt;p&gt;因为和几个志同道合的同学开了个小专栏，本文发在小专栏上，这里仅做记录。有兴趣的同学，欢迎订阅小专栏，小专栏还有其他好看的文章。&lt;a href=&quot;https://xiaozhuanlan.com/topic/7324865901&quot;&gt;地址&lt;/a&gt;。&lt;/p&gt;
