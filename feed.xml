@@ -8,6 +8,21 @@
     
       
       <item>
+        <title>近期黑苹果折腾小记</title>
+        
+          <description>&lt;p&gt;一直以来都想装一台黑苹果折腾一下，去年10月终于组装了一台。在近期也把电脑折腾完美了。配置如下：&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Fri, 24 Apr 2020 00:00:00 +0000</pubDate>
+        <link>
+        /%E8%BF%91%E6%9C%9F%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%8A%98%E8%85%BE%E5%B0%8F%E8%AE%B0</link>
+        <guid isPermaLink="true">/%E8%BF%91%E6%9C%9F%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%8A%98%E8%85%BE%E5%B0%8F%E8%AE%B0</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>解决Xcode插件突然失效问题</title>
         
           <description>&lt;p&gt;今天工作，突然发现自己的Xcode插件不能用了，原本以为进偏好设置-&amp;gt;扩展-&amp;gt;Xcode Source Editor里面把插件钩上就行呢。但是到了里面突然发现扩展里面的Xcode Source Editor选项都不见了。重新打开插件也不行，重启也不行，反正就是扩展里面没有Xcode Source Editor这个选项。通过Google搜索了一番，找到了一个简单的解决办法：&lt;/p&gt;
