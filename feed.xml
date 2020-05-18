@@ -8,6 +8,26 @@
     
       
       <item>
+        <title>WKWebView离线包开发小记</title>
+        
+          <description>&lt;p&gt;随着项目里面Web页面内容越来越多，H5的加载速度变得越来越重要。在H5同学提出需求前就看过有关优化的文章。当时没有细致的去看，本来以为做起来轻车熟路，但是真做起来坑还是不少。下面记录一下整个优化过程。&lt;/p&gt;
+&lt;h2 id=&quot;优化思路&quot;&gt;优化思路&lt;/h2&gt;
+&lt;p&gt;一个WebView加载的过程大约有以下几个步骤(内容来自于&lt;a href=&quot;https://mp.weixin.qq.com/s/0OR4HJQSDq7nEFUAaX1x5A&quot;&gt;腾讯Bugly的文章&lt;/a&gt;):&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;初始化 WebView -&amp;gt; 请求页面 -&amp;gt; 下载数据 -&amp;gt; 解析HTML -&amp;gt; 请求 js/css 资源 -&amp;gt; dom 渲染 -&amp;gt; 解析 JS 执行 -&amp;gt; JS 请求数据 -&amp;gt; 解析渲染 -&amp;gt; 下载渲染图片&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        
+        <pubDate>Mon, 18 May 2020 00:00:00 +0000</pubDate>
+        <link>
+        /WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0</link>
+        <guid isPermaLink="true">/WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>近期黑苹果折腾小记</title>
         
           <description>&lt;p&gt;一直以来都想装一台黑苹果折腾一下，去年10月终于组装了一台。在近期也把电脑折腾完美了。配置如下：&lt;/p&gt;

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+        <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<head>
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Page Meta -->
+    <title>WKWebView离线包开发小记</title>
+    <meta name="description" content="Freelf's Blog" />
+
+    <!-- Mobile Meta -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Brand icon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.ico" >
+
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/css/screen.css" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/syntax.css" />
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!-- Ghost outputs important style and meta data with this tag -->
+        <link rel="canonical" href="//WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0" />
+    <meta name="referrer" content="origin" />
+    <link rel="next" href="/page2/" />
+
+    <meta property="og:site_name" content="面向自由编程" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WKWebView离线包开发小记" />
+    <meta property="og:description" content="Freelf's Blog" />
+    <meta property="og:url" content="//WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0" />
+    <meta property="og:image" content="/assets/images/cover1.jpg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="WKWebView离线包开发小记" />
+    <meta name="twitter:description" content="Freelf's Blog" />
+    <meta name="twitter:url" content="//WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0" />
+    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+
+    <script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "面向自由编程",
+    "name": "WKWebView离线包开发小记",
+    "url": "//WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0",
+    "image": "/assets/images/cover1.jpg",
+    "description": "Freelf's Blog"
+}
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="面向自由编程" href="/feed.xml" />
+
+
+</head>
+<body class="home-template nav-closed">
+
+    <!-- The blog navigation links -->
+    <div class="nav">
+    <h3 class="nav-title">Menu</h3>
+    <a href="#" class="nav-close">
+        <span class="hidden">Close</span>
+    </a>
+    <ul>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
+        <li class="nav-about " role="presentation"><a href="/about">About</a></li>
+    </ul>
+    <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
+</div>
+<span class="nav-cover"></span>
+
+
+    <div class="site-wrapper">
+
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+<!-- The comment above "< default" means - insert everything in this file into -->
+<!-- the [body] of the default.hbs template, which contains our header/footer. -->
+
+<!-- Everything inside the #post tags pulls data fom the post -->
+<!-- #post -->
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        <a class="back-button icon-arrow-left" href="/">Home</a>
+        <a class="menu-button icon-menu" href="#"><span class="word">Menu</span></a>
+    </nav>
+</header>
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">WKWebView离线包开发小记</h1>
+            <section class="post-meta">
+                <!-- <a href='/'>Freelf</a> -->
+
+                
+                
+                <!-- <a href='/author/Freelf'>Freelf</a> -->
+                
+                
+                <time class="post-date" datetime="2020-05-18">18 May 2020</time>
+                <!-- [[tags prefix=" on "]] -->
+                
+                <!-- on -->
+                
+                
+                <a href='/tag/WebView'>Webview</a>
+                
+                
+                
+            </section>
+        </header>
+
+        <section class="post-content">
+
+            <p>随着项目里面Web页面内容越来越多，H5的加载速度变得越来越重要。在H5同学提出需求前就看过有关优化的文章。当时没有细致的去看，本来以为做起来轻车熟路，但是真做起来坑还是不少。下面记录一下整个优化过程。</p>
+<h2 id="优化思路">优化思路</h2>
+<p>一个WebView加载的过程大约有以下几个步骤(内容来自于<a href="https://mp.weixin.qq.com/s/0OR4HJQSDq7nEFUAaX1x5A">腾讯Bugly的文章</a>):</p>
+<blockquote>
+  <p>初始化 WebView -&gt; 请求页面 -&gt; 下载数据 -&gt; 解析HTML -&gt; 请求 js/css 资源 -&gt; dom 渲染 -&gt; 解析 JS 执行 -&gt; JS 请求数据 -&gt; 解析渲染 -&gt; 下载渲染图片</p>
+</blockquote>
+
+<p><img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/05/18/15895445172664.jpg" alt="" />
+在dom渲染前，Web页面都是白屏，所以优化的思路就是优化dom渲染前的时间耗时。从上图可以看出优化主要集中优化以下两个阶段</p>
+<ol>
+  <li>WebView的初始化阶段，这个阶段可以采用类似UITableViewCell的复用池机制来解决。</li>
+  <li>初始化后到渲染前的阶段的优化，请求页面、下载数据、请求js/css资源这些阶段可以通过提前下载H5资源到本地，加载H5的时候加载本地资源来优化。</li>
+</ol>
+
+<h2 id="优化webview初始化阶段">优化WebView初始化阶段</h2>
+<p>WebView的初始化也需要一段时间，<a href="">美团</a>已经测量过WebView加载需要的时间了，这里直接引用一下：
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/05/18/15897743113037.jpg" alt="-w1193" />
+优化WebView初始化耗时的方式是在app启动之后启动一个WebView的复用池，创建一些备用的WebView，至于创建几个要根据app的使用情况来定，主要代码如下：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span>
+<span class="p">{</span>
+	<span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">reuseableWebViewSet</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableSet</span> <span class="nf">new</span><span class="p">];</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">visiableWebViewSet</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableSet</span> <span class="nf">new</span><span class="p">];</span>
+		<span class="p">[</span><span class="n">self</span> <span class="nf">prepareWebView</span><span class="p">];</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">prepareWebView</span> <span class="p">{</span>
+	<span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">NSUInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">capacity</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">WBWebView</span> <span class="o">*</span><span class="n">webView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WBWebView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectZero</span> <span class="nf">configuration</span><span class="p">:[</span><span class="n">self</span> <span class="nf">defaultConfiguration</span><span class="p">]];</span>
+			<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">reuseableWebViewSet</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">webView</span><span class="p">];</span>
+		<span class="p">}</span>
+	<span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// 获取WebView
+</span><span class="o">-</span> <span class="p">(</span><span class="n">WBWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">getReuseWebViewForHolder</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="n">holder</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">holder</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="p">[</span><span class="n">self</span> <span class="nf">tryCompactWekHolders</span><span class="p">];</span>
+	<span class="n">WBWebView</span> <span class="o">*</span><span class="n">webView</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+	<span class="n">dispatch_semaphore_wait</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">DISPATCH_TIME_FOREVER</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">reuseableWebViewSet</span><span class="p">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">webView</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">reuseableWebViewSet</span> <span class="nf">anyObject</span><span class="p">];</span>
+		<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">reuseableWebViewSet</span> <span class="nf">removeObject</span><span class="p">:</span><span class="n">webView</span><span class="p">];</span>
+		<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">visiableWebViewSet</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">webView</span><span class="p">];</span>
+		<span class="p">[</span><span class="n">webView</span> <span class="nf">willReuse</span><span class="p">];</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="n">webView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WBWebView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectZero</span> <span class="nf">configuration</span><span class="p">:[</span><span class="n">self</span> <span class="nf">defaultConfiguration</span><span class="p">]];</span>
+		<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">visiableWebViewSet</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">webView</span><span class="p">];</span>
+	<span class="p">}</span>
+	<span class="n">webView</span><span class="p">.</span><span class="n">holdObject</span> <span class="o">=</span> <span class="n">holder</span><span class="p">;</span>
+	<span class="n">dispatch_semaphore_signal</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semaphore</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">webView</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// 用完之后回收WebView
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">recycleReuseWebView</span><span class="o">:</span><span class="p">(</span><span class="n">WBWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">webView</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">dispatch_semaphore_wait</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">DISPATCH_TIME_FOREVER</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">([</span><span class="n">self</span><span class="p">.</span><span class="n">visiableWebViewSet</span> <span class="nf">containsObject</span><span class="p">:</span><span class="n">webView</span><span class="p">])</span> <span class="p">{</span>
+		<span class="p">[</span><span class="n">webView</span> <span class="nf">endReuse</span><span class="p">];</span>
+		<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">visiableWebViewSet</span> <span class="nf">removeObject</span><span class="p">:</span><span class="n">webView</span><span class="p">];</span>
+		<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">reuseableWebViewSet</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">webView</span><span class="p">];</span>
+	<span class="p">}</span>
+	<span class="n">dispatch_semaphore_signal</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semaphore</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// 清除WebView复用池
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">clearReuseWebViews</span> <span class="p">{</span>
+	<span class="n">dispatch_semaphore_wait</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semaphore</span><span class="p">,</span> <span class="n">DISPATCH_TIME_FOREVER</span><span class="p">);</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">reuseableWebViewSet</span> <span class="nf">removeAllObjects</span><span class="p">];</span>
+	<span class="n">dispatch_semaphore_signal</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">semaphore</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>WebView复用池写完后，发现了两个问题。其中一个是进入一个H5页面退出后，再次进入另一个H5页面调用webView的goBack方法会返回第一次进入的H5页面么。另外一个是如果WebView没有销毁，sessionStorage是不会清空的，如果两次进入的是同一个H5页面，而且H5用sessionStorage做一些业务逻辑的话，会有一些奇怪的bug。所以在一个WebView结束复用的时候，需要做一些操作来清除一些东西来保证进入复用池的WebView和一个新建的WebView一样，主要代码如下:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define kWKWebViewReuseUrlString @"WBCustomScheme://reuse-webView"
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">willReuse</span> <span class="p">{</span>
+	<span class="p">[</span><span class="n">self</span> <span class="nf">_clearBackForwardList</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">endReuse</span> <span class="p">{</span>
+	<span class="n">self</span><span class="p">.</span><span class="n">holdObject</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+	<span class="n">self</span><span class="p">.</span><span class="n">scrollView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+	<span class="p">[</span><span class="n">self</span> <span class="nf">stopLoading</span><span class="p">];</span>
+	<span class="n">self</span><span class="p">.</span><span class="n">navigationDelegate</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+	<span class="n">self</span><span class="p">.</span><span class="n">UIDelegate</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+	<span class="p">[</span><span class="n">self</span> <span class="nf">clearWebSessionStorage</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">self</span> <span class="nf">_clearBackForwardList</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">self</span> <span class="nf">loadRequest</span><span class="p">:[</span><span class="n">NSURLRequest</span> <span class="nf">requestWithURL</span><span class="p">:[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:</span><span class="n">kWKWebViewReuseUrlString</span><span class="p">]]];</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">configuration</span><span class="p">.</span><span class="n">userContentController</span> <span class="nf">removeScriptMessageHandlerForName</span><span class="p">:</span><span class="s">@"WebInteractiveWithNative"</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">configuration</span><span class="p">.</span><span class="n">userContentController</span> <span class="nf">removeAllUserScripts</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">// 清空页面历史记录
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">_clearBackForwardList</span> <span class="p">{</span>
+<span class="cp">#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+</span>	<span class="n">SEL</span> <span class="n">sel</span> <span class="o">=</span> <span class="n">NSSelectorFromString</span><span class="p">([</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%@%@%@%@"</span><span class="p">,</span> <span class="s">@"_re"</span><span class="p">,</span> <span class="s">@"moveA"</span><span class="p">,</span> <span class="s">@"llIte"</span><span class="p">,</span> <span class="s">@"ms"</span><span class="p">]);</span>
+	<span class="k">if</span> <span class="p">([</span><span class="n">self</span><span class="p">.</span><span class="n">backForwardList</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">])</span> <span class="p">{</span>
+		<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">backForwardList</span> <span class="nf">performSelector</span><span class="p">:</span><span class="n">sel</span><span class="p">];</span>
+	<span class="p">}</span>
+<span class="cp">#pragma clang diagnostic pop
+</span><span class="p">}</span>
+
+<span class="c1">// 清空sessonStorage
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">clearWebSessionStorage</span> <span class="p">{</span>
+	<span class="n">NSSet</span> <span class="o">*</span><span class="n">websiteDataTypes</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSSet</span> <span class="nf">setWithArray</span><span class="p">:@[</span>
+													<span class="n">WKWebsiteDataTypeSessionStorage</span>
+													<span class="p">]];</span>
+
+	<span class="n">NSDate</span> <span class="o">*</span><span class="n">dateFrom</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="nf">dateWithTimeIntervalSince1970</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+	<span class="p">[[</span><span class="n">WKWebsiteDataStore</span> <span class="nf">defaultDataStore</span><span class="p">]</span> <span class="nf">removeDataOfTypes</span><span class="p">:</span><span class="n">websiteDataTypes</span>
+											   <span class="nf">modifiedSince</span><span class="p">:</span><span class="n">dateFrom</span>
+										   <span class="n">completionHandler</span><span class="o">:^</span><span class="p">{}];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">canGoBack</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">([</span><span class="n">self</span><span class="p">.</span><span class="n">backForwardList</span><span class="p">.</span><span class="n">backItem</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span> <span class="nf">caseInsensitiveCompare</span><span class="p">:</span><span class="n">kWKWebViewReuseUrlString</span><span class="p">]</span> <span class="o">==</span> <span class="n">NSOrderedSame</span> <span class="o">||</span>
+		<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="n">kWKWebViewReuseUrlString</span><span class="p">])</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="k">return</span> <span class="p">[</span><span class="n">super</span> <span class="nf">canGoBack</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="n">canGoForward</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">([</span><span class="n">self</span><span class="p">.</span><span class="n">backForwardList</span><span class="p">.</span><span class="n">forwardItem</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span> <span class="nf">caseInsensitiveCompare</span><span class="p">:</span><span class="n">kWKWebViewReuseUrlString</span><span class="p">]</span> <span class="o">==</span> <span class="n">NSOrderedSame</span> <span class="o">||</span>
+		<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="n">kWKWebViewReuseUrlString</span><span class="p">])</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="k">return</span> <span class="p">[</span><span class="n">super</span> <span class="nf">canGoForward</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>继承<code class="highlighter-rouge">WKWebView</code>写了一个子类，通过在<code class="highlighter-rouge">willReuse</code>和<code class="highlighter-rouge">endReuse</code>调用<code class="highlighter-rouge">_clearBackForwardList</code>方法来清空历史记录可以解决前面说的第一个问题，为了使回收后的WebView在重新用的时候更像一个新建的WebView，在<code class="highlighter-rouge">endReuse</code>时加载了一个<code class="highlighter-rouge">WBCustomScheme://reuse-webView</code>这样的url，这个其实是加载了一个类似前端<code class="highlighter-rouge">about:blank</code>这样的的页面。后面说离线包的时候再说怎么通过加载这个url可以加载一个空页面。这里多说一句，<code class="highlighter-rouge">_clearBackForwardList</code>这个方法调用了WebKit的私有api，关于审核风险也咨询了用的一些人，详情见<a href="https://github.com/dequan1331/HybridPageKit/issues/44#event-3326186119">这个issue</a>
+在<code class="highlighter-rouge">endReuse</code>时，调用<code class="highlighter-rouge">clearWebSessionStorage</code>这个方法可以清空WebView的sessionStorage，解决前面提到的第二个问题。复用池的坑就这么多，下面来看一下离线包的实现。</p>
+<h2 id="离线包优化">离线包优化</h2>
+<p>前面提到了，请求页面、下载数据、请求js/css资源这些阶段可以通过加载本地资源实现，也就是离线包的方式。离线包的核心技术是拦截，市面上有多种拦截方案，个有优劣。这次优化使用的是<code class="highlighter-rouge">WKWebView</code>自定义scheme的拦截方式来实现的离线包。
+原理也很简单，WKWebView初始化时允许注册ShemeHandler，当WebView加载自定义的scheme的url时，SchemeHandler就可以拦截这个请求。拦截后可以检测所需要的资源是否在本地，在本地的话加载本地资源给WebView渲染。不在本地的话手动发一个请求去请求资源交给WebView渲染。关于post请求会被拦截的问题，可以让前端同学在js里面发post请求时不用相对路径，写死请求路径即可。SchemeHandler的代码如下:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - WKURLSchemeHandler
+</span><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">webView</span><span class="p">:(</span><span class="n">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="nv">webView</span> <span class="nf">startURLSchemeTask</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WKURLSchemeTask</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">urlSchemeTask</span>  <span class="n">API_AVAILABLE</span><span class="p">(</span><span class="n">ios</span><span class="p">(</span><span class="mi">11</span><span class="p">.</span><span class="mi">0</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="n">self</span><span class="p">.</span><span class="n">holdURLSchemeTasks</span><span class="p">[</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="nf">description</span><span class="p">]</span> <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="nb">YES</span><span class="p">);</span>
+	<span class="n">NSDictionary</span> <span class="o">*</span><span class="n">headers</span> <span class="o">=</span> <span class="n">urlSchemeTask</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">allHTTPHeaderFields</span><span class="p">;</span>
+	<span class="n">NSString</span> <span class="o">*</span><span class="n">accept</span> <span class="o">=</span> <span class="n">headers</span><span class="p">[</span><span class="s">@"Accept"</span><span class="p">];</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">accept</span> <span class="o">||</span> <span class="o">!</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">NSString</span> <span class="o">*</span><span class="n">requestUrlString</span> <span class="o">=</span> <span class="n">urlSchemeTask</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">accept</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">accept</span> <span class="nf">containsString</span><span class="p">:</span><span class="s">@"text/html"</span><span class="p">])</span> <span class="p">{</span> <span class="c1">// HTML拦截
+</span>		<span class="n">WBLogDebug</span><span class="p">(</span><span class="s">@"WBWebViewCustomURLSchemeHandler-- html = %@"</span><span class="p">,</span> <span class="n">urlSchemeTask</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">);</span>
+		<span class="p">[</span><span class="n">self</span> <span class="nf">loadLocalFileWithURLSchemeTask</span><span class="p">:</span><span class="n">urlSchemeTask</span><span class="p">];</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">([</span><span class="n">self</span> <span class="nf">isJSOrCSSFile</span><span class="p">:</span><span class="n">requestUrlString</span><span class="p">])</span> <span class="p">{</span> <span class="c1">// JS/CSS拦截
+</span>		<span class="p">[</span><span class="n">self</span> <span class="nf">loadLocalFileWithURLSchemeTask</span><span class="p">:</span><span class="n">urlSchemeTask</span><span class="p">];</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">accept</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;=</span> <span class="s">@"image"</span><span class="p">.</span><span class="n">length</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">accept</span> <span class="nf">rangeOfString</span><span class="p">:</span><span class="s">@"image"</span><span class="p">].</span><span class="n">location</span> <span class="o">!=</span> <span class="n">NSNotFound</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// image
+</span>		<span class="p">[</span><span class="n">self</span> <span class="nf">loadLocalFileWithURLSchemeTask</span><span class="p">:</span><span class="n">urlSchemeTask</span><span class="p">];</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="p">[</span><span class="n">self</span> <span class="nf">loadLocalFileWithURLSchemeTask</span><span class="p">:</span><span class="n">urlSchemeTask</span><span class="p">];</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">webView</span><span class="o">:</span><span class="p">(</span><span class="n">WKWebView</span> <span class="o">*</span><span class="p">)</span><span class="n">webView</span> <span class="n">stopURLSchemeTask</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WKURLSchemeTask</span><span class="o">&gt;</span><span class="p">)</span><span class="n">urlSchemeTask</span>  <span class="n">API_AVAILABLE</span><span class="p">(</span><span class="n">ios</span><span class="p">(</span><span class="mi">11</span><span class="p">.</span><span class="mi">0</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="n">self</span><span class="p">.</span><span class="n">holdURLSchemeTasks</span><span class="p">[</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="nf">description</span><span class="p">]</span> <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="nb">NO</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// MARK: - Private Method
+</span>
+<span class="c1">// 判断当前资源是否在本地
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">loadLocalFileWithURLSchemeTask</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WKURLSchemeTask</span><span class="o">&gt;</span><span class="p">)</span><span class="n">urlSchemeTask</span> <span class="p">{</span>
+	<span class="n">NSString</span> <span class="o">*</span><span class="n">URLString</span> <span class="o">=</span> <span class="n">urlSchemeTask</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">([</span><span class="n">URLString</span> <span class="nf">containsString</span><span class="p">:</span><span class="s">@"wbcustomscheme"</span><span class="p">])</span> <span class="p">{</span>
+		<span class="n">URLString</span> <span class="o">=</span> <span class="p">[</span><span class="n">URLString</span> <span class="nf">stringByReplacingOccurrencesOfString</span><span class="p">:</span><span class="s">@"wbcustomscheme"</span> <span class="nf">withString</span><span class="p">:</span><span class="s">@"https"</span><span class="p">];</span>
+	<span class="p">}</span>
+	<span class="n">URLString</span> <span class="o">=</span> <span class="p">[[</span><span class="n">URLString</span> <span class="nf">componentsSeparatedByString</span><span class="p">:</span><span class="s">@"?"</span><span class="p">]</span> <span class="nf">firstObject</span><span class="p">];</span>
+	<span class="n">EZTuple2</span> <span class="o">*</span><span class="n">tuple</span> <span class="o">=</span> <span class="p">[</span><span class="n">WBServiceWebViewOfflinePackage</span><span class="p">.</span><span class="n">service</span> <span class="nf">getLocalFileDataForURLString</span><span class="p">:</span><span class="n">URLString</span><span class="p">];</span>
+	<span class="n">NSData</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="n">tuple</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">data</span> <span class="o">&amp;&amp;</span> <span class="n">data</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">WBLogDebug</span><span class="p">(</span><span class="s">@"离线包命中缓存"</span><span class="p">);</span>
+		<span class="p">[</span><span class="n">self</span> <span class="nf">resendQuestForUrlSchemeTask</span><span class="p">:</span><span class="n">urlSchemeTask</span> <span class="nf">mimeType</span><span class="p">:</span><span class="n">tuple</span><span class="p">.</span><span class="n">second</span> <span class="n">requestData</span><span class="o">:</span><span class="n">data</span><span class="p">];</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="p">[</span><span class="n">self</span> <span class="nf">requestRemoteForUrlSchemeTask</span><span class="p">:</span><span class="n">urlSchemeTask</span><span class="p">];</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 把本地资源作为响应返回给UrlSchemeTask
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">resendQuestForUrlSchemeTask</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WKURLSchemeTask</span><span class="o">&gt;</span><span class="p">)</span><span class="n">urlSchemeTask</span> <span class="n">mimeType</span><span class="o">:</span><span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">mimeType</span> <span class="n">requestData</span><span class="o">:</span><span class="p">(</span><span class="n">NSData</span> <span class="o">*</span><span class="p">)</span><span class="n">data</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">BOOL</span> <span class="n">isValid</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">holdURLSchemeTasks</span><span class="p">[</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="nf">description</span><span class="p">]</span> <span class="nf">boolValue</span><span class="p">];</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isValid</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">NSURLResponse</span> <span class="o">*</span><span class="n">resp</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSURLResponse</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithURL</span><span class="p">:</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">URL</span> <span class="nf">MIMEType</span><span class="p">:</span><span class="n">mimeType</span> <span class="n">expectedContentLength</span><span class="o">:</span><span class="n">data</span><span class="p">.</span><span class="n">length</span> <span class="n">textEncodingName</span><span class="o">:</span><span class="s">@"utf-8"</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">urlSchemeTask</span> <span class="nf">didReceiveResponse</span><span class="p">:</span><span class="n">resp</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">urlSchemeTask</span> <span class="nf">didReceiveData</span><span class="p">:</span><span class="n">data</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">urlSchemeTask</span> <span class="nf">didFinish</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">// 资源不在本地，请求远程资源
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">requestRemoteForUrlSchemeTask</span><span class="o">:</span><span class="p">(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WKURLSchemeTask</span><span class="o">&gt;</span><span class="p">)</span><span class="n">urlSchemeTask</span> <span class="p">{</span>
+	<span class="n">NSString</span> <span class="o">*</span><span class="n">urlString</span> <span class="o">=</span> <span class="p">[</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">URL</span><span class="p">.</span><span class="n">absoluteString</span> <span class="nf">stringByReplacingOccurrencesOfString</span><span class="p">:</span><span class="s">@"wbcustomscheme"</span> <span class="nf">withString</span><span class="p">:</span><span class="s">@"https"</span><span class="p">];</span>
+	<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">httpSessionManager</span> <span class="nf">GET</span><span class="p">:</span><span class="n">urlString</span> <span class="nf">parameters</span><span class="p">:</span><span class="nb">nil</span> <span class="n">headers</span><span class="o">:</span><span class="nb">nil</span> <span class="n">progress</span><span class="o">:</span><span class="nb">nil</span> <span class="n">success</span><span class="o">:^</span><span class="p">(</span><span class="n">NSURLSessionDataTask</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">task</span><span class="p">,</span> <span class="n">id</span> <span class="n">_Nullable</span> <span class="n">responseObject</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// urlSchemeTask 提前结束，调用实例方法会崩溃
+</span>		<span class="n">BOOL</span> <span class="n">isValid</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">holdURLSchemeTasks</span><span class="p">[</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="nf">description</span><span class="p">]</span> <span class="nf">boolValue</span><span class="p">];</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isValid</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">task</span><span class="p">.</span><span class="n">response</span> <span class="o">&amp;&amp;</span> <span class="n">responseObject</span><span class="p">)</span> <span class="p">{</span>
+			<span class="p">[</span><span class="n">urlSchemeTask</span> <span class="nf">didReceiveResponse</span><span class="p">:</span><span class="n">task</span><span class="p">.</span><span class="n">response</span><span class="p">];</span>
+			<span class="p">[</span><span class="n">urlSchemeTask</span> <span class="nf">didReceiveData</span><span class="p">:</span><span class="n">responseObject</span><span class="p">];</span>
+			<span class="p">[</span><span class="n">urlSchemeTask</span> <span class="nf">didFinish</span><span class="p">];</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span> <span class="n">failure</span><span class="o">:^</span><span class="p">(</span><span class="n">NSURLSessionDataTask</span> <span class="o">*</span><span class="n">_Nullable</span> <span class="n">task</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">_Nonnull</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// urlSchemeTask 提前结束，调用实例方法会崩溃
+</span>		<span class="n">BOOL</span> <span class="n">isValid</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">holdURLSchemeTasks</span><span class="p">[</span><span class="n">urlSchemeTask</span><span class="p">.</span><span class="nf">description</span><span class="p">]</span> <span class="nf">boolValue</span><span class="p">];</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isValid</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="p">[</span><span class="n">urlSchemeTask</span> <span class="nf">didFailWithError</span><span class="p">:</span><span class="n">error</span><span class="p">];</span>
+	<span class="p">}];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>WebView初始化时需要注册的代码如下:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="err">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mi">11</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">))</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">config</span> <span class="nf">urlSchemeHandlerForURLScheme</span><span class="p">:</span><span class="s">@"WBCustomScheme"</span><span class="p">])</span> <span class="p">{</span>
+			<span class="p">[</span><span class="n">config</span> <span class="nf">setURLSchemeHandler</span><span class="p">:[</span><span class="n">WBWebViewCustomURLSchemeHandler</span> <span class="nf">new</span><span class="p">]</span> <span class="nf">forURLScheme</span><span class="p">:</span><span class="s">@"WBCustomScheme"</span><span class="p">];</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<p>WebView加载url时的代码如下:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="err">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mi">11</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="p">))</span> <span class="p">{</span>
+<span class="c1">// 这里主要是服务端开关，和当前这个url的资源是否在本地的判断。
+</span>		<span class="k">if</span> <span class="p">([</span><span class="n">WBServiceWebViewOfflinePackage</span><span class="p">.</span><span class="n">service</span> <span class="nf">shouldOpenOfflinePackageFeature</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">urlString</span> <span class="nf">hasPrefix</span><span class="p">:</span><span class="s">@"https"</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">WBServiceWebViewOfflinePackage</span><span class="p">.</span><span class="n">service</span> <span class="nf">doseOfflinePackageContainUrlString</span><span class="p">:</span><span class="n">urlString</span><span class="p">])</span> <span class="p">{</span> 
+			<span class="n">tmpUrlString</span> <span class="o">=</span> <span class="p">[</span><span class="n">tmpUrlString</span> <span class="nf">stringByReplacingOccurrencesOfString</span><span class="p">:</span><span class="s">@"https"</span> <span class="nf">withString</span><span class="p">:</span><span class="s">@"WBCustomScheme"</span><span class="p">];</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+</code></pre></div></div>
+<p>这样，整套离线包的实现主要就是这些。离线包主要就一个坑，把https换成自定义的scheme后cookie就不生效了。解决cookie的问题是通过localStorage来解决的，加载WebView时设置localStorage，前端想要获取一些信息就通过localStorage来取。除了cookie这个坑，离线包其他的坑还没遇到。
+接下来看一下怎么通过加载<code class="highlighter-rouge">WBCustomScheme://reuse-webView</code>这个url时加载一个空的H5页面。其实很简单，因为加载这个页面时也是一个自定义的scheme，所以自定义的SchemeHandler可以拦截到请求，然后返回一个空的H5数据给WebView渲染就好了。具体代码如下:</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">([</span><span class="n">url</span><span class="p">.</span><span class="n">host</span> <span class="nf">isEqualToString</span><span class="p">:</span><span class="s">@"reuse-webView"</span><span class="p">])</span> <span class="p">{</span>
+		<span class="n">NSData</span> <span class="o">*</span><span class="n">responseData</span> <span class="o">=</span> <span class="p">[[</span><span class="n">self</span> <span class="nf">_getWebViewReuseLoadString</span><span class="p">]</span> <span class="nf">dataUsingEncoding</span><span class="p">:</span><span class="n">NSUTF8StringEncoding</span><span class="p">];</span>
+		<span class="k">return</span> <span class="n">EZTuple</span><span class="p">(</span><span class="n">responseData</span><span class="p">,</span> <span class="s">@"text/html"</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="o">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">_getWebViewReuseLoadString</span><span class="p">{</span>
+	<span class="k">return</span> <span class="s">@"&lt;html&gt;&lt;head&gt;&lt;meta name=</span><span class="se">\"</span><span class="s">viewport</span><span class="se">\"</span><span class="s"> "</span> <span class="s">@"content=</span><span class="se">\"</span><span class="s">initial-scale=1.0,width=device-width,user-scalable=no</span><span class="se">\"</span><span class="s">/&gt;&lt;title&gt;&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;/body&gt;&lt;/html&gt;"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="总结">总结</h2>
+<p>本文主要讲述了在优化时的一些坑，看了一些文章，思路都差不多，但是这些坑都没有涉及到，所以总结一下。</p>
+
+<h2 id="参考链接">参考链接</h2>
+<ul>
+  <li><a href="https://juejin.im/post/5d8da122f265da5b5a7209fa">iOS 端 h5 页面秒开优化实践</a></li>
+  <li><a href="https://juejin.im/post/5cf8ad2af265da1ba77c9465">iOS app秒开H5实战总结</a></li>
+  <li><a href="https://mp.weixin.qq.com/s/0OR4HJQSDq7nEFUAaX1x5A">移动端本地 H5 秒开方案探索与实现</a></li>
+  <li><a href="https://tech.meituan.com/2017/06/09/webviewperf.html">WebView性能、体验分析与优化</a></li>
+  <li><a href="https://www.jianshu.com/p/97faf098e673">JXBWKWebView</a></li>
+  <li><a href="https://github.com/dequan1331/HybridPageKit">HybridPageKit</a></li>
+</ul>
+
+
+        </section>
+
+        <footer class="post-footer">
+
+            <!-- Everything inside the #author tags pulls data from the author -->
+            <!-- #author-->
+            
+            
+            
+            <figure class="author-image">
+                <a class="img" href="https://github.com/zhangdongpo" style="background-image: url(/assets/images/freelf.jpg)"><span
+                        class="hidden">Freelf's Picture</span></a>
+            </figure>
+            
+
+            <section class="author">
+                <h4><a href="/author/Freelf">Freelf</a></h4>
+
+                
+                <p> iOS Developer</p>
+                
+                <div class="author-meta">
+                    <span class="author-location icon-location"> Beijing, China</span>
+                    <span class="author-link icon-link"><a href="https://freelf.me"> freelf.me</a></span>
+                </div>
+            </section>
+
+            <!-- /author  -->
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="http://twitter.com/share?text=WKWebView离线包开发小记&amp;url=WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0"
+                    onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+            
+            
+
+            <!-- Add Disqus Comments -->
+            
+            <div id="gitalk-container"></div>
+<script src="/assets/js/md5.min.js"></script>
+<script>
+    const gitalk = new Gitalk({
+        clientID: 'b62d799fc3a6b1dd7de9',
+        clientSecret: 'd5a315aa0855dd6a00cdb4025b88059c1b0c585f',
+        repo: 'blog',
+        owner: 'zhangdongpo',
+        admin: 'zhangdongpo',
+        id: md5(location.pathname), // Ensure uniqueness and length less than 50
+        distractionFreeMode: false // Facebook-like distraction free mode
+    })
+    gitalk.render('gitalk-container')
+</script>
+            
+
+        </footer>
+
+    </article>
+
+</main>
+
+<!-- /post -->
+
+        <!-- The tiny footer at the very bottom -->
+        <footer class="site-footer clearfix">
+          <section class="copyright"><a href="/">面向自由编程</a> &copy; 2020</section>
+          <section class="poweredby">Proudly published with <a href="https://jekyllrb.com/">Jekyll</a> using <a href="https://github.com/jekyller/jasper">Jasper</a></section>
+        </footer>
+    </div>
+    <!-- highlight.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- jQuery needs to come before `` so that jQuery can be used in code injection -->
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <!-- Ghost outputs important scripts and data with this tag -->
+    <!--  -->
+    <!-- Add Google Analytics  -->
+        <!-- Google Analytics Tracking code -->
+     <script>
+	    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	    ga('create', '', 'auto');
+	    ga('send', 'pageview');
+
+     </script>
+    <!-- Fitvids makes video embeds responsive and awesome -->
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <!-- The main JavaScript file for Casper -->
+    <script type="text/javascript" src="/assets/js/index.js"></script>
+
+</body>
+</html>
