@@ -3,7 +3,7 @@ layout: post
 title: iOS 13 ScrollView截图问题记录
 date: 2019-09-24
 tags: iOS
-category: 作问题
+category: 
 ---
 最近有个需求，需要给TabelView截图。当时做的比较着急，从stackoverflow上面抄了如下一段代码，并且可以正常运行。代码如下：
 ```objc
