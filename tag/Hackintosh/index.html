@@ -28,7 +28,7 @@
     <style>.hljs { background: none; }</style>
 
     <!-- Ghost outputs important style and meta data with this tag -->
-        <link rel="canonical" href="//" />
+        <link rel="canonical" href="//tag/Hackintosh/" />
     <meta name="referrer" content="origin" />
     <link rel="next" href="/page2/" />
 
@@ -36,14 +36,14 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="面向自由编程" />
     <meta property="og:description" content="Freelf's Blog" />
-    <meta property="og:url" content="//" />
-    <meta property="og:image" content="/assets/images/cover1.jpg" />
+    <meta property="og:url" content="//tag/Hackintosh/" />
+    <meta property="og:image" content="/assets/images/cover4.jpg" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="面向自由编程" />
     <meta name="twitter:description" content="Freelf's Blog" />
-    <meta name="twitter:url" content="//" />
-    <meta name="twitter:image:src" content="/assets/images/cover1.jpg" />
+    <meta name="twitter:url" content="//tag/Hackintosh/" />
+    <meta name="twitter:image:src" content="/assets/images/cover4.jpg" />
 
     <script type="application/ld+json">
 {
@@ -51,8 +51,8 @@
     "@type": "Website",
     "publisher": "面向自由编程",
     "name": "面向自由编程",
-    "url": "//",
-    "image": "/assets/images/cover1.jpg",
+    "url": "//tag/Hackintosh/",
+    "image": "/assets/images/cover4.jpg",
     "description": "Freelf's Blog"
 }
     </script>
@@ -62,7 +62,7 @@
 
 
 </head>
-<body class="home-template nav-closed">
+<body class="tag-template nav-closed">
 
     <!-- The blog navigation links -->
     <div class="nav">
@@ -71,7 +71,7 @@
         <span class="hidden">Close</span>
     </a>
     <ul>
-        <li class="nav-home  nav-current" role="presentation"><a href="/">Home</a></li>
+        <li class="nav-home " role="presentation"><a href="/">Home</a></li>
         <li class="nav-about " role="presentation"><a href="/about">About</a></li>
     </ul>
     <a class="subscribe-button icon-feed" href="/feed.xml">Subscribe</a>
@@ -82,11 +82,14 @@
     <div class="site-wrapper">
 
         <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
-        <!-- < default -->
+        <!-- dynamically overriding backgrounds for tags as well as descriptions -->
+
+
+<!-- default -->
 <!-- The tag above means - insert everything in this file into the [body] of the default.hbs template -->
 
-<!-- The big featured header  -->
-<header class="main-header " style="background-image: url(/assets/images/cover1.jpg) ">
+<!-- If we have a tag cover, display that - else blog cover - else nothing -->
+<header class="main-header tag-head " style="background-image: url(/assets/images/cover4.jpg) ">
     <nav class="main-nav overlay clearfix">
         <a class="blog-logo" href="/"><img src="/assets/images/ghost.png"
                 alt="Blog Logo" /></a>
@@ -96,11 +99,14 @@
     </nav>
     <div class="vertical">
         <div class="main-header-content inner">
-            <h1 class="page-title">面向自由编程</h1>
-            <h2 class="page-description">Freelf's Blog</h2>
+            <h1 class="page-title">Hackintosh</h1>
+            <h2 class="page-description">
+                
+                A 1-post collection
+                
+            </h2>
         </div>
     </div>
-    <a class="scroll-down icon-arrow-left" href="#content" data-offset="-45"><span class="hidden">Scroll Down</span></a>
 </header>
 
 <!-- The main content area on the homepage -->
@@ -112,9 +118,7 @@
     
     <nav class="pagination" role="pagination">
     
-    <span class="page-number"> Page 1 of 8 </span>
-     
-        <a class="older-posts" href="/page2/" title="Next Page">Older Posts &raquo;</a>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
     
@@ -154,136 +158,12 @@
     </footer>
 </article>
 
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0">WKWebView离线包开发小记</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>随着项目里面Web页面内容越来越多，H5的加载速度变得越来越重要。在H5同学提出需求前就看过有关优化的文章。当时没有细致的去看，本来以为做起来轻车熟路，但是真做起来坑还是不少。下面记录一下整个优化过程。 优化思路 一个WebView加载的过程大约有以下几个步骤(内容来自于腾讯Bugly的文章): 初始化... <a class="read-more" href="/WKWebView%E7%A6%BB%E7%BA%BF%E5%8C%85%E5%BC%80%E5%8F%91%E5%B0%8F%E8%AE%B0">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/WebView'>Webview</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2020-05-18">18 May 2020</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%BF%91%E6%9C%9F%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%8A%98%E8%85%BE%E5%B0%8F%E8%AE%B0">近期黑苹果折腾小记</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>一直以来都想装一台黑苹果折腾一下，去年10月终于组装了一台。在近期也把电脑折腾完美了。配置如下： 主板 技嘉Z390m GAMING... <a class="read-more" href="/%E8%BF%91%E6%9C%9F%E9%BB%91%E8%8B%B9%E6%9E%9C%E6%8A%98%E8%85%BE%E5%B0%8F%E8%AE%B0">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/黑苹果'>黑苹果</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2020-04-24">24 Apr 2020</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/%E8%A7%A3%E5%86%B3Xcode%E6%8F%92%E4%BB%B6%E7%AA%81%E7%84%B6%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98">解决Xcode插件突然失效问题</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>今天工作，突然发现自己的Xcode插件不能用了，原本以为进偏好设置-&gt;扩展-&gt;Xcode Source Editor里面把插件钩上就行呢。但是到了里面突然发现扩展里面的Xcode Source... <a class="read-more" href="/%E8%A7%A3%E5%86%B3Xcode%E6%8F%92%E4%BB%B6%E7%AA%81%E7%84%B6%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <time class="post-date index-post-date" datetime="2019-11-20">20 Nov 2019</time>
-    </footer>
-</article>
-
-<article class="post">
-    <header class="post-header">
-        <h2 class="post-title"><a href="/Meta(%E4%B8%80)-Hello-Metal,%E7%AC%AC%E4%B8%80%E4%B8%AAMetal%E5%BA%94%E7%94%A8">Meta(一):Hello Metal,第一个Metal应用</a></h2>
-    </header>
-    <section class="post-excerpt">
-        <p>因为和几个志同道合的同学开了个小专栏，本文发在小专栏上，这里仅做记录。有兴趣的同学，欢迎订阅小专栏，小专栏还有其他好看的文章。地址。
- <a class="read-more" href="/Meta(%E4%B8%80)-Hello-Metal,%E7%AC%AC%E4%B8%80%E4%B8%AAMetal%E5%BA%94%E7%94%A8">&raquo;</a></p>
-    </section>
-    <footer class="post-meta">
-        
-        
-
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
-        <!-- author -->
-        <!-- <a href='/author/'>Freelf</a> -->
-
-        
-        
-
-        <!-- [[tags prefix=" on "]] -->
-        
-        <!-- on -->
-        
-        
-        <a href='/tag/Metal'>Metal</a>
-        
-        
-        
-        <time class="post-date index-post-date" datetime="2019-09-30">30 Sep 2019</time>
-    </footer>
-</article>
-
 
 <!-- Previous/next page links - displayed on every page -->
 
 <nav class="pagination" role="pagination">
     
-    <span class="page-number"> Page 1 of 8 </span>
-     
-        <a class="older-posts" href="/page2/" title="Next Page">Older Posts &raquo;</a>
+    <span class="page-number"> Page 1 of 1 </span>
      
 </nav>
 

@@ -8,6 +8,21 @@
     
       
       <item>
+        <title>Ghost S1复刻 &amp; Hackintosh</title>
+        
+          <description>&lt;p&gt;由于年初疫情的原因，去年装的黑苹果终于可以用来干点正事了(关于去年的黑苹果配置可以看前一篇文章)，在家办公一直使用黑苹果来开发。疫情渐渐远去，慢慢开始复工，复工后又开始用19年13寸中配的MBP办公。没有对比就没有伤害，没用黑苹果之前也没感觉这台笔记本会这么慢，编译一次项目2分钟的时长实在忍不了。经过权衡决定组装一台黑苹果在公司用。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Wed, 03 Jun 2020 00:00:00 +0000</pubDate>
+        <link>
+        /Ghost-S1%E5%A4%8D%E5%88%BB-&-Hackintosh</link>
+        <guid isPermaLink="true">/Ghost-S1%E5%A4%8D%E5%88%BB-&-Hackintosh</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>WKWebView离线包开发小记</title>
         
           <description>&lt;p&gt;随着项目里面Web页面内容越来越多，H5的加载速度变得越来越重要。在H5同学提出需求前就看过有关优化的文章。当时没有细致的去看，本来以为做起来轻车熟路，但是真做起来坑还是不少。下面记录一下整个优化过程。&lt;/p&gt;

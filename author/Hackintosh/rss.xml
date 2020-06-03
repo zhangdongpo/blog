@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+   
+      <title>freelf.me</title>
+   
+   <link></link>
+   <description>Freelf's Blog</description>
+   <language>en-uk</language>
+   <managingEditor> Freelf</managingEditor>
+   <atom:link href="rss" rel="self" type="application/rss+xml" />
+   
+	<item>
+	  <title>Ghost S1复刻 & Hackintosh</title>
+	  <link>//Ghost-S1%E5%A4%8D%E5%88%BB-&-Hackintosh</link>
+	  <author>Freelf</author>
+	  <pubDate>2020-06-03T00:00:00+00:00</pubDate>
+	  <guid>//Ghost-S1%E5%A4%8D%E5%88%BB-&-Hackintosh</guid>
+	  <description><![CDATA[
+	     <p>由于年初疫情的原因，去年装的黑苹果终于可以用来干点正事了(关于去年的黑苹果配置可以看前一篇文章)，在家办公一直使用黑苹果来开发。疫情渐渐远去，慢慢开始复工，复工后又开始用19年13寸中配的MBP办公。没有对比就没有伤害，没用黑苹果之前也没感觉这台笔记本会这么慢，编译一次项目2分钟的时长实在忍不了。经过权衡决定组装一台黑苹果在公司用。</p>
+
+<p>这次装电脑又两个需求，一个是在公司用，另外一个是老家没电脑，每次放假回家都很无聊，所以希望这台电脑可以放假带回家用。有了便携这个需求，所以主机肯定是ITX的机型了。组ITX主机需要先去选机箱，然后根据机箱找合适的配件。正好同事推荐了Ghost S1复刻这个机箱，A4机箱，很满意，就是价格略贵。最后还是咬咬牙买了下来。机箱确定了，其他配件就好说了，最后敲定配置如下：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>配件</th>
+      <th>型号</th>
+      <th>入手渠道</th>
+      <th>价格</th>
+      <th>备注</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>主板</td>
+      <td>技嘉Z370N Wi-Fi</td>
+      <td>闲鱼</td>
+      <td>1000</td>
+      <td>Z390 ITX主板价格太高，缩预算选择Z370N，物超所值</td>
+    </tr>
+    <tr>
+      <td>CPU</td>
+      <td>i5 9600K</td>
+      <td>淘宝散片</td>
+      <td>1400</td>
+      <td>主板都缩了，CPU也从开始的9700K缩到了9600K，主频够高，就是核数少点</td>
+    </tr>
+    <tr>
+      <td>显卡</td>
+      <td>蓝宝石5500xt</td>
+      <td>淘宝官方旗舰店</td>
+      <td>1499</td>
+      <td>最便宜的7nm免驱卡，还可以低特效玩点游戏</td>
+    </tr>
+    <tr>
+      <td>内存</td>
+      <td>海盗船复仇者16G*2 3200Hz</td>
+      <td>闲鱼</td>
+      <td>800</td>
+      <td>和主板一起收的，挺便宜</td>
+    </tr>
+    <tr>
+      <td>SSD</td>
+      <td>西数SN750 500G + SN550 500G</td>
+      <td>淘宝</td>
+      <td>1060</td>
+      <td>一块装macOS，一块装Windows玩游戏</td>
+    </tr>
+    <tr>
+      <td>电源</td>
+      <td>海盗船SF600金牌</td>
+      <td>闲鱼</td>
+      <td>773</td>
+      <td>闲鱼买的全新的，价格还算可以</td>
+    </tr>
+    <tr>
+      <td>WI-FI &amp; 蓝牙</td>
+      <td>BCM94360CS2</td>
+      <td>淘宝</td>
+      <td>180</td>
+      <td>免驱</td>
+    </tr>
+    <tr>
+      <td>散热器</td>
+      <td>利民AXP90</td>
+      <td>京东</td>
+      <td>299</td>
+      <td>幸亏买的AXP90没买AXP100，尺寸正好</td>
+    </tr>
+    <tr>
+      <td>机箱</td>
+      <td>Ghost S1 复刻 K总家的</td>
+      <td>闲鱼</td>
+      <td>788</td>
+      <td>全新的要等40天，闲鱼买的二手</td>
+    </tr>
+    <tr>
+      <td>定制电源线</td>
+      <td>YY定制</td>
+      <td>淘宝</td>
+      <td>180</td>
+      <td>线材长度正好，省了理线流程</td>
+    </tr>
+    <tr>
+      <td>总计</td>
+      <td>7971</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="组装">组装</h2>
+<p>因为是第一次装ITX主机，所以和同事一起装的，过程还算顺利，照着教程撸了下来。中间大力出奇迹把显卡延长线的卡扣搞折了，不过不影响使用。整机图片如下：
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/wechatimg4.jpeg" alt="WechatIMG4" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/wechatimg2.jpeg" alt="WechatIMG2" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/wei-ming-ming.png" alt="未命名" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/wechatimg1.jpeg" alt="WechatIMG1" /></p>
+
+<h2 id="系统安装">系统安装</h2>
+<p>本来以为用OpenCore安装起来很简单，结果下了一个同型号主板的EFI安装，死活不显示进macOS恢复模式的引导。后来从QQ群重新找了一个Z370主板的EFI可以进恢复模式，然后就和安装白苹果的流程一样了。中间在下载镜像时自动重启了，不走安装流程。期间还怀疑EFI有问题，后来怀着试试的态度，又重新走了一遍，顺利安装上了。中间甚至还烧了一个Clover的盘，后来也没用上。OpenCore安装起来很简单，只要找一个可以引导的EFI就可以。相关教程可以看<a href="https://github.com/cattyhouse/oc-guide/blob/master/oc-dmg-install.md">这个链接</a>。</p>
+<h2 id="优化系统">优化系统</h2>
+<p>系统安装上了，需要自己优化一下，毕竟是别人的EFI。需要自己填入自己生成的机型信息。本来以为用以前那台电脑的EFI就可以，因为以前的电脑也是技嘉的主板，只不过是Z390，都是300系列的。结果被现实啪啪打脸。折腾了一下午才搞好。主要是有个RTC相关的坑。新电脑的主板需要去改这个问题，旧的电脑没有这个问题。以后一定要照着教程好好撸一遍。相关教程可以看<a href="https://blog.xjn819.com/?p=543">xjn大佬的博客</a>。经过一下午的优化以下功能可以正常工作：</p>
+<ul>
+  <li>核显</li>
+  <li>独显</li>
+  <li>声卡</li>
+  <li>WIFI</li>
+  <li>蓝牙</li>
+  <li>主板网卡</li>
+  <li>Sidecar</li>
+  <li>电源节能5项</li>
+  <li>USB</li>
+  <li>睡眠唤醒</li>
+  <li>USBPower充电</li>
+  <li>原生NVRAM启动盘切换
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/15911783260128.jpg" alt="-w586" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/15911784334508.jpg" alt="-w751" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/15911784723872.jpg" alt="-w893" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/15911784930758.jpg" alt="-w893" />
+<img src="https://nightwish.oss-cn-beijing.aliyuncs.com/2020/06/03/15911785091634.jpg" alt="-w893" /></li>
+</ul>
+
+<h2 id="使用体验">使用体验</h2>
+<p>在公司使用了一天的感受是编译速度明显变快，因为本身是iOS开发，所以拿编译工程来举例。以前Clean重新编译平均需要360s，CPU温度高的话500s的时候也有，MBP会在温度高的时候自动降频，降到1GHz。不Clean工程，跑缓存，平均一次编译需要120-150s不等。</p>
+
+<p>换上新主机后Clean重新编译需要120-150s，不Clean平均编译需要70-90s。编译时CPU可以一直满速跑，基本不会掉频。Emmm，极大高了生产力，再也不会有打字都卡的情况了，心情愉悦… <a href="https://github.com/zhangdongpo/Z370N-Wi-Fi-Hackintosh-EFI">EFI地址</a></p>
+
+<p>等后面装好Windows再看看游戏效果怎么样。</p>
+
+	  ]]></description>
+	</item>
+
+
+</channel>
+</rss>
