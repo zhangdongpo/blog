@@ -131,14 +131,15 @@
         <h2 class="post-title"><a href="/%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7">理解属性</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>属性是Objective-C的一项特性，用于封装对象内的数据。OC对象常会把需要的数据保存为实例变量，实例变量一般通过存取方法（这里的存取方法指的就是setter/getter方法）来访问实例变量。其中setter方法用于写入变量的值，getter方法用于读取变量的值。大家也许已经使用过属性这一概念了，不过大家未必会知道其中所有的细节，而且还有很多与属性有关的麻烦事。这里将会告诉大家有哪些问题可以用属性解决，并指出其中所体现出的关键特性。 ​ 在一个描述个人信息的类中，我们可能会存放人名，生日，地址等内容，我们可以在类的.h文件中声明一些实例变量，如下图所示： 以前写过java或者C++的人应该比较熟悉这种写法，可以定义实例变量的作用域，然而编写OC却很少这样做。这种写法的问题是：对象布局在编译器就已经固定了，只要碰到_firstName变量的代码，编译器就把其替换为“偏移量”，这个偏移量是“硬编码”，表示该变量距离存放对象的内存区域的起始地址有多远。这样做目前看来没有什么问题，但是如果又增加了一个实例变量，如下图所示：... <a class="read-more" href="/%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7">&raquo;</a></p>
+        <p>属性是Objective-C的一项特性，用于封装对象内的数据。OC对象常会把需要的数据保存为实例变量，实例变量一般通过存取方法（这里的存取方法指的就是setter/getter方法）来访问实例变量。其中setter方法用于写入变量的值，getter方法用于读取变量的值。大家也许已经使用过属性这一概念了，不过大家未必会知道其中所有的细节，而且还有很多与属性有关的麻烦事。这里将会告诉大家有哪些问题可以用属性解决，并指出其中所体现出的关键特性。 ​ 在一个描述个人信息的类中，我们可能会存放人名，生日，地址等内容，我们可以在类的.h文件中声明一些实例变量，如下图所示： 以前写过java或者C++的人应该比较熟悉这种写法，可以定义实例变量的作用域，然而编写OC却很少这样做。这种写法的问题是：对象布局在编译器就已经固定了，只要碰到_firstName变量的代码，编译器就把其替换为“偏移量”，这个偏移量是“硬编码”，表示该变量距离存放对象的内存区域的起始地址有多远。这样做目前看来没有什么问题，但是如果又增加了一个实例变量，如下图所示：... <a class="read-more"
+                href="/%E7%90%86%E8%A7%A3%E5%B1%9E%E6%80%A7">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
         
 
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
+        <img class="author-thumb" src="/assets/images/freelf.jpg"
+            alt="Author image" nopin="nopin" />
         <!-- author -->
         <!-- <a href='/author/'>Freelf</a> -->
 
@@ -163,14 +164,15 @@
         <h2 class="post-title"><a href="/iOS9%E7%9A%84%E9%80%82%E9%85%8D">iOS9的适配</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>iOS9升级后相信很多人都是项目报错，因为项目要升级iOS9，从网上看了很多教程，就这篇教程还是比较全的，分享给大家，顺便自己记录下。网址是整理 iOS 9 适配中出现的坑（图文）。... <a class="read-more" href="/iOS9%E7%9A%84%E9%80%82%E9%85%8D">&raquo;</a></p>
+        <p>iOS9升级后相信很多人都是项目报错，因为项目要升级iOS9，从网上看了很多教程，就这篇教程还是比较全的，分享给大家，顺便自己记录下。网址是整理 iOS 9 适配中出现的坑（图文）。... <a class="read-more"
+                href="/iOS9%E7%9A%84%E9%80%82%E9%85%8D">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
         
 
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
+        <img class="author-thumb" src="/assets/images/freelf.jpg"
+            alt="Author image" nopin="nopin" />
         <!-- author -->
         <!-- <a href='/author/'>Freelf</a> -->
 
@@ -182,7 +184,7 @@
         <!-- on -->
         
         
-        <a href='/tag/UI'>Ui</a>
+        <a href='/tag/UI'>UI</a>
         
         
         
@@ -195,14 +197,15 @@
         <h2 class="post-title"><a href="/iOS%E8%A7%86%E5%9B%BE%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">iOS视图控制器的生命周期</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>​ 我们去面试很多时候都被问到视图控制器的声明周期，下面我们着重来讲解下视图控制器的声明周期。 了解重要的三个函数 ​... <a class="read-more" href="/iOS%E8%A7%86%E5%9B%BE%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">&raquo;</a></p>
+        <p>​ 我们去面试很多时候都被问到视图控制器的声明周期，下面我们着重来讲解下视图控制器的声明周期。 了解重要的三个函数 ​... <a class="read-more"
+                href="/iOS%E8%A7%86%E5%9B%BE%E6%8E%A7%E5%88%B6%E5%99%A8%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
         
 
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
+        <img class="author-thumb" src="/assets/images/freelf.jpg"
+            alt="Author image" nopin="nopin" />
         <!-- author -->
         <!-- <a href='/author/'>Freelf</a> -->
 
@@ -214,7 +217,7 @@
         <!-- on -->
         
         
-        <a href='/tag/UI'>Ui</a>
+        <a href='/tag/UI'>UI</a>
         
         
         
@@ -227,14 +230,15 @@
         <h2 class="post-title"><a href="/iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6">iOS事件响应机制</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>​ 本文着重讲解iOS事件的传递机制，如有错误或者有意见不同者，欢迎指出讨论。 ​ iOS的事件有好几种：Touch... <a class="read-more" href="/iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6">&raquo;</a></p>
+        <p>​ 本文着重讲解iOS事件的传递机制，如有错误或者有意见不同者，欢迎指出讨论。 ​ iOS的事件有好几种：Touch... <a class="read-more"
+                href="/iOS%E4%BA%8B%E4%BB%B6%E5%93%8D%E5%BA%94%E6%9C%BA%E5%88%B6">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
         
 
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
+        <img class="author-thumb" src="/assets/images/freelf.jpg"
+            alt="Author image" nopin="nopin" />
         <!-- author -->
         <!-- <a href='/author/'>Freelf</a> -->
 
@@ -246,7 +250,7 @@
         <!-- on -->
         
         
-        <a href='/tag/UI'>Ui</a>
+        <a href='/tag/UI'>UI</a>
         
         
         
@@ -259,14 +263,15 @@
         <h2 class="post-title"><a href="/%E5%A6%82%E4%BD%95%E7%94%A8%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F%E9%9A%90%E8%97%8F%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82">如何用类族模式隐藏实现细节</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>​ 类族是一种很有用的模式，可以隐藏“抽象基类”中的实现细节。这里的抽象基类是指在这个类中只提供接口，并没有提供实现细节，通常是子类重写这个接口，来实现其中的细节。OC中的系统框架普遍应用这个模式。下面我们来举个例子，iOS中有个UIButton的类，想要创建一个按钮，需要调用下面这个方法： + (instancetype)buttonWithType:(UIButtonType)buttonType;... <a class="read-more" href="/%E5%A6%82%E4%BD%95%E7%94%A8%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F%E9%9A%90%E8%97%8F%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82">&raquo;</a></p>
+        <p>​ 类族是一种很有用的模式，可以隐藏“抽象基类”中的实现细节。这里的抽象基类是指在这个类中只提供接口，并没有提供实现细节，通常是子类重写这个接口，来实现其中的细节。OC中的系统框架普遍应用这个模式。下面我们来举个例子，iOS中有个UIButton的类，想要创建一个按钮，需要调用下面这个方法： + (instancetype)buttonWithType:(UIButtonType)buttonType;... <a class="read-more"
+                href="/%E5%A6%82%E4%BD%95%E7%94%A8%E7%B1%BB%E6%97%8F%E6%A8%A1%E5%BC%8F%E9%9A%90%E8%97%8F%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
         
 
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
+        <img class="author-thumb" src="/assets/images/freelf.jpg"
+            alt="Author image" nopin="nopin" />
         <!-- author -->
         <!-- <a href='/author/'>Freelf</a> -->
 

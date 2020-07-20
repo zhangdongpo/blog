@@ -131,14 +131,15 @@
         <h2 class="post-title"><a href="/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F">原型模式</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>前面讨论了工厂模式，这里接着探索创建型模式。在这里考虑一个订单系统，里面有一个保存订单的功能。要求是如果订单预定的产品数量超过1000，就需要把订单拆分成两份订单来保存。如果拆成两份后还是超过1000，那就继续拆分。知道每份订单数量不超过1000。至于为什么要拆分，是为了方便后续处理，后续是有人工来处理，每个人处理能力是1000。根据业务，目前订单类型有两种，企业订单和个人订单。 场景问题 分析上面的业务需求，有人可能会想，很简单嘛，一共就一个功能，没什么困难的，下面尝试实现一下。 首先，如果想要实现通用的订单处理，而不关心订单类型，订单处理对象应该面向一个订单的接口而不是具体对象。这里先定义订单接口：... <a class="read-more" href="/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F">&raquo;</a></p>
+        <p>前面讨论了工厂模式，这里接着探索创建型模式。在这里考虑一个订单系统，里面有一个保存订单的功能。要求是如果订单预定的产品数量超过1000，就需要把订单拆分成两份订单来保存。如果拆成两份后还是超过1000，那就继续拆分。知道每份订单数量不超过1000。至于为什么要拆分，是为了方便后续处理，后续是有人工来处理，每个人处理能力是1000。根据业务，目前订单类型有两种，企业订单和个人订单。 场景问题 分析上面的业务需求，有人可能会想，很简单嘛，一共就一个功能，没什么困难的，下面尝试实现一下。 首先，如果想要实现通用的订单处理，而不关心订单类型，订单处理对象应该面向一个订单的接口而不是具体对象。这里先定义订单接口：... <a class="read-more"
+                href="/%E5%8E%9F%E5%9E%8B%E6%A8%A1%E5%BC%8F">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
         
 
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
+        <img class="author-thumb" src="/assets/images/freelf.jpg"
+            alt="Author image" nopin="nopin" />
         <!-- author -->
         <!-- <a href='/author/'>Freelf</a> -->
 
@@ -163,14 +164,15 @@
         <h2 class="post-title"><a href="/Builder%E6%A8%A1%E5%BC%8F">Builder模式</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>前面讨论了工厂模式，这里接着探索创建类型的设计模式。在讨论工厂模式的时候提出了一个导出数据的应用框架。这里接着对这个框架做一些补充，这些补充的地方会用到Builder模式。 场景问题 对于导出数据的框架，在导出的文件上会有一些约定的方式，比如导出成文本格式、数据库模式、xml格式等等。在工厂模式中，使用工厂模式解决了如何选择具体的导出方式，并没有涉及每种导出方式的实现。也就是说，在工厂模式里面，并没有讨论如何实现导出文本、数据库、PDF等具体的格式，这里就来讨论这个问题。 对于导出数据的应用框架，通常对于导出数据的导出内容和格式是有要求的，比如现在有如下要求：... <a class="read-more" href="/Builder%E6%A8%A1%E5%BC%8F">&raquo;</a></p>
+        <p>前面讨论了工厂模式，这里接着探索创建类型的设计模式。在讨论工厂模式的时候提出了一个导出数据的应用框架。这里接着对这个框架做一些补充，这些补充的地方会用到Builder模式。 场景问题 对于导出数据的框架，在导出的文件上会有一些约定的方式，比如导出成文本格式、数据库模式、xml格式等等。在工厂模式中，使用工厂模式解决了如何选择具体的导出方式，并没有涉及每种导出方式的实现。也就是说，在工厂模式里面，并没有讨论如何实现导出文本、数据库、PDF等具体的格式，这里就来讨论这个问题。 对于导出数据的应用框架，通常对于导出数据的导出内容和格式是有要求的，比如现在有如下要求：... <a class="read-more"
+                href="/Builder%E6%A8%A1%E5%BC%8F">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
         
 
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
+        <img class="author-thumb" src="/assets/images/freelf.jpg"
+            alt="Author image" nopin="nopin" />
         <!-- author -->
         <!-- <a href='/author/'>Freelf</a> -->
 
@@ -195,14 +197,15 @@
         <h2 class="post-title"><a href="/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F">工厂模式</a></h2>
     </header>
     <section class="post-excerpt">
-        <p>最近重新学习设计模式，以前一直看的是Raywenderlich的书籍，总感觉不够深入。最近重新找了一本书来学习，所以以前的系列就不再继续写了，重新开始记录。这是第一篇，来学习一下工厂模式。 设计模式名字中带工厂的有三个。简单工厂，工厂方法，抽象工厂。本文就看一下这三种工厂的区别，以及从简单工厂到抽象工厂的演进。 简单工厂 严格来讲简单工厂并不是一个标准的设计模式，但是它太常用了，所以需要我们好好掌握它。... <a class="read-more" href="/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F">&raquo;</a></p>
+        <p>最近重新学习设计模式，以前一直看的是Raywenderlich的书籍，总感觉不够深入。最近重新找了一本书来学习，所以以前的系列就不再继续写了，重新开始记录。这是第一篇，来学习一下工厂模式。 设计模式名字中带工厂的有三个。简单工厂，工厂方法，抽象工厂。本文就看一下这三种工厂的区别，以及从简单工厂到抽象工厂的演进。 简单工厂 严格来讲简单工厂并不是一个标准的设计模式，但是它太常用了，所以需要我们好好掌握它。... <a class="read-more"
+                href="/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F">&raquo;</a></p>
     </section>
     <footer class="post-meta">
         
         
 
-        <img class="author-thumb" src="/assets/images/freelf.jpg" alt="Author image"
-            nopin="nopin" />
+        <img class="author-thumb" src="/assets/images/freelf.jpg"
+            alt="Author image" nopin="nopin" />
         <!-- author -->
         <!-- <a href='/author/'>Freelf</a> -->
 
