@@ -8,6 +8,21 @@
     
       
       <item>
+        <title>Aspects源码分析</title>
+        
+          <description>&lt;p&gt;最近有个需求用到了Aspects这个库，用的过程中发现了一些问题，为了解决问题，花了几天时间精读了一遍Aspects的源码。读的过程中发现这个库如果发散着去读，可以了解Objective-C这个语言的方方面面。这篇文章就不发散了，本篇集中记录Aspects如何去进行Hook方法的。后面可能会写一些Aspects发散的文章。本篇分析采用从入口方法开始，然后用到哪个方法会分析哪个方法。&lt;/p&gt;
+
+</description>
+        
+        <pubDate>Wed, 09 Dec 2020 00:00:00 +0000</pubDate>
+        <link>
+        /Aspects%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90</link>
+        <guid isPermaLink="true">/Aspects%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90</guid>
+      </item>
+      
+    
+      
+      <item>
         <title>初识iOS中的动态库和静态库</title>
         
           <description>&lt;p&gt;由于最近研究组件化后调试时二进制映射源码的功能，发现需要对开发中的动态库和静态库需要有一些了解。所以就有了这篇文章，由于只是了解，并没有深入到编译层面，所以本篇文章只是简单了解一些库的知识，并不深入。&lt;/p&gt;
